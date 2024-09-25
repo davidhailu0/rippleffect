@@ -1,7 +1,5 @@
-import { lato } from "@/app/fonts/lato";
 import Image from "next/image";
 import VideoPlayer from "@/app/components/videoComponent";
-import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Button from "@/app/components/Button";
 
@@ -30,8 +28,8 @@ export default function Home() {
                 <VideoPlayer src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
                 <p className="text-md text-gray-200 mb-5">Make sure to watch all videos before you call if not you will not be able to understand my business or ask the right question</p>
                 <div className="flex justify-between w-1/2">
-                    <Button title="f Join our Facebook Group" type="text" />
-                    <Button title="Next >" type="text" />
+                    <Button title="f Join our Facebook Group" type="button" />
+                    <Button title="Next >" type="button" />
                 </div>
             </div>
         </>
