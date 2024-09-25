@@ -45,7 +45,7 @@ export default function BookCallForm() {
         </div>
         {!timeSelected && <p className="text-white font-bold text-xl py-4">Select Date and Time</p>}
         <div className="w-full flex">
-            {!timeSelected && <Calendar value={value} onChange={onChange} className={'bg-transparent text-white w-2/3'} calendarType="gregory" minDate={new Date()} maxDate={getLastDayOfCurrentMonth()} tileDisabled={({ _, date, __ }) => date.getDay() === 0} />}
+            {!timeSelected && <Calendar value={value} onChange={onChange} className={'bg-transparent text-white w-2/3'} calendarType="gregory" minDate={new Date()} maxDate={getLastDayOfCurrentMonth()} tileDisabled={({ date }) => date.getDay() === 0} />}
             {!timeSelected && <div className={`w-1/3 ${value ? 'flex' : 'hidden'} flex-col text-white items-center gap-4 pt-3`}>
                 {
                     availableTimes.map((val) => <div key={val} className="flex gap-2 h-12 w-48 border border-[#d7b398] rounded-sm shadow-lg transition ease-in-out duration-200">
