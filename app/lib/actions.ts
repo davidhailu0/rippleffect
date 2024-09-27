@@ -1,17 +1,15 @@
-import {z} from "zod"
+'use server'
 
-const AccountSchema = z.object({
-    username:z.string(),
-    firstname:z.string(),
-    lastname:z.string(),
-    email:z.string(),
-    password:z.string(),
-    confirmpassword:z.string()
-})
 
-export async function createAccount(formData:FormData){
-    const validatedAccount = AccountSchema.safeParse(Object.fromEntries(formData.entries()))
-    if(!validatedAccount.success){
-        
-    }
+export async function createAccount(prevState:void,formData:FormData){
+    const email = formData.get("email")
+    const resp = await fetch(`${process.env.DOMAIN}/api/v1/leads`,{method:'POST',headers:{
+        'Content-Type':'application/json',
+        'Origin': 'https://cribcrm.com/'
+    },body:JSON.stringify({
+        'affiliate_id':process.env.affiliate_ID,
+        'email':email
+    })})
+    const json = await resp.json()
+    return json
 }

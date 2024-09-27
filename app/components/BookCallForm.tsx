@@ -28,12 +28,12 @@ export default function BookCallForm() {
 
     const availableTimes = ['10:00 PM', '10:30 PM']
 
-    return <div className="h-auto w-2/3 bg-[#4B7A87] rounded flex flex-col mx-auto p-6">
+    return <div className="h-auto w-full md:w-2/3 bg-[#4B7A87] rounded flex flex-col md:mx-auto p-6 mx-2">
         <div className="h-20 w-20 bg-white rounded-full">
             <Image src='/logo.png' alt='logo' height={127} width={120} />
         </div>
         <p className="text-white font-bold text-xl my-4">Booking Plan Call</p>
-        <div className="border border-white rounded bg-transparent h-auto w-full flex flex-col gap-2 py-6 px-4">
+        <div className="border border-white rounded bg-transparent h-auto w-full flex flex-col gap-2 py-6 px-2 md:px-4">
             <ImageWithLabel image="/clock.png" label="60 mins" />
             {value && <ImageWithLabel image="/date.png" label={new Date(value.valueOf() as number).toDateString()} />}
             {value && <ImageWithLabel image="/globe.png" label={timezone} />}
@@ -44,9 +44,9 @@ export default function BookCallForm() {
             <p className="text-white">Any Available</p>
         </div>
         {!timeSelected && <p className="text-white font-bold text-xl py-4">Select Date and Time</p>}
-        <div className="w-full flex">
-            {!timeSelected && <Calendar value={value} onChange={onChange} className={'bg-transparent text-white w-2/3'} calendarType="gregory" minDate={new Date()} maxDate={getLastDayOfCurrentMonth()} tileDisabled={({ date }) => date.getDay() === 0} />}
-            {!timeSelected && <div className={`w-1/3 ${value ? 'flex' : 'hidden'} flex-col text-white items-center gap-4 pt-3`}>
+        <div className="w-full flex flex-col md:flex-row">
+            {!timeSelected && <Calendar value={value} onChange={onChange} className={'bg-transparent text-white w-full md:w-1/2'} calendarType="gregory" minDate={new Date()} maxDate={getLastDayOfCurrentMonth()} tileDisabled={({ date }) => date.getDay() === 0} />}
+            {!timeSelected && <div className={`w-full md:w-1/2 ${value ? 'flex' : 'hidden'} flex-col text-white items-center gap-4 pt-3`}>
                 {
                     availableTimes.map((val) => <div key={val} className="flex gap-2 h-12 w-48 border border-[#d7b398] rounded-sm shadow-lg transition ease-in-out duration-200">
                         <button className={`h-full ${selectedTime == val ? 'w-1/2' : 'w-full'} ${selectedTime == val ? 'bg-blue-400' : 'bg-transparent'} transition ease-in-out duration-500`} onClick={() => setSelectedTime(val)}>{val}</button>
@@ -57,7 +57,7 @@ export default function BookCallForm() {
         </div>
         {!timeSelected && <div className="flex flex-col text-white mt-4">
             <p className="text-md mb-3">Time zone</p>
-            <select className="bg-transparent h-12 w-96 border border-white outline-none" value={timezone} onChange={handleTimezoneChange}>
+            <select className="bg-transparent h-12 w-full md:w-96 border border-white outline-none" value={timezone} onChange={handleTimezoneChange}>
                 <option value="Pacific/Honolulu">(GMT-10:00) Hawaii</option>
                 <option value="America/Anchorage">(GMT-09:00) Alaska</option>
                 <option value="America/Los_Angeles">(GMT-08:00) Pacific Time (US & Canada)</option>

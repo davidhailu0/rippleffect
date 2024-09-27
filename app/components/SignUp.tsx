@@ -1,21 +1,17 @@
 'use client'
-import { MouseEvent } from "react"
-import TextField from "./TextField"
-import Button from "./Button"
+import { useFormState } from "react-dom"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
+import TextField from "./TextField"
+import { createAccount } from "../lib/actions"
+
 export default function SignUpForm() {
+    const [, formAction] = useFormState(createAccount, undefined)
+    const [pressed, setPressed] = useState(false)
     const router = useRouter()
-    const handleRegister = (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault()
-        router.push('/step-1')
-    }
-    return <form className="grid grid-cols-2 grid-rows-3 w-1/2 gap-4 mx-auto">
-        <TextField name="username" type="text" placeholder="Username" />
-        <TextField name="firstname" type="text" placeholder="First Name" />
-        <TextField name="lastname" type="text" placeholder="Last Name" />
-        <TextField name="email" type="email" placeholder="Email" />
-        <TextField name="password" type="password" placeholder="Password" />
-        <TextField name="confirmpassword" type="password" placeholder="Confirm Password" />
-        <Button callBack={handleRegister} type="submit" title="Register Now" />
+
+    return <form action={formAction} className="flex flex-col w-11/12 md:w-1/3 gap-4 mx-auto">
+        <TextField name={pressed ? "code" : "email"} type={pressed ? "text" : "email"} placeholder={pressed ? "Confirmation Code" : "Email"} />
+        <button onClick={pressed ? () => router.push('/step-2') : () => setPressed(true)} type={pressed ? 'button' : 'submit'} className="bg-gradient-to-r from-[#18455F] via-[#4B7A87] to-black h-12 rounded-[50px] text-white shadow-xl font-bold mt-6 col-span-2 w-[260px] mx-auto text-center">{!pressed ? "Sign Up" : "Confirm"}</button>
     </form>
 }

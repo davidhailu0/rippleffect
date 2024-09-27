@@ -9,10 +9,10 @@ select option {
 body {
   color: transparent;
   background: linear-gradient(to bottom right, #0F2C40, #8A6A60);
-  font-family: Arial, Helvetica, sans-serif;
-  height: auto;
+  height: 100vh;
   width: 100vw;
   overflow-x: hidden;
+  overflow-y: scroll;
 }
 abbr{
   text-decoration: none;
@@ -40,7 +40,7 @@ abbr{
 }
 .react-calendar__month-view__days{
   gap: 1rem;
-  padding-left:0.7rem;
+  justify-content: space-evenly;
 }
 .react-calendar__month-view__days__day{
   min-height: 50px;
@@ -56,4 +56,17 @@ abbr{
 }
 .react-calendar__tile--active {
   background: #d7b398;
+}
+/* .react-calendar__month-view__weekdays__weekday.react-calendar__month-view__weekdays__weekday--weekend{
+  max-width: 50px;
+} */
+
+@media (max-width:640px){
+  .react-calendar__month-view__days__day{
+    min-height: 40px;
+    min-width: 40px;
+  }
+  .react-calendar__month-view__days{
+    gap: 0.2rem;
+  }
 }
