@@ -21,9 +21,9 @@ export default function BookCallForm() {
         setTimeZone(e.target.value)
     }
 
-    const goToStep3 = (e: MouseEvent<HTMLButtonElement>) => {
+    const goToQuestionnaire = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        router.push('/step-3')
+        router.push('/questionnaire')
     }
 
     const availableTimes = ['10:00 PM', '10:30 PM']
@@ -80,7 +80,7 @@ export default function BookCallForm() {
                 <option value="Pacific/Auckland">(GMT+12:00) Auckland</option>
             </select>
         </div>}
-        {timeSelected && <ScheduleMeetingRegistration callBack={goToStep3} />}
+        {timeSelected && <ScheduleMeetingRegistration callBack={goToQuestionnaire} />}
     </div>
 }
 
