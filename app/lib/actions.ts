@@ -44,3 +44,15 @@ export async function confirmAccount(frontend_token:string|null,prevState:void,f
     // const json = await resp.json()
     redirect('/step-2')
 }
+
+export const fetchFilteredMembers = async(currentPage:number)=>{
+    return [{
+        id:1,
+        name:"Abebe",
+        email:"Abe@gmail.com",
+        signupdate:'Mar 2024',
+        enegicId:'01',
+        URLScheduler:'',
+        StatusScheduler:false,
+    }]
+}
