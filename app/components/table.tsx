@@ -1,4 +1,4 @@
-import { fetchFilteredMembers } from '../lib/actions';
+// import { fetchFilteredMembers } from '../lib/actions';
 
 export default async function MembersTable(
     //     {
@@ -7,7 +7,15 @@ export default async function MembersTable(
     //     currentPage: number;
     // }
 ) {
-    const members = await fetchFilteredMembers();
+    const members = [{
+        id: 1,
+        name: "Abebe",
+        email: "Abe@gmail.com",
+        signupdate: 'Mar 2024',
+        enegicId: '01',
+        URLScheduler: '',
+        StatusScheduler: false,
+    }]
 
     return (
         <div className="mt-6 flow-root w-full bg-transparent">
