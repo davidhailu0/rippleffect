@@ -22,20 +22,19 @@ export async function createAccount(ref_code:string|undefined,prevState:PrevStat
             }
         }
     }
-    const resp = await fetch(`${process.env.DOMAIN}/api/v1/leads`,{method:'POST',headers:{
+    const resp = await fetch(`${process.env.APP_DOMAIN}/api/v1/leads`,{method:'POST',headers:{
         'Content-Type':'application/json',
-        'Origin': process.env.ORIGIN as string
+        'Origin': process.env.APP_ORIGIN as string
     },body:JSON.stringify(data)})
     const jsonResp = await resp.json()
-    console.log(jsonResp)
     return jsonResp;
 }
 
 export async function confirmAccount(frontend_token:string|null,prevState:void,formData:FormData){
     const confirmation_token = formData.get('token')
-     await fetch(`${process.env.DOMAIN}/api/v1/leads/confirm`,{method:'POST',headers:{
+     await fetch(`${process.env.APP_DOMAIN}/api/v1/leads/confirm`,{method:'POST',headers:{
         'Content-Type':'application/json',
-        'Origin': process.env.ORIGIN as string
+        'Origin': process.env.APP_ORIGIN as string
     },body:JSON.stringify({
         lead: {
             "confirmation_token": confirmation_token,
