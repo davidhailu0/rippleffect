@@ -1,0 +1,92 @@
+# GitLab CI configuration for Next.js 14 deployment to S3 bucket cliptill.com
+# Necessary variables:
+# region: eu-central-1
+# bucketname: cliptill.com
+# DEPLOY_NOTIFICATION_TOKEN
+# DEPLOY_NOTIFICATION_RECIPIENTS
+
+default:
+  image: docker:24.0.7
+  services:
+    - docker:24.0.7-dind
+
+stages:
+  - install
+  - build
+  - deploy
+
+# Notification script for deployment updates
+.notification_script: &notification_script
+  - apt-get install -y curl
+  - COMMIT_MESSAGE=$(echo "$CI_COMMIT_MESSAGE" | sed 's/"/\\"/g' | tr -d '\n')
+  - PIPELINE_URL=$(echo "$CI_PIPELINE_URL" | sed 's/"/\\"/g')
+  - >
+    curl -X POST $DEPLOY_NOTIFICATION_ENDPOINT
+    -H "Content-Type: application/json"
+    -d '{
+          "token": "'"${DEPLOY_NOTIFICATION_TOKEN}"'",
+          "appname": "'"${CI_PROJECT_NAME}"'",
+          "version": "'$CI_COMMIT_SHA'",
+          "message": "'"${COMMIT_MESSAGE}"'",
+          "pipeline_url": "'"${PIPELINE_URL}"'",
+          "deployment_time": "'"$(date -u)"'",
+          "author": "'"${CI_COMMIT_AUTHOR}"'",
+          "branch_name": "'"${CI_COMMIT_REF_NAME}"'",
+          "environment_name": "'"${CI_ENVIRONMENT_NAME}"'",
+          "recipients": "'$DEPLOY_NOTIFICATION_RECIPIENTS'"
+        }'
+
+# Stage 1: Install dependencies
+install_dependencies:
+  stage: install
+  image: node:18-alpine
+  script:
+    # Install libc6-compat and install dependencies based on the package manager
+    - apk add --no-cache libc6-compat
+    - >
+      if [ -f yarn.lock ]; then yarn --frozen-lockfile;
+      elif [ -f package-lock.json ]; then npm ci;
+      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile;
+      else echo "Lockfile not found." && exit 1;
+      fi
+  artifacts:
+    paths:
+      - node_modules/
+
+# Stage 2: Build the Next.js project
+build_project:
+  stage: build
+  image: node:18-alpine
+  script:
+    - >
+      if [ -f yarn.lock ]; then yarn run build;
+      elif [ -f package-lock.json ]; then npm run build;
+      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build;
+      else echo "Lockfile not found." && exit 1;
+      fi
+  artifacts:
+    paths:
+      - .next/standalone/
+      - .next/static/
+      - public/
+  only:
+    - main
+
+# Stage 3: Deploy to S3
+deploy_to_s3:
+  stage: deploy
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  script:
+    - aws --version
+    - aws s3 rm s3://$S3_BUCKET --recursive  # Clear the existing content in the S3 bucket
+    - aws s3 sync .next/static s3://$S3_BUCKET/_next/static  # Sync the static Next.js assets
+    - aws s3 sync public/ s3://$S3_BUCKET/public  # Sync the public directory
+  only:
+    - main
+
+# Optional: Notifications after deploy
+deploy_notification:
+  stage: deploy
+  script: *notification_script
+  only:
+    - main

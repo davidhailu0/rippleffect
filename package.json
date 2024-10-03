@@ -16,6 +16,7 @@
     "react-dom": "^18",
     "react-toastify": "^10.0.5",
     "rippleffect": "file:",
+    "sharp": "^0.33.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {

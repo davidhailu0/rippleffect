@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { lato } from "@/app/fonts/lato";
 import Navbar from "../components/Navbar";
 import MembersTable from "../components/table";
@@ -13,14 +14,17 @@ export default function Members() {
                 <p className={`${lato.className} text-white md:text-center text-lg px-0 leading-7 md:text-lg font-medium md:leading-[23.4px]`}>Nate|nate@natewells.co.uk|Mar 2024</p>
                 <p className="text-white text-lg">Referrer: No Referrer</p>
                 <div className="mt-5 flex w-full justify-start">
-                    <Pagination totalPages={11} />
+                    <Suspense>
+                        <Pagination totalPages={11} />
+                    </Suspense>
                 </div>
                 <div className="flex gap-4 flex-col md:flex-row">
                     <button className="text-black bg-white h-12 w-32">CSV</button>
                     <button className="text-black bg-white h-12 w-32">EXCEL</button>
                     <button className="text-black bg-white h-12 w-32">PDF</button>
                 </div>
-                <MembersTable currentPage={1} />
+                {/* <MembersTable currentPage={1} /> */}
+                <MembersTable />
             </div>
         </>
     );

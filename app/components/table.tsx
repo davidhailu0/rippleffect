@@ -1,11 +1,13 @@
 import { fetchFilteredMembers } from '../lib/actions';
 
-export default async function MembersTable({
-    currentPage,
-}: {
-    currentPage: number;
-}) {
-    const members = await fetchFilteredMembers(currentPage);
+export default async function MembersTable(
+    //     {
+    //     currentPage,
+    // }: {
+    //     currentPage: number;
+    // }
+) {
+    const members = await fetchFilteredMembers();
 
     return (
         <div className="mt-6 flow-root w-full bg-transparent">

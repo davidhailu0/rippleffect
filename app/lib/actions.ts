@@ -27,6 +27,7 @@ export async function createAccount(ref_code:string|undefined,prevState:PrevStat
         'Origin': process.env.ORIGIN as string
     },body:JSON.stringify(data)})
     const jsonResp = await resp.json()
+    console.log(jsonResp)
     return jsonResp;
 }
 
@@ -45,7 +46,9 @@ export async function confirmAccount(frontend_token:string|null,prevState:void,f
     redirect('/step-2')
 }
 
-export const fetchFilteredMembers = async(currentPage:number)=>{
+
+
+export const fetchFilteredMembers = async()=>{
     return [{
         id:1,
         name:"Abebe",

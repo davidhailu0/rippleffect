@@ -80,7 +80,7 @@ export default function Training() {
                     <TrainingCard
                         title="Quick start"
                         icon="⚙️"
-                        items={quickStartItems}
+                        items={paidTrainingItems}
                         imageUrl="/image.jpg" // Replace with the correct path for the image
                         buttonText="Quick start"
                     />
