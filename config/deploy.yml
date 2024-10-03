@@ -19,6 +19,7 @@ servers:
 proxy:
   ssl: true
   host: natewells.org
+  app_port: 3000
 
 servers:
   web:
