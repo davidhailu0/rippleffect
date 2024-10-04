@@ -1,10 +1,11 @@
 'use client'
-import { ChangeEvent, MouseEventHandler, useState, MouseEvent } from "react";
+import { ChangeEvent, MouseEventHandler, useState, MouseEvent, useEffect } from "react";
 import Image from "next/image"
 import Calendar from "react-calendar";
 import { useRouter } from "next/navigation";
 import { getLastDayOfCurrentMonth } from "../util/dayutil";
 import TextField from "./TextField";
+import Cookies from "js-cookie";
 
 type ValuePiece = Date | null;
 
@@ -13,9 +14,35 @@ type Value = ValuePiece | [ValuePiece, ValuePiece];
 export default function BookCallForm() {
     const router = useRouter()
     const [value, onChange] = useState<Value>(null);
-    const [timezone, setTimeZone] = useState<string>('Asia/Bangkok')
-    const [selectedTime, setSelectedTime] = useState<string>('')
+    const [timezone, setTimeZone] = useState<string>(Intl.DateTimeFormat().resolvedOptions().timeZone)
+    const [selectedTime, setSelectedTime] = useState<string | undefined>('')
     const [timeSelected, setTimeSelected] = useState<boolean>(false)
+    const [availableTimes, setAvailableTimes] = useState<[string?]>([])
+    // console.log(value)
+    useEffect(() => {
+        async function fetchAvailableDates() {
+            const token = Cookies.get("token")
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities`, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Origin": window.location.origin,
+                    "Authorization": token as string
+                },
+                body: JSON.stringify({
+                    "timezone": "string",
+                    "year": new Date(value!.toString()).getFullYear(),
+                    "month": new Date(value!.toString()).getMonth() + 1
+                })
+            })
+            const respJson = await resp.json()
+            console.log(respJson)
+            setAvailableTimes([])
+        }
+        if (value != null) {
+            fetchAvailableDates()
+        }
+
+    }, [value])
 
     const handleTimezoneChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setTimeZone(e.target.value)
@@ -23,14 +50,31 @@ export default function BookCallForm() {
 
     const goToQuestionnaire = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
+        bookSession()
         router.push('/questionnaire')
     }
 
-    const availableTimes = ['10:00 PM', '10:30 PM']
+    const bookSession = async () => {
+        // const token = Cookies.get('token')
+        // const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/bookings`,
+        //     {
+        //         method: 'POST',
+        //         headers: {
+        //             'Origin': window.location.origin,
+        //             'Authorization': token || ''
+        //         },
+        //         body: JSON.stringify({
+        //             "timezone": timezone,
+        //             "start_time": selectedTime,
+        //             "end_time": "string"
+        //         })
+        //     })
+    }
+
 
     return <div className="h-auto w-full md:w-2/3 bg-[#4B7A87] rounded flex flex-col md:mx-auto p-6 mx-2">
         <div className="h-20 w-20 bg-white rounded-full">
-            <Image src='/logo.png' alt='logo' height={127} width={120} />
+            <Image src='/logo.png' alt='logo' height={127} width={120} unoptimized />
         </div>
         <p className="text-white font-bold text-xl my-4">Booking Plan Call</p>
         <div className="border border-white rounded bg-transparent h-auto w-full flex flex-col gap-2 py-6 px-2 md:px-4">
@@ -40,7 +84,7 @@ export default function BookCallForm() {
             <ImageWithLabel image="/list.png" label="Schedule a time that works best for you. Be sure to choose the correct time-zone at a bottom of a calendar. Please complete the questionnaire. So that we have the data the data needed to help you best" />
         </div>
         <div className="flex gap-6 my-7 items-end">
-            <Image src={'/user.png'} alt="User" height={25} width={25} />
+            <Image src={'/user.png'} alt="User" height={25} width={25} unoptimized />
             <p className="text-white">Any Available</p>
         </div>
         {!timeSelected && <p className="text-white font-bold text-xl py-4">Select Date and Time</p>}
@@ -86,7 +130,7 @@ export default function BookCallForm() {
 
 function ImageWithLabel({ image, label }: { image: string, label: string | Value }) {
     return <div className="flex bg-transparent items-start gap-2">
-        <Image src={image} alt={image} height={30} width={30} className=" items-start object-contain" />
+        <Image src={image} alt={image} height={30} width={30} className=" items-start object-contain" unoptimized />
         <p className="text-white text-sm leading-6 font-light">{label?.toString()}</p>
     </div>
 }
