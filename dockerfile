@@ -1,42 +1,27 @@
-FROM node:18-alpine AS base
+FROM node:18-alpine AS builder
 
-# Disabling Telemetry
-ENV NEXT_TELEMETRY_DISABLED=1
-RUN apk add --no-cache libc6-compat curl
-
-FROM base AS deps
+# Set working directory
 WORKDIR /app
 
+# Copy package files and install dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
 
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy all files and build the project
 COPY . .
-
 RUN npm run build
 
-FROM base AS runner
-WORKDIR /app
+# Use a lightweight node image to serve the static files
+FROM node:18-alpine AS runner
 
-ENV NODE_ENV=production
+# Install http-server globally
+RUN npm install -g http-server
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Copy the generated static files from the builder stage
+COPY --from=builder /app/out /app/out
 
-COPY --from=builder /app/public ./public
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-USER nextjs
-
+# Expose port 3000
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
-CMD ["node", "server.js"]
+# Serve the static files using http-server
+CMD ["http-server", "/app/out", "-p", "3000"]

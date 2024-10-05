@@ -1,4 +1,5 @@
-
+'use server'
+import { cookies } from 'next/headers'
 
 // type PrevState = {error?:string,frontend_token?:string}|undefined|void
 
@@ -45,6 +46,22 @@
 
 
 
-// export const fetchFilteredMembers = async()=>{
-//     return 
-// }
+export const fetchFilteredMembers = async()=>{
+    const token = cookies().get('token')?.value
+    const email = cookies().get('email')?.value
+    const referral_code = cookies().get('referral_code')?.value
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads`,{
+        headers:{
+            'Origin':process.env.APP_ORIGIN as string,
+            'Authorization':token||''
+        },
+        body:JSON.stringify({
+            "lead": {
+              "email": email,
+              "referral_code": referral_code
+            }
+          })
+    })
+    const respJson = await resp.json()
+    return respJson;
+}

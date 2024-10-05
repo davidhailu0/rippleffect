@@ -13,7 +13,7 @@ const ReferalComponent = () => {
 
     return (
         <div className="bg-gradient-to-br from-[#0F2C40] to-[#8A6A60] h-auto w-full rounded-lg text-white flex flex-col justify-between font-sans">
-            <Image src={'/brochure.png'} alt="Referal Image" height={300} width={420} />
+            <Image src={'/brochure.png'} alt="Referal Image" height={300} width={420} unoptimized />
             <div>
                 <div className="flex items-center mt-4">
                     <button

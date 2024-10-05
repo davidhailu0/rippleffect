@@ -54,7 +54,7 @@ const EditProfile = () => {
 
 const DisplayCardInfo = ({ image, type, data }: { image: string, type: string, data: string }) => {
     return <div className="flex flex-col gap-4 items-center h-auto">
-        <Image src={image} alt={type} height={150} width={150} />
+        <Image src={image} alt={type} height={150} width={150} unoptimized />
         <p className="text-white text-lg font-bold text-center">{type}</p>
         <p className="text-white text-lg text-center">{data}</p>
     </div>

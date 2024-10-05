@@ -101,6 +101,7 @@ const TrainingCard = ({ title, icon, items, imageUrl, buttonText }: { title: str
                     height={48}
                     width={48}
                     className="object-cover w-full h-full"
+                    unoptimized
                 />
             </div>
 
