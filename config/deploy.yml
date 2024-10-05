@@ -41,8 +41,8 @@ builder:
 env:
   clear:
     NEXT_PUBLIC_APP_DOMAIN: https://cribcrm.com
-#   secret:
-#     - RAILS_MASTER_KEY
+  secret:
+    - NEXT_PUBLIC_APP_DOMAIN
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
