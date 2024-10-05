@@ -8,7 +8,7 @@ image: cribcrm/cribcrm-nate
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 49.13.236.191
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -20,11 +20,6 @@ proxy:
   ssl: true
   host: natewells.org
   app_port: 3000
-
-servers:
-  web:
-    - 49.13.236.191
-
 
 
 # Credentials for your image host.
