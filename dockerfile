@@ -9,6 +9,7 @@ RUN npm ci
 
 # Copy all files and build the project
 COPY . .
+COPY .env.build .env
 RUN npm run build
 
 # Use a lightweight node image to serve the static files
