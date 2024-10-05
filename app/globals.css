@@ -11,8 +11,8 @@ body {
   background: linear-gradient(to bottom right, #0F2C40, #8A6A60);
   height: 100vh;
   width: 100vw;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow: hidden;
+  /* overflow-y: scroll; */
 }
 abbr{
   text-decoration: none;

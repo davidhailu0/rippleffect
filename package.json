@@ -6,21 +6,25 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "export": "next export",
     "lint": "next lint",
     "deploy": "dotenv kamal deploy "
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
+    "js-cookie": "^3.0.5",
     "next": "14.2.13",
     "react": "^18",
     "react-calendar": "^5.0.0",
     "react-dom": "^18",
+    "react-spinners": "^0.14.1",
     "react-toastify": "^10.0.5",
     "rippleffect": "file:",
     "sharp": "^0.33.5",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

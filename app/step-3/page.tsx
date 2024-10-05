@@ -14,12 +14,12 @@ export default function Step3() {
             <p className="text-white font-bold text-xl">Please Select Your Country</p>
             <div className="md:mt-12 flex flex-col mx-auto justify-between items-center flex-grow">
                 <div className="flex mt-4">
-                    <Link href={'/step-3/us'}><Image src={'/us.png'} alt="US" height={100} width={100} /></Link>
-                    <Link href={'/step-3/eu'}><Image src={'/eu.png'} alt="EU" height={100} width={100} /></Link>
-                    <Link href={'/step-3/uk'}><Image src={'/uk.png'} alt="UK" height={100} width={100} /></Link>
-                    <Link href={'/step-3/canada'}><Image src={'/canada.png'} alt="CANADA" height={100} width={100} /></Link>
-                    <Link href={'/step-3/australia'}><Image src={'/australia.png'} alt="Australia" height={100} width={100} /></Link>
-                    <Link href={'/step-3/mexico'}><Image src={'/mexico.png'} alt="Mexico" height={100} width={100} /></Link>
+                    <Link href={'/step-3/us'}><Image src={'/us.png'} alt="US" height={100} width={100} unoptimized /></Link>
+                    <Link href={'/step-3/eu'}><Image src={'/eu.png'} alt="EU" height={100} width={100} unoptimized /></Link>
+                    <Link href={'/step-3/uk'}><Image src={'/uk.png'} alt="UK" height={100} width={100} unoptimized /></Link>
+                    <Link href={'/step-3/canada'}><Image src={'/canada.png'} alt="CANADA" height={100} width={100} unoptimized /></Link>
+                    <Link href={'/step-3/australia'}><Image src={'/australia.png'} alt="Australia" height={100} width={100} unoptimized /></Link>
+                    <Link href={'/step-3/mexico'}><Image src={'/mexico.png'} alt="Mexico" height={100} width={100} unoptimized /></Link>
                 </div>
                 <div>
                     <p className="text-white text-sm">&copy; {new Date().getFullYear()} RippleEffect. Allrights reserved</p>
