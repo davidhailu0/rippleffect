@@ -1,5 +1,5 @@
 # Name of your application. Used to uniquely configure containers.
-service: cribcrm-nate
+service: site-natewells
 
 # Name of the container image.
 image: cribcrm/cribcrm-nate
@@ -8,7 +8,7 @@ image: cribcrm/cribcrm-nate
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - 49.13.236.191
   # job:
   #   hosts:
   #     - 192.168.0.1
@@ -20,11 +20,6 @@ proxy:
   ssl: true
   host: natewells.org
   app_port: 3000
-
-servers:
-  web:
-    - 49.13.236.191
-
 
 
 # Credentials for your image host.
@@ -43,9 +38,9 @@ builder:
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
-# env:
-#   clear:
-#     DB_HOST: 192.168.0.2
+env:
+  clear:
+    NEXT_PUBLIC_APP_DOMAIN: https://cribcrm.com
 #   secret:
 #     - RAILS_MASTER_KEY
 
