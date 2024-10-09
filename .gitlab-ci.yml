@@ -57,13 +57,12 @@ production_deploy:
     - ssh-add ~/.ssh/id_rsa
     - ssh-keyscan $REMOTE_HOST >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
-    - export SSH_OPTIONS="-o BatchMode=yes -o RequestTTY=no"
-
     - ./bin/generate_commit_info.sh
     - cat commit_info.json
     - gem install kamal
     - kamal version
-    - kamal deploy
+    - kamal deploy --ssh-options="-o BatchMode=yes -o RequestTTY=no"
+    # - kamal deploy
     - echo 'Kamal deploy done.'
     - *notification_script
   only:
