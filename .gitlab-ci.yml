@@ -44,18 +44,14 @@ build_project:
 
 production_deploy:
   stage: deploy
+  image: ruby:latest
   environment: production
   variables:
     REMOTE_HOST: $REMOTE_HOST
   script:
-    - pwd
-    - ls -al .
-    - ls -al ./bin
-    - ls -al ./bin/generate_commit_info.sh
-    - whoami
-    - chmod +x ./bin/generate_commit_info.sh
     - ./bin/generate_commit_info.sh
     - cat commit_info.json
+    - gem install kamal
     - kamal version
     - kamal deploy
     - echo 'Kamal deploy done.'
