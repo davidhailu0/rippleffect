@@ -17,7 +17,7 @@ export default function Navbar() {
                         <Link href={'/step-3'}>Step 3</Link>
                         <Link href={'/training'}>Trainings</Link>
                         <Link href={'/funnels'}>Funnels</Link>
-                        <Link href={'/members'}>Members</Link>
+                        <Link href={'/leads'}>Leads</Link>
                         <Link href={'/leaderboard'}>Leaderboard</Link>
                         <Link href={'/account'}>Account</Link>
                     </div>
@@ -38,7 +38,7 @@ export default function Navbar() {
                 <Link href={'/step-3'}>Step 3</Link>
                 <Link href={'/training'}>Trainings</Link>
                 <Link href={'/funnels'}>Funnels</Link>
-                <Link href={'/members'}>Members</Link>
+                <Link href={'/leads'}>Leads</Link>
                 <Link href={'/leaderboard'}>Leaderboard</Link>
                 <Link href={'/account'}>Account</Link>
             </div>

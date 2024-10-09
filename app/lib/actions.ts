@@ -50,18 +50,48 @@ export const fetchFilteredMembers = async()=>{
     const token = cookies().get('token')?.value
     const email = cookies().get('email')?.value
     const referral_code = cookies().get('referral_code')?.value
-    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads`,{
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/?email=${email}&referral_code=${referral_code}`,{
         headers:{
-            'Origin':process.env.APP_ORIGIN as string,
+            'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             'Authorization':token||''
         },
-        body:JSON.stringify({
-            "lead": {
-              "email": email,
-              "referral_code": referral_code
-            }
-          })
     })
     const respJson = await resp.json()
+    if(respJson.leads){
+      return respJson.leads;
+    }
+    return [];
+}
+
+export const fetchAvailableDates = async(month:number,year:number)=>{
+  const token = cookies().get('token')?.value
+  const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities/?year=${year}&month=${month}`,{
+      headers:{
+          'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Authorization':token||''
+      },
+  })
+  const respJson = await resp.json()
+  // console.log(respJson.availabilities)
+  if(respJson.availabilities){
+    return respJson.availabilities;
+  }
+  return [];
+}
+
+export const fetchSurveys = async()=>{
+  const token = cookies().get('token')?.value
+  const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys`,{
+      headers:{
+          'Content-Type':'application/json',
+          'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Authorization':token||''
+      },
+  })
+  const respJson = await resp.json()
+  // console.log(respJson.availabilities)
+  if(respJson.questions){
     return respJson;
+  }
+  return [];
 }

@@ -4,7 +4,7 @@ import { roboto } from "./fonts/roboto";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Ripple Effect",
+  title: "Nate Wells",
   description: "Increase Your Income",
 };
 

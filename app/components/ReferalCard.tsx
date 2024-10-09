@@ -1,12 +1,13 @@
 'use client'
 import { useState } from "react";
+import Cookies from "js-cookie";
 import Image from "next/image";
 
 const ReferalComponent = () => {
     const [copied, setCopied] = useState(false);
 
     const copyToClipboard = () => {
-        navigator.clipboard.writeText('https://rippleeffectfree.com/funnel-2/?aff=Nate');
+        navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_ORIGIN}/?ref=${Cookies.get('referral_code')}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000); // reset after 2 seconds
     };
@@ -30,7 +31,7 @@ const ReferalComponent = () => {
                 </div>
                 {copied && <p className="text-green-400 text-sm mt-2">Link copied!</p>}
                 <p className=" text-black font-medium h-12 w-full bg-white self-center pt-2 text-center">
-                    https://rippleeffectfree.com/funnel-2/?aff=Nate
+                    {`${process.env.NEXT_PUBLIC_APP_ORIGIN}/?ref=${Cookies.get('referral_code')}`}
                 </p>
             </div>
         </div>

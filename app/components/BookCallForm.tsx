@@ -1,48 +1,24 @@
 'use client'
-import { ChangeEvent, MouseEventHandler, useState, MouseEvent, useEffect } from "react";
+import { ChangeEvent, MouseEventHandler, useState, MouseEvent } from "react";
 import Image from "next/image"
 import Calendar from "react-calendar";
-import { useRouter } from "next/navigation";
-import { getLastDayOfCurrentMonth } from "../util/dayutil";
 import TextField from "./TextField";
+import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import Cookies from "js-cookie";
+import { Availablities } from "../lib/models";
 
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-export default function BookCallForm() {
+export default function BookCallForm({ availablities, currentDate }: { availablities: Availablities, currentDate?: string | null }) {
+    const dateParams = useSearchParams();
+    const pathname = usePathname();
     const router = useRouter()
     const [value, onChange] = useState<Value>(null);
     const [timezone, setTimeZone] = useState<string>(Intl.DateTimeFormat().resolvedOptions().timeZone)
-    const [selectedTime, setSelectedTime] = useState<string | undefined>('')
+    const [selectedTime, setSelectedTime] = useState<{ start_time: string, end_time: string } | undefined>({ start_time: '', end_time: '' })
     const [timeSelected, setTimeSelected] = useState<boolean>(false)
-    const [availableTimes, setAvailableTimes] = useState<[string?]>([])
-    // console.log(value)
-    useEffect(() => {
-        async function fetchAvailableDates() {
-            const token = Cookies.get("token")
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Origin": window.location.origin,
-                    "Authorization": token as string
-                },
-                body: JSON.stringify({
-                    "timezone": "string",
-                    "year": new Date(value!.toString()).getFullYear(),
-                    "month": new Date(value!.toString()).getMonth() + 1
-                })
-            })
-            const respJson = await resp.json()
-            console.log(respJson)
-            setAvailableTimes([])
-        }
-        if (value != null) {
-            fetchAvailableDates()
-        }
-
-    }, [value])
 
     const handleTimezoneChange = (e: ChangeEvent<HTMLSelectElement>) => {
         setTimeZone(e.target.value)
@@ -50,25 +26,31 @@ export default function BookCallForm() {
 
     const goToQuestionnaire = (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        bookSession()
         router.push('/questionnaire')
     }
 
     const bookSession = async () => {
-        // const token = Cookies.get('token')
-        // const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/bookings`,
-        //     {
-        //         method: 'POST',
-        //         headers: {
-        //             'Origin': window.location.origin,
-        //             'Authorization': token || ''
-        //         },
-        //         body: JSON.stringify({
-        //             "timezone": timezone,
-        //             "start_time": selectedTime,
-        //             "end_time": "string"
-        //         })
-        //     })
+        const token = Cookies.get('token')
+        try {
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}api/v1/bookings`,
+                {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json",
+                        'Origin': window.location.origin,
+                        'Authorization': token || ''
+                    },
+                    body: JSON.stringify(selectedTime)
+                })
+            const respJson = await resp.json()
+            if (respJson.message) {
+                Cookies.set('booked', "true", { path: '/', expires: getDayDifference(selectedTime!.start_time, new Date()) })
+            }
+        }
+        catch (e) {
+            console.error(e)
+        }
+
     }
 
 
@@ -89,12 +71,23 @@ export default function BookCallForm() {
         </div>
         {!timeSelected && <p className="text-white font-bold text-xl py-4">Select Date and Time</p>}
         <div className="w-full flex flex-col md:flex-row">
-            {!timeSelected && <Calendar value={value} onChange={onChange} className={'bg-transparent text-white w-full md:w-1/2'} calendarType="gregory" minDate={new Date()} maxDate={getLastDayOfCurrentMonth()} tileDisabled={({ date }) => date.getDay() === 0} />}
-            {!timeSelected && <div className={`w-full md:w-1/2 ${value ? 'flex' : 'hidden'} flex-col text-white items-center gap-4 pt-3`}>
+            {!timeSelected && <Calendar value={value} activeStartDate={currentDate ? new Date(currentDate) : new Date()} onActiveStartDateChange={({ action, activeStartDate }) => {
+                if (action == 'next') {
+                    const params = new URLSearchParams(dateParams);
+                    params.set('date', activeStartDate?.toLocaleDateString('en-CA') || '');
+                    router.replace(`${pathname}?${params.toString()}`);
+                }
+            }} onChange={onChange} allowPartialRange={true} className={'bg-transparent text-white w-full md:w-1/2'} calendarType="gregory" minDate={new Date()} tileDisabled={({ activeStartDate, date }) =>
+                date.getMonth() != activeStartDate.getMonth() || !Object.keys(availablities).includes(date.toLocaleDateString('en-CA'))
+            } />}
+            {!timeSelected && value && <div className={`w-full md:w-1/2 grid grid-cols-2 text-white items-center gap-2 pt-3 pl-6`}>
                 {
-                    availableTimes.map((val) => <div key={val} className="flex gap-2 h-12 w-48 border border-[#d7b398] rounded-sm shadow-lg transition ease-in-out duration-200">
-                        <button className={`h-full ${selectedTime == val ? 'w-1/2' : 'w-full'} ${selectedTime == val ? 'bg-blue-400' : 'bg-transparent'} transition ease-in-out duration-500`} onClick={() => setSelectedTime(val)}>{val}</button>
-                        <button className={`w-1/2 ${selectedTime == val ? 'inline' : 'hidden'} h-full bg-[#d7b398] transition ease-in-out duration-500`} onClick={() => setTimeSelected(true)}>Select</button>
+                    availablities[new Date(value.toString()).toLocaleDateString('en-CA')].map(({ start_time, end_time }) => <div key={start_time} className="flex gap-2 h-12 w-48 border border-[#d7b398] rounded-sm shadow-lg transition ease-in-out duration-200">
+                        <button className={`h-full ${selectedTime?.start_time == start_time ? 'w-1/2' : 'w-full'} ${selectedTime?.start_time == start_time ? 'bg-blue-400' : 'bg-transparent'} transition ease-in-out duration-500`} onClick={() => setSelectedTime({ start_time, end_time })}>{`${new Date(start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - ${new Date(end_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}`}</button>
+                        <button className={`w-1/2 ${selectedTime?.start_time == start_time ? 'inline' : 'hidden'} h-full bg-[#d7b398] transition ease-in-out duration-500`} onClick={() => {
+                            bookSession()
+                            setTimeSelected(true)
+                        }}>Select</button>
                     </div>)
                 }
             </div>}
@@ -159,4 +152,10 @@ function ScheduleMeetingRegistration({ callBack }: { callBack: MouseEventHandler
         </div>
         <button onClick={callBack} type="submit" className="col-span-2 rounded-xl bg-[#d7b398] h-16 w-52 justify-self-end">Schedule Meeting</button>
     </form>
+}
+
+function getDayDifference(date1: Date | string, date2: Date | string): number {
+    const msInDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
+    const diffInMs = Math.abs(new Date(date2).getTime() - new Date(date1).getTime()); // Absolute difference in milliseconds
+    return Math.floor(diffInMs / msInDay); // Convert to days
 }
