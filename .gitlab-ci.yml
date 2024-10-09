@@ -39,8 +39,6 @@ build_project:
   script:
     - npm install
     - npm run build
-  # TODO _ REMOVE THIS ONCE PIPELINE WORKS!!!
-  when: manual
 
 
 production_deploy:
@@ -62,10 +60,9 @@ production_deploy:
     - gem install kamal
     - kamal version
     - kamal deploy --ssh-options="-o BatchMode=yes -o RequestTTY=no"
-    # - kamal deploy
     - echo 'Kamal deploy done.'
     - *notification_script
   only:
     - main
-  # when: manual
+  when: manual
 
