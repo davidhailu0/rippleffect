@@ -1,19 +1,25 @@
+'use client'
+import { useEffect, useState } from "react";
+import { fetchFilteredMembers } from "../lib/actions";
 import { Lead } from "../lib/models";
 
-export default async function LeadsTable(
-    {
-        members
-    }: {
-        members: [Lead?]
-    }
-) {
 
+export default function LeadsTable(
+) {
+    const [leads, setLeads] = useState<Lead[]>([])
+    useEffect(() => {
+        async function fetchLeads() {
+            const leads: Lead[] = await fetchFilteredMembers()
+            setLeads(leads)
+        }
+        fetchLeads()
+    }, [])
     return (
         <div className="mt-6 flow-root w-full bg-transparent">
             <div className="inline-block min-w-full align-middle">
                 <div className="rounded-lg bg-transparent p-2 md:pt-0">
                     <div className="md:hidden text-white">
-                        {members?.map((member) => (
+                        {leads?.map((member) => (
                             <div
                                 key={member!.id}
                                 className="mb-2 w-full rounded-md bg-transparent p-4"
@@ -75,7 +81,7 @@ export default async function LeadsTable(
                             </tr>
                         </thead>
                         <tbody className="bg-transparent text-white">
-                            {members?.map((member) => (
+                            {leads?.map((member) => (
                                 <tr
                                     key={member!.id}
                                     className="w-full border-b py-3 h-20 border-y [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"

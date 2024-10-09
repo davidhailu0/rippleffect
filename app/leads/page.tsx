@@ -1,11 +1,8 @@
 import { lato } from "@/app/fonts/lato";
 import Navbar from "../components/Navbar";
 import LeadsTable from "../components/table";
-import { Lead } from "../lib/models";
-import { fetchFilteredMembers } from "../lib/actions";
 
-export default async function Leads() {
-    const leads: [Lead?] = await fetchFilteredMembers()
+export default function Leads() {
 
     return (
         <>
@@ -14,7 +11,7 @@ export default async function Leads() {
                 <p className="text-xl md:text-4xl font-bold text-white">Your Lead List</p>
                 <p className={`${lato.className} text-white md:text-center text-lg px-0 leading-7 md:text-lg font-medium md:leading-[23.4px]`}>Nate|nate@natewells.co.uk|Mar 2024</p>
                 <p className="text-white text-lg">Referrer: No Referrer</p>
-                <LeadsTable members={leads} />
+                <LeadsTable />
             </div>
         </>
     );

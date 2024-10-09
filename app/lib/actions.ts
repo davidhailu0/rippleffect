@@ -1,5 +1,5 @@
-'use server'
-import { cookies } from 'next/headers'
+'use client'
+import Cookies from 'js-cookie'
 
 // type PrevState = {error?:string,frontend_token?:string}|undefined|void
 
@@ -47,11 +47,12 @@ import { cookies } from 'next/headers'
 
 
 export const fetchFilteredMembers = async()=>{
-    const token = cookies().get('token')?.value
-    const email = cookies().get('email')?.value
-    const referral_code = cookies().get('referral_code')?.value
+    const token = Cookies.get('token')
+    const email = Cookies.get('email')
+    const referral_code = Cookies.get('referral_code')
     const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/?email=${email}&referral_code=${referral_code}`,{
         headers:{
+            'Content-Type':'application/json',
             'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             'Authorization':token||''
         },
@@ -64,9 +65,10 @@ export const fetchFilteredMembers = async()=>{
 }
 
 export const fetchAvailableDates = async(month:number,year:number)=>{
-  const token = cookies().get('token')?.value
+  const token = Cookies.get('token')
   const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities/?year=${year}&month=${month}`,{
       headers:{
+          'Content-Type':'application/json',
           'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Authorization':token||''
       },
@@ -80,7 +82,7 @@ export const fetchAvailableDates = async(month:number,year:number)=>{
 }
 
 export const fetchSurveys = async()=>{
-  const token = cookies().get('token')?.value
+  const token = Cookies.get('token')
   const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys`,{
       headers:{
           'Content-Type':'application/json',
