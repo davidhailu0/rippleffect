@@ -38,6 +38,8 @@ build_project:
   script:
     - npm install
     - npm run build
+  # TODO _ REMOVE THIS ONCE PIPELINE WORKS!!!
+  when: manual
 
 
 production_deploy:
@@ -47,6 +49,7 @@ production_deploy:
   script:
     - pwd
     - ls -al .
+    - ls -al ./bin
     - ./bin/generate_commit_info.sh
     - cat commit_info.json
     - kamal version
