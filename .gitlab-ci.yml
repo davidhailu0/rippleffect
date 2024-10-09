@@ -45,6 +45,8 @@ production_deploy:
   variables:
     REMOTE_HOST: $REMOTE_HOST
   script:
+    - pwd
+    - ls -al .
     - ./bin/generate_commit_info.sh
     - cat commit_info.json
     - kamal version
