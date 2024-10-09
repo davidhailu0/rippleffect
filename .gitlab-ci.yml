@@ -1,16 +1,14 @@
-# GitLab CI configuration for Next.js 14 deployment to S3 bucket cliptill.com
-# Necessary variables:
-# region: eu-central-1
-# bucketname: cliptill.com
-# DEPLOY_NOTIFICATION_TOKEN
-# DEPLOY_NOTIFICATION_RECIPIENTS
-
 default:
   image: node:18-alpine
 
 stages:
   - build
   - deploy
+
+variables:
+  DEPLOY_NOTIFICATION_ENDPOINT: "https://n0l5yvafvi.execute-api.us-east-1.amazonaws.com/default/deploy-notifications"
+  DEPLOY_NOTIFICATION_RECIPIENTS: till@tillcarlos.com
+
 
 # Notification script for deployment updates
 .notification_script: &notification_script
@@ -42,14 +40,6 @@ build_project:
     - npm run build
 
 
-# Optional: Notifications after deploy
-deploy_notification:
-  stage: deploy
-  script: *notification_script
-  only:
-    - main
-
-
 production_deploy:
   stage: deploy
   variables:
@@ -63,5 +53,5 @@ production_deploy:
     - *notification_script
   only:
     - main
-  when: manual
+  # when: manual
 
