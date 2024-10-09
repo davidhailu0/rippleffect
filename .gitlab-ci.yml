@@ -53,6 +53,7 @@ production_deploy:
     - cat commit_info.json
     - gem install kamal
     - kamal version
+    - export SSH_OPTIONS="-o BatchMode=yes -o RequestTTY=no"
     - kamal deploy
     - echo 'Kamal deploy done.'
     - *notification_script
