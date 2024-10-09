@@ -38,11 +38,12 @@ builder:
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 #
-env:
-  clear:
-    NEXT_PUBLIC_APP_DOMAIN: https://cribcrm.com
+# env:
+#   clear:
+#     No. That below variable gets copied in docker build step
+#     NEXT_PUBLIC_APP_DOMAIN: https://cribcrm.com
 #   secret:
-#     - RAILS_MASTER_KEY
+#     - NEXT_PUBLIC_APP_DOMAIN
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.

@@ -1,19 +1,15 @@
-# GitLab CI configuration for Next.js 14 deployment to S3 bucket cliptill.com
-# Necessary variables:
-# region: eu-central-1
-# bucketname: cliptill.com
-# DEPLOY_NOTIFICATION_TOKEN
-# DEPLOY_NOTIFICATION_RECIPIENTS
-
 default:
-  image: docker:24.0.7
-  services:
-    - docker:24.0.7-dind
+  image: node:18-alpine
 
 stages:
-  - install
   - build
   - deploy
+
+variables:
+  DEPLOY_NOTIFICATION_ENDPOINT: "https://n0l5yvafvi.execute-api.us-east-1.amazonaws.com/default/deploy-notifications"
+  DEPLOY_NOTIFICATION_RECIPIENTS: till@tillcarlos.com
+  REMOTE_HOST: 49.13.236.191
+
 
 # Notification script for deployment updates
 .notification_script: &notification_script
@@ -36,57 +32,37 @@ stages:
           "recipients": "'$DEPLOY_NOTIFICATION_RECIPIENTS'"
         }'
 
-# Stage 1: Install dependencies
-install_dependencies:
-  stage: install
-  image: node:18-alpine
-  script:
-    # Install libc6-compat and install dependencies based on the package manager
-    - apk add --no-cache libc6-compat
-    - >
-      if [ -f yarn.lock ]; then yarn --frozen-lockfile;
-      elif [ -f package-lock.json ]; then npm ci;
-      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile;
-      else echo "Lockfile not found." && exit 1;
-      fi
-  artifacts:
-    paths:
-      - node_modules/
-
 # Stage 2: Build the Next.js project
 build_project:
   stage: build
   image: node:18-alpine
   script:
-    - >
-      if [ -f yarn.lock ]; then yarn run build;
-      elif [ -f package-lock.json ]; then npm run build;
-      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build;
-      else echo "Lockfile not found." && exit 1;
-      fi
-  artifacts:
-    paths:
-      - .next/standalone/
-      - .next/static/
-      - public/
-  only:
-    - main
+    - npm install
+    - npm run build
 
-# Stage 3: Deploy to S3
-deploy_to_s3:
+
+production_deploy:
   stage: deploy
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  image: khanhhq2k/docker-ruby:latest
+  environment: production
   script:
-    - aws --version
-    - aws s3 rm s3://$S3_BUCKET --recursive  # Clear the existing content in the S3 bucket
-    - aws s3 sync .next/static s3://$S3_BUCKET/_next/static  # Sync the static Next.js assets
-    - aws s3 sync public/ s3://$S3_BUCKET/public  # Sync the public directory
+    - mkdir -p ~/.ssh
+    - rm -f commit_info.json
+    - eval $(ssh-agent -s)
+    - '[ -z "$SSH_PRIVATE_KEY_BASE64" ] && { echo "Error: SSH_PRIVATE_KEY_BASE64 is empty."; exit 1; }'
+    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan $REMOTE_HOST >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - ./bin/generate_commit_info.sh
+    - cat commit_info.json
+    - gem install kamal
+    - kamal version
+    - kamal deploy --ssh-options="-o BatchMode=yes -o RequestTTY=no"
+    - echo 'Kamal deploy done.'
+    - *notification_script
   only:
     - main
+  when: manual
 
-# Optional: Notifications after deploy
-deploy_notification:
-  stage: deploy
-  script: *notification_script
-  only:
-    - main
