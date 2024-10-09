@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Function to determine if running in CI
 is_ci_environment() {
