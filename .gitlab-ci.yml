@@ -44,7 +44,7 @@ build_project:
 
 production_deploy:
   stage: deploy
-  image: ruby:latest
+  image: khanhhq2k/docker-ruby:latest
   environment: production
   variables:
     REMOTE_HOST: $REMOTE_HOST
