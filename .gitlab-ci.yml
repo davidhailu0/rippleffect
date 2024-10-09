@@ -50,6 +50,7 @@ production_deploy:
     - pwd
     - ls -al .
     - ls -al ./bin
+    - ls -al ./bin/generate_commit_info.sh
     - ./bin/generate_commit_info.sh
     - cat commit_info.json
     - kamal version
