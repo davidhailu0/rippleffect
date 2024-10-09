@@ -44,6 +44,7 @@ build_project:
 
 production_deploy:
   stage: deploy
+  environment: production
   variables:
     REMOTE_HOST: $REMOTE_HOST
   script:
