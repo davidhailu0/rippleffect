@@ -47,8 +47,6 @@ production_deploy:
   stage: deploy
   image: khanhhq2k/docker-ruby:latest
   environment: production
-  variables:
-    REMOTE_HOST: $REMOTE_HOST
   script:
     - mkdir -p ~/.ssh
     - eval $(ssh-agent -s)
