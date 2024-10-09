@@ -1,38 +1,35 @@
-// import { fetchFilteredMembers } from '../lib/actions';
+'use client'
+import { useEffect, useState } from "react";
+import { fetchFilteredMembers } from "../lib/actions";
+import { Lead } from "../lib/models";
 
-export default async function MembersTable(
-    //     {
-    //     currentPage,
-    // }: {
-    //     currentPage: number;
-    // }
+
+export default function LeadsTable(
 ) {
-    const members = [{
-        id: 1,
-        name: "Abebe",
-        email: "Abe@gmail.com",
-        signupdate: 'Mar 2024',
-        enegicId: '01',
-        URLScheduler: '',
-        StatusScheduler: false,
-    }]
-
+    const [leads, setLeads] = useState<Lead[]>([])
+    useEffect(() => {
+        async function fetchLeads() {
+            const leads: Lead[] = await fetchFilteredMembers()
+            setLeads(leads)
+        }
+        fetchLeads()
+    }, [])
     return (
         <div className="mt-6 flow-root w-full bg-transparent">
             <div className="inline-block min-w-full align-middle">
                 <div className="rounded-lg bg-transparent p-2 md:pt-0">
                     <div className="md:hidden text-white">
-                        {members?.map((member) => (
+                        {leads?.map((member) => (
                             <div
-                                key={member.id}
+                                key={member!.id}
                                 className="mb-2 w-full rounded-md bg-transparent p-4"
                             >
                                 <div className="flex items-center justify-between border-b pb-4">
                                     <div>
                                         <div className="mb-2 flex items-center">
-                                            <p>{member.name}</p>
+                                            <p>{member!.name}</p>
                                         </div>
-                                        <p className="text-base">{member.email}</p>
+                                        <p className="text-base">{member!.email_address}</p>
                                     </div>
                                     {/* <InvoiceStatus status={invoice.status} /> */}
                                 </div>
@@ -84,22 +81,22 @@ export default async function MembersTable(
                             </tr>
                         </thead>
                         <tbody className="bg-transparent text-white">
-                            {members?.map((member) => (
+                            {leads?.map((member) => (
                                 <tr
-                                    key={member.id}
+                                    key={member!.id}
                                     className="w-full border-b py-3 h-20 border-y [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                                 >
                                     <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                                        <p>{member.id}</p>
+                                        <p>{member!.id}</p>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
-                                        <p>{member.name}</p>
+                                        <p>{member!.name}</p>
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
-                                        {member.email}
+                                        {member!.email_address}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
-                                        {member.signupdate}
+                                        {member!.created_at}
                                     </td>
                                     <td className="whitespace-nowrap px-3 py-3">
                                         {/* {formatDateToLocal(invoice.date)} */}

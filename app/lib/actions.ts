@@ -1,5 +1,5 @@
-'use server'
-import { cookies } from 'next/headers'
+'use client'
+import Cookies from 'js-cookie'
 
 // type PrevState = {error?:string,frontend_token?:string}|undefined|void
 
@@ -47,21 +47,53 @@ import { cookies } from 'next/headers'
 
 
 export const fetchFilteredMembers = async()=>{
-    const token = cookies().get('token')?.value
-    const email = cookies().get('email')?.value
-    const referral_code = cookies().get('referral_code')?.value
-    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads`,{
+    const token = Cookies.get('token')
+    const email = Cookies.get('email')
+    const referral_code = Cookies.get('referral_code')
+    const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/?email=${email}&referral_code=${referral_code}`,{
         headers:{
-            'Origin':process.env.APP_ORIGIN as string,
+            'Content-Type':'application/json',
+            'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             'Authorization':token||''
         },
-        body:JSON.stringify({
-            "lead": {
-              "email": email,
-              "referral_code": referral_code
-            }
-          })
     })
     const respJson = await resp.json()
+    if(respJson.leads){
+      return respJson.leads;
+    }
+    return [];
+}
+
+export const fetchAvailableDates = async(month:number,year:number)=>{
+  const token = Cookies.get('token')
+  const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities/?year=${year}&month=${month}`,{
+      headers:{
+          'Content-Type':'application/json',
+          'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Authorization':token||''
+      },
+  })
+  const respJson = await resp.json()
+  // console.log(respJson.availabilities)
+  if(respJson.availabilities){
+    return respJson.availabilities;
+  }
+  return [];
+}
+
+export const fetchSurveys = async()=>{
+  const token = Cookies.get('token')
+  const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys`,{
+      headers:{
+          'Content-Type':'application/json',
+          'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Authorization':token||''
+      },
+  })
+  const respJson = await resp.json()
+  // console.log(respJson.availabilities)
+  if(respJson.questions){
     return respJson;
+  }
+  return [];
 }

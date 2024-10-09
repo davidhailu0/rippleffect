@@ -1,7 +1,7 @@
 import { lato } from "@/app/fonts/lato";
 import Image from "next/image";
 import VideoPlayer from "@/app/components/videoComponent";
-import SignUpForm from "@/app/components/SignUp";
+import SignUpForm from "./components/SignUp";
 
 export default function Home({
   params,

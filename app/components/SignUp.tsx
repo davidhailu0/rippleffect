@@ -6,6 +6,7 @@ import { ScaleLoader } from "react-spinners";
 import clsx from "clsx";
 import Cookies from 'js-cookie';
 import "react-toastify/dist/ReactToastify.css";
+import CodeInput from "./CodeInput";
 
 // Define the shape of the API response state
 type State = {
@@ -19,7 +20,7 @@ const showToast = (message: string, type: "error" | "success") => {
     if (type === "error") {
         toast.error(message, { position: "top-center" });
     } else {
-        toast.success(message, { position: 'top-center' });
+        toast.warn(message, { position: 'top-center', icon: false });
     }
 };
 
@@ -55,7 +56,7 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
             if (jsonResp.error || jsonResp.errors) {
                 showToast(jsonResp.error || jsonResp.errors, "error");
             } else if (jsonResp.frontend_token) {
-                showToast("Please check your email", "success");
+                showToast("Please check your emails and then enter the 6-digit code.", "success");
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
@@ -88,7 +89,7 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
                 Cookies.set('token', json.login_token, { expires: 1, path: '/', sameSite: 'Strict' })
                 Cookies.set('referral_code', json.referral_code, { expires: 1, path: '/', sameSite: 'Strict' })
                 Cookies.set('email', email, { expires: 1, path: '/', sameSite: 'Strict' })
-                router.push("/step-2");
+                router.push("/step-1");
             }
             else {
                 showToast("Incorrect Confirmation Token, Please try again.", "error");
@@ -106,7 +107,7 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
 
     return (
         <>
-            <ToastContainer />
+            <ToastContainer autoClose={false} />
             <form className="flex flex-col w-11/12 md:w-1/3 gap-4 mx-auto">
                 <TextField
                     name="email"
@@ -115,13 +116,7 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
                     onChange={setEmail}
                     hidden={Boolean(state.frontend_token)}
                 />
-                <TextField
-                    name="token"
-                    type="text"
-                    placeholder="Confirmation Token"
-                    onChange={setConfirmationCode}
-                    hidden={!showConfirmationField}
-                />
+                {showConfirmationField && <CodeInput confirmationCode={confirmationCode} setConfirmationCode={setConfirmationCode} />}
                 {showConfirmationField && (
                     <button
                         type="button"
@@ -149,5 +144,5 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
 
 
 function TextField({ name, type, placeholder, hidden, onChange }: { name: string, type?: string, placeholder: string, hidden?: boolean, onChange: (arg: string) => void }) {
-    return <input name={name} type={type ? type : 'text'} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className={`h-12 text-white bg-transparent outline-none border-b-[1px] border-b-white focus:outline-1 focus:outline-black focus:border-b-0 placeholder:text-white ${hidden && 'hidden'}`} />
+    return <input name={name} type={type ? type : 'text'} onChange={(e) => { onChange(e.target.value); localStorage.setItem(name, e.target.value) }} placeholder={placeholder} className={`h-12 text-white bg-transparent outline-none border-b-[1px] border-b-white focus:outline-1 focus:outline-black focus:border-b-0 placeholder:text-white ${hidden && 'hidden'}`} />
 }
