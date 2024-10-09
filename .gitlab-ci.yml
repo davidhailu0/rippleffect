@@ -6,12 +6,9 @@
 # DEPLOY_NOTIFICATION_RECIPIENTS
 
 default:
-  image: docker:24.0.7
-  services:
-    - docker:24.0.7-dind
+  image: node:18-alpine
 
 stages:
-  - install
   - build
   - deploy
 
@@ -36,53 +33,14 @@ stages:
           "recipients": "'$DEPLOY_NOTIFICATION_RECIPIENTS'"
         }'
 
-# Stage 1: Install dependencies
-install_dependencies:
-  stage: install
-  image: node:18-alpine
-  script:
-    # Install libc6-compat and install dependencies based on the package manager
-    - apk add --no-cache libc6-compat
-    - >
-      if [ -f yarn.lock ]; then yarn --frozen-lockfile;
-      elif [ -f package-lock.json ]; then npm ci;
-      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile;
-      else echo "Lockfile not found." && exit 1;
-      fi
-  artifacts:
-    paths:
-      - node_modules/
-
 # Stage 2: Build the Next.js project
 build_project:
   stage: build
   image: node:18-alpine
   script:
-    - >
-      if [ -f yarn.lock ]; then yarn run build;
-      elif [ -f package-lock.json ]; then npm run build;
-      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build;
-      else echo "Lockfile not found." && exit 1;
-      fi
-  artifacts:
-    paths:
-      - .next/standalone/
-      - .next/static/
-      - public/
-  only:
-    - main
+    - npm install
+    - npm run build
 
-# Stage 3: Deploy to S3
-deploy_to_s3:
-  stage: deploy
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
-  script:
-    - aws --version
-    - aws s3 rm s3://$S3_BUCKET --recursive  # Clear the existing content in the S3 bucket
-    - aws s3 sync .next/static s3://$S3_BUCKET/_next/static  # Sync the static Next.js assets
-    - aws s3 sync public/ s3://$S3_BUCKET/public  # Sync the public directory
-  only:
-    - main
 
 # Optional: Notifications after deploy
 deploy_notification:
@@ -90,3 +48,20 @@ deploy_notification:
   script: *notification_script
   only:
     - main
+
+
+production_deploy:
+  stage: deploy
+  variables:
+    REMOTE_HOST: $REMOTE_HOST
+  script:
+    - ./bin/generate_commit_info.sh
+    - cat commit_info.json
+    - kamal version
+    - kamal deploy
+    - echo 'Kamal deploy done.'
+    - *notification_script
+  only:
+    - main
+  when: manual
+
