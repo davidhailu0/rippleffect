@@ -107,7 +107,7 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
 
     return (
         <>
-            <ToastContainer autoClose={false} />
+            <ToastContainer />
             <form className="flex flex-col w-11/12 md:w-1/3 gap-4 mx-auto">
                 <TextField
                     name="email"

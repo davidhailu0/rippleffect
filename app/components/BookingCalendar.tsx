@@ -97,15 +97,15 @@ const BookingCalendar: React.FC = () => {
     return (
         <>
             {!showRegistration ?
-                <div className="flex space-x-4 p-6 bg-gray-900 text-white h-auto w-2/3 rounded-md">
-                    <div className="w-1/4 border-l-gray-500">
+                <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-gray-900 text-white h-auto w-11/12 md:w-2/3 rounded-md">
+                    <div className="w-full md:w-1/4 border-l-gray-500">
                         <h2 className="text-lg font-semibold">60 Min Meeting</h2>
                         <p className="mt-2 text-gray-400">60m</p>
                         <p className="my-2">🗓️ Google Meet</p>
                         <TimezoneSelect selectedTimezone={selectedTimezone} handleTimezoneChange={handleTimezoneChange} />
                     </div>
 
-                    <div className="w-1/2">
+                    <div className="w-full mx-0 md:w-1/2">
                         <Calendar value={value} calendarType="gregory"
                             tileContent={({ date }) => date.toLocaleDateString() === new Date().toLocaleDateString() ? <div className='h-2 w-2 absolute left-[44%] rounded-full bg-white'></div> : null}
                             activeStartDate={currentDate}
@@ -119,7 +119,7 @@ const BookingCalendar: React.FC = () => {
                         />
                     </div>
 
-                    <div className="w-1/4 pb-4">
+                    <div className="w-full md:w-1/4 pb-4">
                         <div className="flex justify-between mb-4 items-center">
                             <p className='text-white'><span className='font-bold text-lg'>{days[new Date(value!.toString()).getDay()]}</span> {new Date(value!.toString()).getDate()}</p>
                             <div className='p-2 border border-gray-500 rounded-lg flex gap-x-1'>
