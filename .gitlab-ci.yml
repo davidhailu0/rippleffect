@@ -59,6 +59,7 @@ production_deploy:
     - cat commit_info.json
     - gem install kamal
     - kamal version
+    - ssh root@49.13.236.191 'echo "hello world"'
     - kamal deploy
     - echo 'Kamal deploy done.'
     - *notification_script
