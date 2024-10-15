@@ -1,7 +1,7 @@
 'use client'
 import Image from "next/image"
 import { useRouter } from "next/navigation"
-import { useState, useEffect, ChangeEvent } from "react"
+import { useState, useEffect, ChangeEvent, useRef } from "react"
 import { ClipLoader } from "react-spinners"
 import Cookies from "js-cookie"
 import { fetchSurveys } from "../lib/actions"
@@ -14,6 +14,9 @@ export default function DisplayQuestion() {
     const [selectedValue, setSelectedValue] = useState<Answer | null>(null)
     const [answers, setAnswer] = useState<Answer[]>([])
     const [index, setIndex] = useState(0)
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [lastTime, setLastTime] = useState(0);
+    const [show, setShow] = useState(false)
     const router = useRouter()
 
     useEffect(() => {
@@ -23,6 +26,42 @@ export default function DisplayQuestion() {
         }
         fetchRequest()
     }, [])
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            const videoElement = videoRef.current;
+            if (videoElement) {
+                if (document.visibilityState === "hidden" && !videoElement.paused) {
+                    videoElement.pause();
+                }
+            }
+        };
+
+        const handlePlayPause = () => {
+            const videoElement = videoRef.current;
+            if (videoElement) {
+                if (document.visibilityState === "visible") {
+                    videoElement.play();
+                } else {
+                    videoElement.pause();
+                }
+            }
+        };
+
+        // Detect tab visibility changes
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+        document.addEventListener("visibilitychange", handlePlayPause);
+
+        // Prevent context menu (right-click)
+        const handleContextMenu = (e: MouseEvent) => e.preventDefault();
+        document.addEventListener("contextmenu", handleContextMenu);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+            document.removeEventListener("visibilitychange", handlePlayPause);
+            document.removeEventListener("contextmenu", handleContextMenu);
+        };
+    }, []);
     if (!surveys) return <ClipLoader color="#fff" size={70} className="h-10 w-10" />;
 
     if (surveys.questions.length === 0) {
@@ -41,7 +80,7 @@ export default function DisplayQuestion() {
     const answerQuestion = () => {
         const email = Cookies.get('email')
         const token = Cookies.get('token')
-        fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}api/v1/surveys/${surveys.id}/answer`, {
+        fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys/${surveys.id}/answer`, {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
@@ -54,6 +93,15 @@ export default function DisplayQuestion() {
             })
         })
     }
+
+    const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+        const currentTime = e.currentTarget.currentTime;
+        if (currentTime - lastTime > 2) { // Adjust tolerance if necessary
+            e.currentTarget.currentTime = lastTime;
+        } else {
+            setLastTime(currentTime);
+        }
+    };
 
     const goToNext = () => {
         if (index + 1 < surveys.questions.length) {
@@ -68,18 +116,25 @@ export default function DisplayQuestion() {
             return
         }
         answerQuestion()
+        Cookies.set('questionFinished', 'true', { path: '/', expires: 365 })
         router.replace('/step-3')
+    }
+
+    const onVideoEnd = () => {
+        setShow(true)
     }
 
     return <div className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
         <div className="h-auto w-full mx-auto flex flex-col gap-7 bg-white px-8 py-10">
-            <Image src="/logo.png" alt="logo.png" height={106} width={100} className="mx-auto" unoptimized />
-            <video controls autoPlay className="h-[300px] md:h-[500px]"></video>
-            <p className="text-blue-400">
+            <Image src="/logo.png" alt="logo.png" height={95} width={90} className="mx-auto" unoptimized />
+            <video autoPlay ref={videoRef} id="videoPlayer" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} controlsList="nodownload nofastforward" className={"h-[300px] md:h-[500px]"}>
+                {/* <source className="h-full" type="video/mp4" /> */}
+            </video>
+            {surveys.questions[index]?.question_type === 'multiple_choice' && <p className={`text-blue-400 ${!show && 'hidden'}`}>
                 {surveys.questions[index]?.title}
-            </p>
+            </p>}
             {surveys.questions[index]?.question_type === 'multiple_choice' ?
-                <div className="grid grid-cols-4 space-x-3">
+                <div className={`grid grid-cols-4 space-x-3 ${!show && 'hidden'}`}>
                     {Object.entries(surveys.questions[index].choices).map(([key, value]) => (
                         <label key={key} className="inline-flex items-center">
                             <input
@@ -94,10 +149,23 @@ export default function DisplayQuestion() {
                         </label>
                     ))}
                 </div>
-                : <input className="outline-none border-b border-b-black " type="text" value={selectedValue?.response} onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange({ question_id: surveys.questions[index].id, response: e.target.value })} />}
+                : <TextField label={surveys.questions[index]?.title} placeholder={surveys.questions[index]?.title} value={selectedValue?.response} onChange={(e: ChangeEvent<HTMLInputElement>) => handleOnChange({ question_id: surveys.questions[index].id, response: e.target.value })} hidden={!show} />}
         </div>
         <div className="w-full h-16 bg-blue-500 flex justify-end items-center">
             <button onClick={goToNext} className="text-white h-full w-48 bg-blue-700">Next -&gt;</button>
         </div>
     </div>
+}
+
+function TextField({ label, value, type, placeholder, hidden, onChange }: { label: string, value?: string, type?: string, placeholder: string, hidden?: boolean, onChange: (arg: ChangeEvent<HTMLInputElement>) => void }) {
+    return <div className={`relative w-full max-w-xs mx-auto ${hidden && 'hidden'}`}>
+        <input type={type ? type : 'text'} value={value}
+            className="text-black peer w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent placeholder-transparent transition-all duration-200"
+            placeholder={placeholder} onChange={onChange} />
+        <label htmlFor="fancy-input"
+            className="absolute left-4 -top-2.5 text-gray-400 text-sm transition-all duration-200 peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-4 peer-focus:text-sm peer-focus:text-white">
+            {label}
+        </label>
+    </div>
+
 }

@@ -32,7 +32,7 @@ export default function BookCallForm({ availablities, currentDate }: { availabli
     const bookSession = async () => {
         const token = Cookies.get('token')
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}api/v1/bookings`,
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/bookings`,
                 {
                     method: 'POST',
                     headers: {
@@ -56,7 +56,7 @@ export default function BookCallForm({ availablities, currentDate }: { availabli
 
     return <div className="h-auto w-full md:w-2/3 bg-[#4B7A87] rounded flex flex-col md:mx-auto p-6 mx-2">
         <div className="h-20 w-20 bg-white rounded-full">
-            <Image src='/logo.png' alt='logo' height={127} width={120} unoptimized />
+            <Image src='/logo.png' alt='logo' height={95} width={90} unoptimized />
         </div>
         <p className="text-white font-bold text-xl my-4">Booking Plan Call</p>
         <div className="border border-white rounded bg-transparent h-auto w-full flex flex-col gap-2 py-6 px-2 md:px-4">
@@ -123,28 +123,28 @@ export default function BookCallForm({ availablities, currentDate }: { availabli
 
 function ImageWithLabel({ image, label }: { image: string, label: string | Value }) {
     return <div className="flex bg-transparent items-start gap-2">
-        <Image src={image} alt={image} height={30} width={30} className=" items-start object-contain" unoptimized />
+        <Image src={image} alt={image} height={20} width={20} className=" items-start object-contain" unoptimized />
         <p className="text-white text-sm leading-6 font-light">{label?.toString()}</p>
     </div>
 }
 
 function ScheduleMeetingRegistration({ callBack }: { callBack: MouseEventHandler<HTMLButtonElement> }) {
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     return <form className="grid grid-cols-2 grid-rows-4 gap-x-10 gap-y-6 text-white">
         <div className="flex flex-col ">
-            <label htmlFor="firstName">First Name</label>
-            <TextField name="firstName" placeholder="First Name" />
+            <TextField label="First Name" value={firstName} placeholder="First Name" onChange={setFirstName} />
         </div>
         <div className="flex flex-col">
-            <label htmlFor="lastName">Last Name</label>
-            <TextField name="lastName" placeholder="Last Name" />
+            <TextField label="Last Name" value={lastName} placeholder="Last Name" onChange={setLastName} />
         </div>
         <div className="flex flex-col">
-            <label htmlFor="email">Email</label>
-            <TextField name="email" placeholder="Email" type="email" />
+            <TextField label="Email" value={email} placeholder="Email" type="email" onChange={setEmail} />
         </div>
         <div className="flex flex-col">
-            <label htmlFor="phone">Phone</label>
-            <TextField name="phone" placeholder="Phone" type="tel" />
+            <TextField label="Phone" value={phone} placeholder="Phone" type="tel" onChange={setPhone} />
         </div>
         <div className="flex col-span-2 items-start gap-3">
             <input name="lastName" type="checkbox" className="mt-2" />

@@ -1,15 +1,35 @@
 'use client'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { lato } from "@/app/fonts/lato";
 import { InformationCircleIcon, PencilIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import clsx from 'clsx'
-import Navbar from "../components/Navbar";
+import Navbar from "@/app/components/Navbar";
+import Logo from "@/app/components/LogoComponent";
+import { ToastContainer, toast } from "react-toastify";
+import Cookies from 'js-cookie';
 
 export default function Members() {
     const [active, setActive] = useState<string>('information')
+    useEffect(() => {
+        setTimeout(() => {
+            const startTime = Cookies.get('bookedTime')
+            const daysDifference = getDaysDifference(startTime!, new Date())
+            if (daysDifference === 0) {
+                const hours = getHourDifference(new Date(startTime!), new Date)
+                if (hours > 1) {
+                    toast.warn(`Your call is up in ${hours} from now`, { style: { background: 'yellow', color: 'whitw' }, })
+                }
+            }
+            else if (daysDifference === 1) {
+                toast.warn(`Your call is tomorrow. Please watch all videos`, { style: { background: 'yellow', color: 'whitw' }, })
+            }
+        }, 1000 * 60 * 60)
+    }, [])
     return (
         <>
+            <ToastContainer position="top-center" />
+            <Logo />
             <Navbar />
             <div className="flex flex-col md:mt-7 items-start w-[95%] md:w-[85%] mx-auto">
                 <p className="text-xl md:text-4xl font-bold text-white mb-4 md:mb-5">Account</p>
@@ -54,7 +74,7 @@ const EditProfile = () => {
 
 const DisplayCardInfo = ({ image, type, data }: { image: string, type: string, data: string }) => {
     return <div className="flex flex-col gap-4 items-center h-auto">
-        <Image src={image} alt={type} height={150} width={150} unoptimized />
+        <Image src={image} alt={type} height={100} width={100} unoptimized />
         <p className="text-white text-lg font-bold text-center">{type}</p>
         <p className="text-white text-lg text-center">{data}</p>
     </div>
@@ -62,4 +82,16 @@ const DisplayCardInfo = ({ image, type, data }: { image: string, type: string, d
 
 const InputField = ({ name, type, value }: { name: string, type: string, value: string }) => {
     return <input name={name} type={type} defaultValue={value} className="bg-white outline-none text-gray-500 h-12 rounded-md w-full p-2" />
+}
+
+
+function getHourDifference(date1: Date | string, date2: Date | string): number {
+    const msInHour = 60 * 60 * 1000;
+    const diffInMs = new Date(date1).getTime() - new Date(date2).getTime();
+    return Math.floor(diffInMs / msInHour);
+}
+function getDaysDifference(date1: Date | string, date2: Date | string): number {
+    const msInDay = 24 * 60 * 60 * 1000;
+    const diffInMs = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
+    return Math.floor(diffInMs / msInDay);
 }

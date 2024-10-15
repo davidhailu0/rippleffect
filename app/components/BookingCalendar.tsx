@@ -7,6 +7,7 @@ import TimezoneSelect from './TimeZoneSelect';
 import { fetchAvailableDates } from '../lib/actions';
 import { CalendarSkeleton } from './Skeleton';
 import { useRouter } from 'next/navigation';
+import TextField from './TextField';
 
 type ValuePiece = Date | null;
 
@@ -68,7 +69,7 @@ const BookingCalendar: React.FC = () => {
     const bookSession = async ({ start_time, end_time }: { start_time: string, end_time: string }) => {
         const token = Cookies.get('token')
         try {
-            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}api/v1/bookings`,
+            const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/bookings`,
                 {
                     method: 'POST',
                     headers: {
@@ -80,7 +81,8 @@ const BookingCalendar: React.FC = () => {
                 })
             const respJson = await resp.json()
             if (respJson.message) {
-                Cookies.set('booked', "true", { path: '/', expires: getDayDifference(start_time, new Date()) })
+                Cookies.set('bookedTime', start_time)
+                Cookies.set('booked', "true", { path: '/', expires: getDayDifference(start_time, new Date()) + 1 })
             }
             setShowRegistration(true)
         }
@@ -110,7 +112,10 @@ const BookingCalendar: React.FC = () => {
                             tileContent={({ date }) => date.toLocaleDateString() === new Date().toLocaleDateString() ? <div className='h-2 w-2 absolute left-[44%] rounded-full bg-white'></div> : null}
                             activeStartDate={currentDate}
                             onActiveStartDateChange={({ action, activeStartDate }) => {
-                                if (action == 'next') {
+                                if (action === 'next') {
+                                    fetchAvailablities(activeStartDate!)
+                                }
+                                else if (action === 'prev') {
                                     fetchAvailablities(activeStartDate!)
                                 }
                             }} onChange={onChange} minDate={new Date()} tileDisabled={({ activeStartDate, date }) =>
@@ -156,29 +161,39 @@ function ScheduleMeetingRegistration({ callback }: { callback: () => void }) {
     const [phone, setPhone] = useState('')
     const router = useRouter()
 
-    const handleFormSubmit = (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        router.replace('/questionnaire')
+        const token = Cookies.get('token')
+        const id = Cookies.get('id')
+        const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+                'Authorization': token || ''
+            },
+            body: JSON.stringify({
+                "lead": {
+                    "email": email,
+                    "first_name": firstName,
+                    "last_name": lastName,
+                    "phone": phone,
+                    "terms_accepted": true
+                }
+            })
+        })
+        const respJson = await resp.json()
+        if (respJson.message === 'Lead has been updated.') {
+            router.replace('/questionnaire')
+        }
     }
-    return <form onSubmit={handleFormSubmit} className="grid grid-cols-2 grid-rows-4 gap-x-10 rounded-lg gap-y-6 text-white bg-gray-900 p-10">
-        <div className="flex flex-col ">
-            <label htmlFor="firstName">First Name</label>
-            <TextField placeholder="First Name" value={firstName} onChange={setFirstName} />
-        </div>
-        <div className="flex flex-col">
-            <label htmlFor="lastName">Last Name</label>
-            <TextField placeholder="Last Name" value={lastName} onChange={setLastName} />
-        </div>
-        <div className="flex flex-col">
-            <label htmlFor="email">Email</label>
-            <TextField placeholder="Email" type="email" value={email!} onChange={setEmail} />
-        </div>
-        <div className="flex flex-col">
-            <label htmlFor="phone">Phone</label>
-            <TextField placeholder="Phone" type="tel" value={phone} onChange={setPhone} />
-        </div>
+    return <form onSubmit={handleFormSubmit} className="grid grid-cols-2 grid-rows-4 gap-x-10 rounded-lg gap-y-6 text-white bg-gray-900 p-10 w-7/12">
+        <TextField placeholder="First Name" value={firstName} onChange={setFirstName} label={'First Name'} />
+        <TextField placeholder="Last Name" value={lastName} onChange={setLastName} label={'Last Name'} />
+        <TextField placeholder="Email" type="email" value={email!} onChange={setEmail} label={'Email'} />
+        <TextField placeholder="Phone" type="tel" value={phone} onChange={setPhone} label={'Phone'} />
         <div className="flex col-span-2 items-start gap-3">
-            <input name="lastName" type="checkbox" className="mt-2" />
+            <input type="checkbox" required className="mt-2" />
             <p className="text-white font-bold">I agree to <span className="text-blue-700"> the terms and conditions </span>provided by the company. By providing my phone number, I agree to receive text messages from the business</p>
         </div>
         <div className='col-span-2 flex justify-end gap-4'>
@@ -193,8 +208,4 @@ function getDayDifference(date1: Date | string, date2: Date | string): number {
     const msInDay = 24 * 60 * 60 * 1000; // Number of milliseconds in a day
     const diffInMs = Math.abs(new Date(date2).getTime() - new Date(date1).getTime()); // Absolute difference in milliseconds
     return Math.floor(diffInMs / msInDay); // Convert to days
-}
-
-function TextField({ value, type, placeholder, hidden, onChange }: { value: string, type?: string, placeholder: string, hidden?: boolean, onChange: (arg: string) => void }) {
-    return <input value={value} type={type ? type : 'text'} onChange={(e) => onChange(e.target.value)} placeholder={placeholder} className={`h-12 text-white bg-transparent outline-none border-b-[1px] border-b-white focus:outline-1 focus:outline-white focus:border-b-0 placeholder:text-white ${hidden && 'hidden'}`} />
 }

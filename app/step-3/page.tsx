@@ -1,11 +1,13 @@
 import Image from "next/image"
 import Link from "next/link"
 import Navbar from "../components/Navbar"
+import Logo from "../components/LogoComponent"
 
 export default function Step3() {
     return <>
+        <Logo />
         <Navbar />
-        <div className="flex flex-col gap-3 mt-7 items-center h-screen w-10/12 md:w-9/12 mx-auto">
+        <div className="flex flex-col gap-3 mt-10 items-center h-screen w-10/12 md:w-9/12 mx-auto">
             <p className="text-2xl md:text-4xl font-bold text-white text-center w-10/12">Thanks for booking your 1-on-1</p>
             <p className="text-2xl md:text-4xl font-bold text-white text-center">Business Plan Call with us!</p>
             <p className="text-base font-light text-white text-center my-7">To Fully benefit from your call and to ensure you already understand business model and are able to ask the right question.Please make sure you watch the following series of videos.
