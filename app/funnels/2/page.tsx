@@ -16,7 +16,7 @@ export default function Home({
         <>
             <Logo />
             <div className="flex flex-col gap-4 md:gap-7 mt-3 md:mt-10 items-center w-[95%] md:w-[73%] mx-auto">
-                <VideoPlayer src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" onVideoEnd={() => { }} />
+                <VideoPlayer playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" onVideoEnd={() => { }} />
                 <p className="text-xl md:text-4xl font-bold text-white mt-4">Create your FREE account NOW!!</p>
                 <p className={`${lato.className} text-[rgba(255,255,255,0.57)] text-center text-lg px-4 md:px-0 leading-7 md:text-lg font-medium md:leading-[23.4px] mb-4`}>Create Your Account Below and <span className="text-[#d7b398]">Get Free Access</span> to my Sales System that allows you to attract, capture and generate leads on autopilot.</p>
                 <p className={`${lato.className} text-[rgba(255,255,255,0.57)] text-base mx-auto w-9/12 font-medium leading-[37.7px] mt-3 text-center`}>(No previous experience or technical skills required)</p>

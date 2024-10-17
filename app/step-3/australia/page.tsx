@@ -35,13 +35,13 @@ export default function Home() {
                     <li>My Best Strategy to get Started</li>
                 </ol>
                 <p className="text-2xl font-bold text-white my-4">1. Intro to your business journey with Nate</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
                 <p className="text-2xl font-bold text-white my-4">2. The Best Product I have found so far</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
                 <p className="text-2xl font-bold text-white my-4">3. The Perfect Business Model</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
                 <p className="text-2xl font-bold text-white my-4">4. My Best Strategy to get Started</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
                 <p className={`${videoWatched == 4} text-md text-gray-200 mb-5`}>Make sure to watch all videos before you call if not you will not be able to understand my business or ask the right question</p>
                 <div className={`${videoWatched == 4 ? 'flex' : 'hidden'} justify-between w-full md:w-1/2`}>
                     <Button title="f Join our Facebook Group" type="button" />

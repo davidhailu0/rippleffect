@@ -12,7 +12,7 @@ export default function Content() {
         setShow(true)
     }
     return <>
-        <VideoPlayer onVideoEnd={handleVideoEnd} src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+        <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
         <div className={`${show ? 'flex' : 'hidden'} flex-col w-full mt-8`}>
             <p className={`text-white ${lato.className} text-center`}>Once you have <span className="font-medium text-[#d7b398]">watched the videos</span> above click the button below to book your call</p>
             <div className="flex mt-8 flex-col md:flex-row">

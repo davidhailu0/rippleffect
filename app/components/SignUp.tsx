@@ -1,5 +1,5 @@
 'use client'
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import { ScaleLoader } from "react-spinners";
@@ -23,12 +23,33 @@ const showToast = (message: string, type: "error" | "success") => {
     }
 };
 
-export default function SignUpForm({ ref_code }: { ref_code?: string }) {
+export default function SignUpForm({ ref_code, login_token }: { ref_code?: string, login_token?: string }) {
     const [email, setEmail] = useState<string>("");
     const [confirmationCode, setConfirmationCode] = useState<string>("");
     const [state, setState] = useState<State>({});
     const [loading, setLoading] = useState<boolean>(false)
     const router = useRouter();
+
+    useEffect(() => {
+        async function verifyLoginToken() {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/login_with_token?login_token=${login_token}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string
+                }
+            })
+            const json = await res.json()
+            if (json.login_token) {
+                Cookies.set('token', json.login_token, { expires: 365, path: '/', sameSite: 'Strict' })
+                Cookies.set('referral_code', json.referral_code, { expires: 365, path: '/', sameSite: 'Strict' })
+                router.push("/account");
+            }
+            else {
+                router.push('/not-found');
+            }
+        }
+        verifyLoginToken()
+    }, [login_token, email, router])
 
     // Memoize function for creating account
     const createAccount = useCallback(async (e: FormEvent<HTMLFormElement>) => {
@@ -89,10 +110,10 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
                 const channel = new BroadcastChannel('auth');
                 channel.postMessage('login');
                 channel.close();
-                Cookies.set('id', json.id, { expires: 365, path: '/', sameSite: 'Strict' })
+                Cookies.set('id', json.id, { expires: 365 * 30, path: '/', sameSite: 'Strict' })
                 Cookies.set('token', json.login_token, { expires: 365, path: '/', sameSite: 'Strict' })
                 Cookies.set('referral_code', json.referral_code, { expires: 365, path: '/', sameSite: 'Strict' })
-                Cookies.set('email', email, { expires: 365, path: '/', sameSite: 'Strict' })
+                Cookies.set('email', email, { expires: 365 * 30, path: '/', sameSite: 'Strict' })
                 router.push("/step-1");
             }
             else {

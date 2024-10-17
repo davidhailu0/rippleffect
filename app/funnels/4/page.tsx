@@ -22,7 +22,7 @@ export default function Home({
                     <p className={`${lato.className} text-[rgba(255,255,255,0.57)] text-base mx-auto w-9/12 font-medium leading-[37.7px] mt-3 text-center`}>(No previous experience or technical skills required)</p>
                     <SignUpForm ref_code={ref} />
                 </div>
-                <VideoPlayer className="col-span-1 md:col-span-2 md:max-h-[90%]" src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer className="col-span-1 md:col-span-2 md:max-h-[90%]" playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
                 <div className="flex md:col-span-3 gap-1 md:gap-4 items-center flex-col md:flex-row justify-center">
                     <Image src='/customer.png' alt='Customers' height={42} width={120} unoptimized />
                     <p className="text-white font-">Join our <span className="font-medium">20,000+</span> students worldwide</p>

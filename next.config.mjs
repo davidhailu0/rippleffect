@@ -3,7 +3,7 @@ const nextConfig = {
     // output:'export',
     // distDir:'out',
     // trailingSlash:true
-    reactStrictMode:false
+    // reactStrictMode:false
 };
 
 export default nextConfig;

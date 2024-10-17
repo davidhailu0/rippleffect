@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useState, useEffect, ChangeEvent, useRef } from "react"
 import { ClipLoader } from "react-spinners"
 import Cookies from "js-cookie"
+import MuxPlayer from "@mux/mux-player-react";
 import { fetchSurveys } from "../lib/actions"
 type Answer = { question_id: number, response: string }
 type Survey = { id: number, title: string, question_type: string, choices: { [key: string]: string } }
@@ -22,6 +23,7 @@ export default function DisplayQuestion() {
     useEffect(() => {
         async function fetchRequest() {
             const question = await fetchSurveys()
+            console.log(question)
             setSurveys(question)
         }
         fetchRequest()
@@ -94,10 +96,11 @@ export default function DisplayQuestion() {
         })
     }
 
-    const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-        const currentTime = e.currentTarget.currentTime;
+    const handleTimeUpdate = (e: Event) => {
+        const videoElement = e.currentTarget as HTMLVideoElement
+        const currentTime = videoElement.currentTime;
         if (currentTime - lastTime > 2) { // Adjust tolerance if necessary
-            e.currentTarget.currentTime = lastTime;
+            videoElement.currentTime = lastTime;
         } else {
             setLastTime(currentTime);
         }
@@ -113,6 +116,7 @@ export default function DisplayQuestion() {
                 return newVal
             })
             setIndex(prev => prev + 1)
+            setShow(false)
             return
         }
         answerQuestion()
@@ -127,9 +131,7 @@ export default function DisplayQuestion() {
     return <div className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
         <div className="h-auto w-full mx-auto flex flex-col gap-7 bg-white px-8 py-10">
             <Image src="/logo.png" alt="logo.png" height={95} width={90} className="mx-auto" unoptimized />
-            <video autoPlay ref={videoRef} id="videoPlayer" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} controlsList="nodownload nofastforward" className={"h-[300px] md:h-[500px]"}>
-                {/* <source className="h-full" type="video/mp4" /> */}
-            </video>
+            <MuxPlayer playbackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} className={"h-[300px] md:h-[500px]"} />
             {surveys.questions[index]?.question_type === 'multiple_choice' && <p className={`text-blue-400 ${!show && 'hidden'}`}>
                 {surveys.questions[index]?.title}
             </p>}
@@ -163,7 +165,7 @@ function TextField({ label, value, type, placeholder, hidden, onChange }: { labe
             className="text-black peer w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent placeholder-transparent transition-all duration-200"
             placeholder={placeholder} onChange={onChange} />
         <label htmlFor="fancy-input"
-            className="absolute left-4 -top-2.5 text-gray-400 text-sm transition-all duration-200 peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-4 peer-focus:text-sm peer-focus:text-white">
+            className="absolute left-4 -top-2.5 text-gray-400 text-sm transition-all duration-200 peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-4 peer-focus:text-sm peer-focus:text-gray-500">
             {label}
         </label>
     </div>

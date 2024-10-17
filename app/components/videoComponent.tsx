@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect, useRef } from "react";
+import MuxPlayer from '@mux/mux-player-react';
 // import { ToastContainer, toast } from "react-toastify";
 
-export default function VideoPlayer({ src, className, onVideoEnd }: { src: string, className?: string, onVideoEnd?: () => void }) {
+type GenericEventListener<T extends Event> = (event: T) => void;
+export default function VideoPlayer({ playBackId, className, onVideoEnd }: { playBackId: string, className?: string, onVideoEnd?: () => void }) {
     const [lastTime, setLastTime] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(false)
     const videoRef = useRef<HTMLVideoElement>(null);
 
     useEffect(() => {
@@ -45,31 +46,31 @@ export default function VideoPlayer({ src, className, onVideoEnd }: { src: strin
 
 
 
-    const handleTimeUpdate = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-        const currentTime = e.currentTarget.currentTime;
+    const handleTimeUpdate: GenericEventListener<Event> = (e) => {
+        const videoElement = e.currentTarget as HTMLMediaElement
+        const currentTime = videoElement.currentTime
         if (currentTime - lastTime > 2) {
-            e.currentTarget.currentTime = lastTime;
+            videoElement.currentTime = lastTime;
         } else {
             setLastTime(currentTime);
         }
     };
 
-    const handlePlayPauseBtn = () => {
-        const videoElement = videoRef.current;
-        if (isPlaying) {
-            videoElement?.pause()
-            setIsPlaying(false)
-        }
-        else {
-            videoElement?.play()
-            setIsPlaying(true)
-        }
-    }
-
     return <>
         {/* <ToastContainer autoClose={false} position="top-center" theme="colored" /> */}
-        <video onClick={handlePlayPauseBtn} ref={videoRef} id="videoPlayer" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} controlsList="nodownload nofastforward" className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] hover:scale-110 transition ease-in-out duration-200 object-contain hover:cursor-pointer ${className}`}>
+        {/* <video onClick={handlePlayPauseBtn} ref={videoRef} id="videoPlayer" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} controlsList="nodownload nofastforward" className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] hover:scale-110 transition ease-in-out duration-200 object-contain hover:cursor-pointer ${className}`}>
             <source className="h-full" src={src} type="video/mp4" />
-        </video>
+        </video> */}
+        <MuxPlayer
+            className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] hover:scale-110 transition ease-in-out duration-200 object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
+            onTimeUpdate={handleTimeUpdate}
+            onEnded={onVideoEnd}
+            playbackId={playBackId}
+            metadata={{
+                video_id: "video-id-54321",
+                video_title: "Test video title",
+                viewer_user_id: "user-id-007",
+            }}
+        />
     </>
 }
