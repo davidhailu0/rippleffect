@@ -82,7 +82,6 @@ const BookingCalendar: React.FC = () => {
             const respJson = await resp.json()
             if (respJson.message) {
                 Cookies.set('bookedTime', start_time)
-                Cookies.set('booked', "true", { path: '/', expires: getDayDifference(start_time, new Date()) + 1 })
             }
             setShowRegistration(true)
         }
@@ -184,6 +183,7 @@ function ScheduleMeetingRegistration({ callback }: { callback: () => void }) {
         })
         const respJson = await resp.json()
         if (respJson.message === 'Lead has been updated.') {
+            Cookies.set('booked', "true", { path: '/', expires: getDayDifference(Cookies.get("bookedTime")!, new Date()) + 1 })
             router.replace('/questionnaire')
         }
     }

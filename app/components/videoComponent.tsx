@@ -5,9 +5,18 @@ import MuxPlayer from '@mux/mux-player-react';
 // import { ToastContainer, toast } from "react-toastify";
 
 type GenericEventListener<T extends Event> = (event: T) => void;
+
+// mux-player.d.ts
+interface MuxPlayerElement extends HTMLVideoElement {
+    currentTime: number;
+    paused: boolean;
+    // Add more methods and properties as needed based on the Mux player API
+}
+
+
 export default function VideoPlayer({ playBackId, className, onVideoEnd }: { playBackId: string, className?: string, onVideoEnd?: () => void }) {
     const [lastTime, setLastTime] = useState(0);
-    const videoRef = useRef<HTMLVideoElement>(null);
+    const videoRef = useRef<MuxPlayerElement>(null);
 
     useEffect(() => {
         //toast.warn("Click on the Video to Play", { icon: false })
@@ -66,6 +75,7 @@ export default function VideoPlayer({ playBackId, className, onVideoEnd }: { pla
             onTimeUpdate={handleTimeUpdate}
             onEnded={onVideoEnd}
             playbackId={playBackId}
+            ref={videoRef}
             metadata={{
                 video_id: "video-id-54321",
                 video_title: "Test video title",

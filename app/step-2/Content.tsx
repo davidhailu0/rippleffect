@@ -3,16 +3,22 @@ import { lato } from "@/app/fonts/lato";
 import Image from "next/image";
 import VideoPlayer from "@/app/components/videoComponent";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Content() {
     const [show, setShow] = useState<boolean>(false)
 
+    useEffect(() => {
+        if (localStorage.getItem("step-2-watched") === "true") {
+            setShow(true)
+        }
+    }, [])
     const handleVideoEnd = () => {
         setShow(true)
+        localStorage.setItem("step-2-watched", "true")
     }
     return <>
-        <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
+        <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
         <div className={`${show ? 'flex' : 'hidden'} flex-col w-full mt-8`}>
             <p className={`text-white ${lato.className} text-center`}>Once you have <span className="font-medium text-[#d7b398]">watched the videos</span> above click the button below to book your call</p>
             <div className="flex mt-8 flex-col md:flex-row">

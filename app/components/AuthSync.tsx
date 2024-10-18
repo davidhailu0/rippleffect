@@ -1,44 +1,74 @@
 'use client';
 import { useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Cookies from 'js-cookie';
+import { useCookies } from 'react-cookie'
 import { ToastContainer, toast } from 'react-toastify';
 
-const checkBooking = () => {
-  const startTime = Cookies.get('bookedTime')
-  console.log("check booking")
-  if (!Boolean(startTime)) {
-    return
-  }
-  const daysDifference = getDaysDifference(startTime!, new Date())
-  if (daysDifference === 0) {
-    const hours = getHourDifference(new Date(startTime!), new Date)
-    if (hours > 1) {
-      toast.warn(`Your call is up in ${hours} Hour(s) from now`, { icon: false })
-    }
-  }
-  else if (daysDifference === 1) {
-    toast.warn(`Your call is tomorrow. Please watch all videos`, { icon: false })
-  }
-}
+
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const pathName = usePathname()
+  const pathname = usePathname()
+  const [cookies] = useCookies()
+
+
   useEffect(() => {
+    const checkAuth = () => {
+      if (pathname === '/' && Boolean(cookies['email'])) {
+        return router.replace('/account');
+      }
+
+      if (!Boolean(cookies['email'])) {
+        return router.replace('/');
+      }
+
+      if (cookies['questionFinished'] && pathname === '/book') {
+        return router.replace('/step-3');
+      }
+
+      if (cookies['booked'] && pathname === '/book') {
+        return router.replace('/questionnaire');
+      }
+
+      if (!cookies['booked'] && pathname !== '/step-1' && pathname !== '/step-2' && pathname !== '/book') {
+        return router.replace('/step-1');
+      }
+    };
+
+
+
+    const checkBooking = () => {
+      const startTime = cookies['bookedTime']
+      if (!Boolean(startTime)) {
+        return
+      }
+      const daysDifference = getDaysDifference(startTime!, new Date())
+      if (daysDifference === 0) {
+        const hours = getHourDifference(new Date(startTime!), new Date)
+        if (hours > 1) {
+          toast.warn(`Your call is up in ${hours} Hour(s) from now`, { icon: false })
+        }
+      }
+      else if (daysDifference === 1) {
+        toast.warn(`Your call is tomorrow. Please watch all videos`, { icon: false })
+      }
+    }
+
+
     const channel = new BroadcastChannel('auth');
     channel.onmessage = (message) => {
       if (message.data === 'login') {
         router.push('/step-1');
       }
     };
+    checkAuth()
     checkBooking()
     const intervalID = setInterval(checkBooking, 1000 * 60 * 30)
     return () => {
       channel.close();
       clearInterval(intervalID);
     }
-  }, [router, pathName]);
+  }, [router, pathname, cookies]);
 
   return (<>
     <ToastContainer position='top-center' theme='colored' />

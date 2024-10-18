@@ -131,7 +131,7 @@ export default function DisplayQuestion() {
     return <div className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
         <div className="h-auto w-full mx-auto flex flex-col gap-7 bg-white px-8 py-10">
             <Image src="/logo.png" alt="logo.png" height={95} width={90} className="mx-auto" unoptimized />
-            <MuxPlayer playbackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} className={"h-[300px] md:h-[500px]"} />
+            <MuxPlayer playbackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} className={"h-[300px] md:h-[500px] overflow-x-hidden"} />
             {surveys.questions[index]?.question_type === 'multiple_choice' && <p className={`text-blue-400 ${!show && 'hidden'}`}>
                 {surveys.questions[index]?.title}
             </p>}

@@ -48,7 +48,9 @@ export default function SignUpForm({ ref_code, login_token }: { ref_code?: strin
                 router.push('/not-found');
             }
         }
-        verifyLoginToken()
+        if (login_token) {
+            verifyLoginToken()
+        }
     }, [login_token, email, router])
 
     // Memoize function for creating account

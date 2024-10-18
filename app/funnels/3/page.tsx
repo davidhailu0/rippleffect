@@ -15,7 +15,7 @@ export default function Home({
     return (
         <>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-5 md:mt-7 items-center w-[95%] md:w-full mx-auto px-4">
-                <VideoPlayer onVideoEnd={() => { }} className="col-span-1 md:col-span-2 md:max-h-[90%]" playBackId="ZflXYEAaVp8GzS7wfucCJ3l7R9c5p101qXI1yg3QEZhk" />
+                <VideoPlayer className="col-span-1 md:col-span-2 md:max-h-[90%]" playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
                 <div className="flex flex-col">
                     <Logo />
                     <p className="text-center text-xl md:text-3xl font-bold text-white my-4">Create your FREE account NOW!!</p>

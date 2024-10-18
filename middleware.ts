@@ -21,7 +21,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (!request.cookies.has('booked') && pathname !== '/step-1'&& pathname !== '/step-2'&&pathname !== '/book') {
-    return NextResponse.redirect(new URL('/book', request.url));
+    return NextResponse.redirect(new URL('/step-1', request.url));
   }
 
   return NextResponse.next();
