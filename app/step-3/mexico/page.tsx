@@ -1,11 +1,31 @@
+'use client'
 import Image from "next/image";
 import VideoPlayer from "@/app/components/videoComponent";
 import Navbar from "@/app/components/Navbar";
 import Button from "@/app/components/Button";
+import Logo from "@/app/components/LogoComponent";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function Home() {
+    const [videoWatched, setVideoWatched] = useState<number>(0);
+    useEffect(() => {
+        toast.warn("Please Watch All the Videos", { icon: false, autoClose: false })
+        if (localStorage.getItem("step-3-watched") === "true") {
+            setVideoWatched(4)
+        }
+    }, [])
+
+    const handleVideoEnd = () => {
+        if (videoWatched == 3) {
+            localStorage.setItem("step-3-watched", "true")
+        }
+        setVideoWatched(prev => prev + 1)
+    }
     return (
         <>
+            <ToastContainer position="top-center" theme="colored" />
+            <Logo />
             <Navbar />
             <div className="flex flex-col gap-5 mt-7 items-center w-full md:w-9/12 mx-auto px-2">
                 <Image src={'/mexico.png'} alt='EU' height={100} width={100} unoptimized />
@@ -19,15 +39,15 @@ export default function Home() {
                     <li>My Best Strategy to get Started</li>
                 </ol>
                 <p className="text-2xl font-bold text-white my-4">1. Intro to your business journey with Nate</p>
-                <VideoPlayer src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
                 <p className="text-2xl font-bold text-white my-4">2. The Best Product I have found so far</p>
-                <VideoPlayer src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
                 <p className="text-2xl font-bold text-white my-4">3. The Perfect Business Model</p>
-                <VideoPlayer src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
                 <p className="text-2xl font-bold text-white my-4">4. My Best Strategy to get Started</p>
-                <VideoPlayer src="https://storage.googleapis.com/msgsndr/C6nqv5N0ZUkTMUIxNoYx/media/6638c58eb478503bf929064b.mp4" />
-                <p className="text-md text-gray-200 mb-5">Make sure to watch all videos before you call if not you will not be able to understand my business or ask the right question</p>
-                <div className="flex justify-between w-full md:w-1/2">
+                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
+                <p className={`${videoWatched == 4} text-md text-gray-200 mb-5`}>Make sure to watch all videos before you call if not you will not be able to understand my business or ask the right question</p>
+                <div className={`${videoWatched == 4 ? 'flex' : 'hidden'} justify-between w-full md:w-1/2`}>
                     <Button title="f Join our Facebook Group" type="button" />
                     <Button title="Next >" type="button" />
                 </div>

@@ -18,7 +18,7 @@ abbr{
   text-decoration: none;
 }
 
-.react-calendar__navigation__prev-button, .react-calendar__navigation__prev2-button,.react-calendar__navigation__next2-button{
+.react-calendar__navigation__prev2-button,.react-calendar__navigation__next2-button{
   display: none;
 }
 
@@ -26,13 +26,36 @@ abbr{
   text-align: center;
   margin-bottom: 0.5rem;
   font-weight: 600;
+  position: relative;
 }
 
 .react-calendar__navigation__label{
   margin-right: 1rem;
 }
+
+.react-calendar__navigation__prev-button,.react-calendar__navigation__next-button{
+  height: 2rem;
+  width: 2rem;
+  position: absolute;
+  top:-0.5rem;
+  border-radius: 7px;
+  font-size: 1.3rem;
+  transition: all 0.3s;
+}
+
+.react-calendar__navigation__prev-button:hover{
+  border:1px solid gray;
+  background: #0F2C40;
+}
+.react-calendar__navigation__next-button:hover{
+  border:1px solid gray;
+  background: #0F2C40;
+}
+.react-calendar__navigation__prev-button{
+  right: 2.3rem;
+}
 .react-calendar__navigation__next-button{
-  font-size: 1.5rem;
+  right: 0;
 }
 .react-calendar__month-view__weekdays__weekday{
   text-align: center;

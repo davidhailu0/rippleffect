@@ -4,9 +4,10 @@ import React, { useEffect, useRef } from 'react';
 interface CodeInputProps {
   confirmationCode: string;
   setConfirmationCode: (code: string) => void;
+  frontend_token: string
 }
 
-const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmationCode }) => {
+const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmationCode, frontend_token }) => {
   const inputsRef = useRef<HTMLInputElement[]>([]); // Define refs for input elements
 
   // Effect to update input values when confirmationCode changes (e.g., via paste)
@@ -54,8 +55,9 @@ const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmation
   };
 
   return (
-    <div className="w-full max-w-sm bg-transparent rounded-lg p-6">
+    <div className="w-full max-w-md rounded-lg">
       <p className='text-white text-xl font-bold text-center mb-4'>Enter Confirmation Code</p>
+      <p className='text-3xl font-medium mb-4 leading-[1.2] text-white text-center'>{frontend_token}</p>
       <div className="flex justify-between">
         {[...Array(6)].map((_, index) => (
           <input
@@ -77,3 +79,6 @@ const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmation
 };
 
 export default CodeInput;
+
+
+

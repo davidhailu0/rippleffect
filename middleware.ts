@@ -13,9 +13,15 @@ export function middleware(request: NextRequest) {
   if (!request.cookies.has('email')) {
     return NextResponse.redirect(new URL('/', request.url));
   }
+  if(request.cookies.has('questionFinished')&&pathname === '/book'){
+    return NextResponse.redirect(new URL('/step-3', request.url));
+  }
+  if(request.cookies.has('booked')&&pathname === '/book'){
+    return NextResponse.redirect(new URL('/questionnaire', request.url));
+  }
 
   if (!request.cookies.has('booked') && pathname !== '/step-1'&& pathname !== '/step-2'&&pathname !== '/book') {
-    return NextResponse.redirect(new URL('/book', request.url));
+    return NextResponse.redirect(new URL('/step-1', request.url));
   }
 
   return NextResponse.next();
