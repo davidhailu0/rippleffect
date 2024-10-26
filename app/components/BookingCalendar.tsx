@@ -7,16 +7,22 @@ import TimezoneSelect from './TimeZoneSelect';
 import { fetchAvailableDates } from '../lib/actions';
 import { CalendarSkeleton } from './Skeleton';
 import { useRouter } from 'next/navigation';
-import TextField from './TextField';
 
 type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const timezoneOptions: TimezoneOption[] = Intl.supportedValuesOf('timeZone').map((tz) => ({
-    value: tz,
-    label: tz.replace('_', ' '),
-}));
+const timezoneOptions: TimezoneOption[] = Intl.supportedValuesOf('timeZone').map((tz) => {
+    const currentDate = new Date(new Date().toLocaleDateString());
+    const dateInTimezone = new Date(currentDate.toLocaleString('en-US', { timeZone: tz }));
+    const utcOffsetMillis = dateInTimezone.getTime() - currentDate.getTime();
+
+    return {
+        value: tz,
+        label: tz.replace('_', ' '),
+        offsetFromUTC: utcOffsetMillis,
+    };
+});
 
 const days: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
@@ -25,7 +31,7 @@ const BookingCalendar: React.FC = () => {
     const [selectedTimezone, setSelectedTimezone] = useState<TimezoneOption | null>(null);
     const [hourFormat, setHourFormat] = useState<string>('12')
     const [availablities, setAvailablities] = useState<Availablities | null>(null)
-    const [currentDate, setCurrentDate] = useState<Date>(new Date())
+    const [currentDate, setCurrentDate] = useState<Date>(new Date(new Date().toLocaleDateString()))
     const [showRegistration, setShowRegistration] = useState<boolean>(false)
 
     async function fetchAvailablities(date: Date) {
@@ -77,13 +83,13 @@ const BookingCalendar: React.FC = () => {
                         'Origin': window.location.origin,
                         'Authorization': token || ''
                     },
-                    body: JSON.stringify({ start_time, end_time })
+                    body: JSON.stringify({ start_time, end_time, "timezone": selectedTimezone?.value })
                 })
             const respJson = await resp.json()
             if (respJson.message) {
                 Cookies.set('bookedTime', start_time)
+                setShowRegistration(true)
             }
-            setShowRegistration(true)
         }
         catch (e) {
             console.error(e)
@@ -98,7 +104,7 @@ const BookingCalendar: React.FC = () => {
     return (
         <>
             {!showRegistration ?
-                <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-gray-900 text-white h-auto w-11/12 md:w-2/3 rounded-md">
+                <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-white text-black h-auto w-11/12 md:w-2/3 rounded-md">
                     <div className="w-full md:w-1/4 border-l-gray-500">
                         <h2 className="text-lg font-semibold">60 Min Meeting</h2>
                         <p className="mt-2 text-gray-400">60m</p>
@@ -125,22 +131,22 @@ const BookingCalendar: React.FC = () => {
 
                     <div className="w-full md:w-1/4 pb-4">
                         <div className="flex justify-between mb-4 items-center">
-                            <p className='text-white'><span className='font-bold text-lg'>{days[new Date(value!.toString()).getDay()]}</span> {new Date(value!.toString()).getDate()}</p>
+                            <p className='text-black'><span className='font-bold text-lg'>{days[new Date(value!.toString()).getDay()]}</span> {new Date(value!.toString()).getDate()}</p>
                             <div className='p-2 border border-gray-500 rounded-lg flex gap-x-1'>
-                                <button onClick={() => setHourFormat('12')} className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-gray-600' : 'bg-gray-800'}`}>12h</button>
-                                <button onClick={() => setHourFormat('24')} className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-gray-600' : 'bg-gray-800'}`}>24h</button>
+                                <button onClick={() => setHourFormat('12')} className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}>12h</button>
+                                <button onClick={() => setHourFormat('24')} className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}>24h</button>
                             </div>
                         </div>
                         <div className="space-y-2 overflow-y-auto h-96 custom-scrollbar pr-1">
-                            {availablities[new Date(value!.toString()).toLocaleDateString('en-CA')].map(({ start_time, end_time }) => (
+                            {availablities[new Date(value!.toString()).toLocaleDateString('en-CA')].map(({ start_time, end_time }) => new Date(currentDate.toLocaleString('en-US', { timeZone: selectedTimezone?.value })).getTime() <= new Date(start_time).getTime() ? (
                                 <button
                                     key={start_time}
                                     onClick={() => bookSession({ start_time, end_time })}
-                                    className={`w-full py-2 text-left px-3 rounded-md bg-[#1a1a1a] border border-gray-600 text-gray-300`}
+                                    className={`w-full py-2 text-left px-3 rounded-md bg-[#d7b398] border border-[#d7b398] text-white`}
                                 >
-                                    {new Date(start_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: hourFormat === '12' ? true : false })}
+                                    {new Date(new Date(start_time).getTime() + selectedTimezone!.offsetFromUTC).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: hourFormat === '12' ? true : false })}
                                 </button>
-                            ))}
+                            ) : null)}
                         </div>
                     </div>
                 </div>
@@ -183,24 +189,60 @@ function ScheduleMeetingRegistration({ callback }: { callback: () => void }) {
         })
         const respJson = await resp.json()
         if (respJson.message === 'Lead has been updated.') {
+            Cookies.set('name', firstName, { path: '/', expires: 365 * 10 })
             Cookies.set('booked', "true", { path: '/', expires: getDayDifference(Cookies.get("bookedTime")!, new Date()) + 1 })
             router.replace('/questionnaire')
         }
     }
-    return <form onSubmit={handleFormSubmit} className="grid grid-cols-2 grid-rows-4 gap-x-10 rounded-lg gap-y-6 text-white bg-gray-900 p-10 w-7/12">
-        <TextField placeholder="First Name" value={firstName} onChange={setFirstName} label={'First Name'} />
-        <TextField placeholder="Last Name" value={lastName} onChange={setLastName} label={'Last Name'} />
-        <TextField placeholder="Email" type="email" value={email!} onChange={setEmail} label={'Email'} />
-        <TextField placeholder="Phone" type="tel" value={phone} onChange={setPhone} label={'Phone'} />
-        <div className="flex col-span-2 items-start gap-3">
-            <input type="checkbox" required className="mt-2" />
-            <p className="text-white font-bold">I agree to <span className="text-blue-700"> the terms and conditions </span>provided by the company. By providing my phone number, I agree to receive text messages from the business</p>
-        </div>
-        <div className='col-span-2 flex justify-end gap-4'>
-            <button type='button' onClick={callback} className="rounded-xl bg-white text-black h-16 w-52 justify-self-end">Back</button>
-            <button type='submit' className="rounded-xl bg-[#d7b398] h-16 w-52 justify-self-end">Schedule Meeting</button>
-        </div>
-    </form>
+    return <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl">
+        <h2 className="text-2xl font-semibold mb-6 text-gray-800">User Information</h2>
+
+        <form id="user-form" onSubmit={handleFormSubmit} className="space-y-4">
+            <div>
+                <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <input type="text" id="first-name" name="first-name" required
+                    className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d7b398]" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+            </div>
+
+            <div>
+                <label htmlFor="last-name" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input type="text" id="last-name" name="last-name" required
+                    className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d7b398]" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+            </div>
+            <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                <input type="email" id="email" name="email" required
+                    className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d7b398]" value={email!} onChange={(e) => setEmail(e.target.value)} />
+            </div>
+
+            <div>
+                <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required
+                    className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 text-black focus:ring-[#d7b398]"
+                    placeholder="123-456-7890" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            </div>
+
+            <div className="flex items-start mt-4">
+                <input type="checkbox" id="terms" name="terms" required
+                    className="h-4 w-4 text-blue-600 focus:ring-[#d7b398] border-gray-300 rounded mt-0.5" />
+                <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
+                    I agree to the <span className="text-blue-600 underline">terms and conditions</span> provided by the company. By providing my phone number, I agree to receive text messages from the business.
+                </label>
+            </div>
+            <div className="flex justify-between items-center mt-6">
+                <button type="button" onClick={callback}
+                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 focus:outline-none">
+                    Back
+                </button>
+                <button type="submit"
+                    className="px-6 py-2 bg-[#d7b398] text-white rounded-md hover:bg-[#ab907b] transition-colors ease-in-out duration-75 focus:outline-none">
+                    Schedule Meeting
+                </button>
+            </div>
+
+        </form>
+    </div>
+
 }
 
 

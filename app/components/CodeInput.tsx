@@ -56,21 +56,22 @@ const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmation
 
   return (
     <div className="w-full max-w-md rounded-lg">
-      <p className='text-white text-xl font-bold text-center mb-4'>Enter Confirmation Code</p>
-      <p className='text-3xl font-medium mb-4 leading-[1.2] text-white text-center'>{frontend_token}</p>
+      <p className='text-black text-xl font-bold text-center mb-4'>Enter Confirmation Code</p>
+      <p className='text-3xl font-medium mb-4 leading-[1.2] text-black text-center'>{frontend_token}</p>
       <div className="flex justify-between">
         {[...Array(6)].map((_, index) => (
           <input
             key={index}
             type="text"
             maxLength={1}
+            autoFocus={index == 0}
             ref={(el) => {
               inputsRef.current[index] = el!;
             }}
             onChange={(e) => handleInputChange(e, index)}
             onKeyDown={(e) => handleKeyDown(e, index)}
             onPaste={handlePaste}
-            className="w-12 h-12 text-center text-black border rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
+            className="w-12 h-12 text-center text-black border-2 border-gray-400 rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-[#d7b398]"
           />
         ))}
       </div>

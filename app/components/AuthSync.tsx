@@ -1,15 +1,30 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCookies } from 'react-cookie'
 import { ToastContainer, toast } from 'react-toastify';
-
-
+import VideoContext from './VideoContext';
+import { Video } from './VideoContext';
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname()
   const [cookies] = useCookies()
+  const [videos, setVideos] = useState<Video[]>([])
+
+  useEffect(() => {
+    async function fetchVideos() {
+      const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+        headers: {
+          'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Authorization': cookies['token']
+        }
+      })
+      const json = await resp.json()
+      setVideos(json['videos'])
+    }
+    fetchVideos()
+  }, [cookies])
 
 
   useEffect(() => {
@@ -35,8 +50,6 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-
-
     const checkBooking = () => {
       const startTime = cookies['bookedTime']
       if (!Boolean(startTime)) {
@@ -45,8 +58,11 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
       const daysDifference = getDaysDifference(startTime!, new Date())
       if (daysDifference === 0) {
         const hours = getHourDifference(new Date(startTime!), new Date)
-        if (hours > 1) {
-          toast.warn(`Your call is up in ${hours} Hour(s) from now`, { icon: false })
+        if (hours >= 1) {
+          toast.warn(`Your call is up in ${Math.floor(hours)} Hour(s) from now`, { icon: false })
+        }
+        else if (hours >= 0 && hours < 1) {
+          toast.warn(`Your call is up in ${Math.floor(hours * 60)} minute(s) from now`, { icon: false })
         }
       }
       else if (daysDifference === 1) {
@@ -62,17 +78,22 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
       }
     };
     checkAuth()
-    checkBooking()
-    const intervalID = setInterval(checkBooking, 1000 * 60 * 30)
+    const intervalID = setInterval(checkBooking, 1000 * 60 * 15)
     return () => {
       channel.close();
       clearInterval(intervalID);
     }
   }, [router, pathname, cookies]);
 
+  if (videos.length === 0) {
+    return <p className='text-white text-2xl text-center'>Loading Videos ...</p>
+  }
+
   return (<>
     <ToastContainer position='top-center' theme='colored' />
-    {children}
+    <VideoContext.Provider value={{ videos }}>
+      {children}
+    </VideoContext.Provider>
   </>)
 };
 
@@ -83,7 +104,7 @@ export default AuthSync;
 function getHourDifference(date1: Date | string, date2: Date | string): number {
   const msInHour = 60 * 60 * 1000;
   const diffInMs = new Date(date1).getTime() - new Date(date2).getTime();
-  return Math.floor(diffInMs / msInHour);
+  return diffInMs / msInHour;
 }
 function getDaysDifference(date1: Date | string, date2: Date | string): number {
   const msInDay = 24 * 60 * 60 * 1000;
