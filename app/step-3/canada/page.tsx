@@ -6,9 +6,12 @@ import Button from "@/app/components/Button";
 import Logo from "@/app/components/LogoComponent";
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
+import { GetVideoContext } from "@/app/components/VideoContext";
 
 export default function Home() {
     const [videoWatched, setVideoWatched] = useState<number>(0);
+    const VideoContext = GetVideoContext()
+    const step_3_intro = VideoContext?.videos.find(({ title }: { title: string }) => title === 'step_3_introduction')
     useEffect(() => {
         toast.warn("Please Watch All the Videos", { icon: false })
         if (localStorage.getItem("step-3-watched") === "true") {
@@ -38,13 +41,13 @@ export default function Home() {
                     <li>My Best Strategy to get Started</li>
                 </ol>
                 <p className="text-2xl font-bold text-white my-4">1. Intro to your business journey with Nate</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
+                <VideoPlayer videoID={step_3_intro!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_intro!.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">2. The Best Product I have found so far</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
+                <VideoPlayer videoID={step_3_intro!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_intro!.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">3. The Perfect Business Model</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
+                <VideoPlayer videoID={step_3_intro!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_intro!.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">4. My Best Strategy to get Started</p>
-                <VideoPlayer onVideoEnd={handleVideoEnd} playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" />
+                <VideoPlayer videoID={step_3_intro!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_intro!.mux_playback_id} />
                 <p className={`${videoWatched == 4} text-md text-gray-200 mb-5`}>Make sure to watch all videos before you call if not you will not be able to understand my business or ask the right question</p>
                 <div className={`${videoWatched == 4 ? 'flex' : 'hidden'} justify-between w-full md:w-1/2`}>
                     <Button title="f Join our Facebook Group" type="button" />
