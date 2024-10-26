@@ -19,34 +19,34 @@ const TimezoneSelect: React.FC<TimeZoneProps> = ({ selectedTimezone, handleTimez
                     onChange={(value) => handleTimezoneChange(value as TimezoneOption)}
                     options={timezoneOptions}
                     placeholder="Choose a timezone"
-                    className="text-black"
+                    // className="text-black"
                     styles={{
                         control: (provided) => ({
                             ...provided,
-                            backgroundColor: '#111827',
+                            backgroundColor: 'white',
                             borderColor: '#374151',
-                            color: 'white',
+                            color: 'black',
                             paddingLeft: '2rem'
                         }),
                         singleValue: (provided) => ({
                             ...provided,
-                            color: 'white'
+                            color: 'black'
                         }),
                         input: (provided) => ({
                             ...provided,
-                            color: 'white'
+                            color: 'black'
                         }),
                         menu: (provided) => ({
                             ...provided,
-                            backgroundColor: '#111827',
+                            backgroundColor: 'white',
                             maxHeight: '200px',
                             scrollbarWidth: 'thin',
                             scrollbarColor: '#9ca3af #111827'
                         }),
                         option: (provided, state) => ({
                             ...provided,
-                            backgroundColor: state.isFocused ? '#374151' : '#111827',
-                            color: 'white',
+                            backgroundColor: state.isFocused ? '#d7b398' : 'white',
+                            color: state.isFocused ? 'white' : 'black',
                             cursor: 'pointer',
                             overflowX: 'hidden'
                         }),
@@ -58,5 +58,6 @@ const TimezoneSelect: React.FC<TimeZoneProps> = ({ selectedTimezone, handleTimez
         </div>
     );
 };
+//backgroundColor: state.isFocused ? '#374151' : '#111827',
 
 export default TimezoneSelect;

@@ -72,12 +72,11 @@ abbr{
   flex-basis: 0 !important;
   border-radius: 10px;
   box-sizing: border-box; 
-  background: #d7b3982c;
+  background: #c4804c2c;
   position: relative;
 }
 .react-calendar__tile:disabled {
   background-color: transparent;
-  color: rgba(255, 255, 255, 0.523);
 }
 .react-calendar__tile--active {
   background: #d7b398;
@@ -92,7 +91,7 @@ abbr{
 }
 
 .custom-scroll__menu-list::-webkit-scrollbar-track {
-  background: #111827;
+  background: #d7b398;
 }
 
 .custom-scroll__menu-list::-webkit-scrollbar-thumb {
@@ -102,7 +101,7 @@ abbr{
 
 .custom-scroll__menu-list {
   scrollbar-width: thin;
-  scrollbar-color: #7b7c7e #111827;
+  scrollbar-color: #7b7c7e #d7b398;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -110,7 +109,7 @@ abbr{
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #111827;
+  background: #d7b398;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -120,7 +119,7 @@ abbr{
 
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #7b7c7e #111827;
+  scrollbar-color: #7b7c7e #d7b398;
 }
 
 

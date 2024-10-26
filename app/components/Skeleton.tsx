@@ -3,7 +3,7 @@ const shimmer =
 
 export function CalendarSkeleton() {
     return (
-        <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-gray-900 text-white h-auto w-11/12 md:w-2/3 rounded-md">
+        <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-white text-black h-auto w-11/12 md:w-2/3 rounded-md">
             <div className={`${shimmer} w-full md:w-1/4 border-l-gray-500`}>
                 <h2 className="text-lg font-semibold">60 Min Meeting</h2>
                 <p className="mt-2 text-gray-400">60m</p>
@@ -22,51 +22,51 @@ export function CalendarSkeleton() {
                         <div className="h-4 rounded w-10">Sat</div>
                         <div className="h-4 rounded w-10">Sun</div>
 
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
-                        <div className="h-16 w-16 bg-gray-700 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
+                        <div className="h-16 w-16 bg-gray-400 rounded col-span-1"></div>
                     </div>
                 </div>
             </div>
 
             <div className={`${shimmer} w-full md:w-1/4 pb-4`}>
                 <div className="flex justify-between mb-4 items-center">
-                    <p className='text-white'><span className='font-bold text-lg'>Today</span> 01</p>
+                    <p className='text-black'><span className='font-bold text-lg'>Today</span> 01</p>
                     <div className='p-2 border border-gray-500 rounded-lg flex gap-x-1'>
-                        <button className={`px-3 py-1 rounded-md bg-gray-600`}>12h</button>
-                        <button className={`px-3 py-1 rounded-md bg-gray-800`}>24h</button>
+                        <button className={`px-3 py-1 rounded-md text-white bg-[#d7b398]`}>12h</button>
+                        <button className={`px-3 py-1 rounded-md text-black bg-white`}>24h</button>
                     </div>
                 </div>
                 <div className="space-y-2 overflow-y-auto h-96 custom-scrollbar pr-1">
                     {[...Array(10)].map((_, index) => (
                         <button
                             key={index}
-                            className={`w-full py-2 h-9 text-left px-3 rounded-md bg-[#1a1a1a] border border-gray-600 text-gray-300`}
+                            className={`w-full py-2 h-9 text-left px-3 rounded-md bg-[#d7b398] border border-[#d7b398] text-black`}
                         ></button>
                     ))}
                 </div>
