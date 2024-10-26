@@ -124,6 +124,9 @@ export default function DisplayQuestion() {
                     return newVal
                 })
                 setIndex(prev => prev + 1)
+                console.log(index)
+                console.log(Boolean(localStorage.getItem(surveys.questions[index + 1]?.title)))
+                setSelectedValue(null)
                 if (Boolean(localStorage.getItem(surveys.questions[index + 1]?.title))) {
                     setSelectedValue({ question_id: surveys.questions[index + 1].id, response: localStorage.getItem(surveys.questions[index + 1].title)!.toString() })
                     setAnswer(prev => {
@@ -132,7 +135,6 @@ export default function DisplayQuestion() {
                         return newVal
                     })
                 }
-                setSelectedValue(null)
             }
             return
         }
