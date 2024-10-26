@@ -40,8 +40,8 @@ const TimezoneSelect: React.FC<TimeZoneProps> = ({ selectedTimezone, handleTimez
                             ...provided,
                             backgroundColor: '#111827',
                             maxHeight: '200px',
-                            scrollbarWidth: 'thin',       // For Firefox
-                            scrollbarColor: '#9ca3af #111827', // For Firefox
+                            scrollbarWidth: 'thin',
+                            scrollbarColor: '#9ca3af #111827'
                         }),
                         option: (provided, state) => ({
                             ...provided,
@@ -51,7 +51,6 @@ const TimezoneSelect: React.FC<TimeZoneProps> = ({ selectedTimezone, handleTimez
                             overflowX: 'hidden'
                         }),
                     }}
-                    // Additional global CSS for custom scrollbar
                     classNamePrefix="custom-scroll"
                 />
                 <FaGlobe className="absolute top-2/4 left-3 transform -translate-y-1/2 text-gray-500 pointer-events-none" />

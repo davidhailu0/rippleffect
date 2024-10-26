@@ -1,11 +1,10 @@
 'use client'
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import { ScaleLoader } from "react-spinners";
 import clsx from "clsx";
 import Cookies from 'js-cookie';
-import "react-toastify/dist/ReactToastify.css";
 import CodeInput from "./CodeInput";
 
 // Define the shape of the API response state
@@ -24,15 +23,38 @@ const showToast = (message: string, type: "error" | "success") => {
     }
 };
 
-export default function SignUpForm({ ref_code }: { ref_code?: string }) {
+export default function SignUpForm({ ref_code, login_token }: { ref_code?: string, login_token?: string }) {
     const [email, setEmail] = useState<string>("");
     const [confirmationCode, setConfirmationCode] = useState<string>("");
     const [state, setState] = useState<State>({});
     const [loading, setLoading] = useState<boolean>(false)
     const router = useRouter();
 
+    useEffect(() => {
+        async function verifyLoginToken() {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/login_with_token?login_token=${login_token}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string
+                }
+            })
+            const json = await res.json()
+            if (json.login_token) {
+                Cookies.set('token', json.login_token, { expires: 365, path: '/', sameSite: 'Strict' })
+                Cookies.set('referral_code', json.referral_code, { expires: 365, path: '/', sameSite: 'Strict' })
+                router.push("/account");
+            }
+            else {
+                router.push('/not-found');
+            }
+        }
+        if (login_token) {
+            verifyLoginToken()
+        }
+    }, [login_token, email, router])
+
     // Memoize function for creating account
-    const createAccount = useCallback(async (e: FormEvent<HTMLButtonElement>) => {
+    const createAccount = useCallback(async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const leadData = ref_code
@@ -61,12 +83,13 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             setLoading(false)
+            console.log(error)
             showToast("Network error. Please try again later.", "error");
         }
     }, [email, ref_code]);
 
     // Memoize function for confirming account
-    const confirmAccount = useCallback(async (e: FormEvent<HTMLButtonElement>) => {
+    const confirmAccount = useCallback(async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true)
         try {
@@ -86,9 +109,13 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
             setLoading(false)
             const json = await resp.json()
             if (json.login_token) {
-                Cookies.set('token', json.login_token, { expires: 1, path: '/', sameSite: 'Strict' })
-                Cookies.set('referral_code', json.referral_code, { expires: 1, path: '/', sameSite: 'Strict' })
-                Cookies.set('email', email, { expires: 1, path: '/', sameSite: 'Strict' })
+                const channel = new BroadcastChannel('auth');
+                channel.postMessage('login');
+                channel.close();
+                Cookies.set('id', json.id, { expires: 365 * 30, path: '/', sameSite: 'Strict' })
+                Cookies.set('token', json.login_token, { expires: 365, path: '/', sameSite: 'Strict' })
+                Cookies.set('referral_code', json.referral_code, { expires: 365, path: '/', sameSite: 'Strict' })
+                Cookies.set('email', email, { expires: 365 * 30, path: '/', sameSite: 'Strict' })
                 router.push("/step-1");
             }
             else {
@@ -107,20 +134,20 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
 
     return (
         <>
-            <ToastContainer autoClose={false} />
-            <form className="flex flex-col w-11/12 md:w-1/3 gap-4 mx-auto">
+            <ToastContainer />
+            <form onSubmit={showSignUpButton ? createAccount : confirmAccount} className="flex flex-col w-11/12 md:w-2/3 gap-3 mx-auto items-center">
                 <TextField
-                    name="email"
+                    label="Email"
                     type="email"
+                    value={email}
                     placeholder="Email"
                     onChange={setEmail}
                     hidden={Boolean(state.frontend_token)}
                 />
-                {showConfirmationField && <CodeInput confirmationCode={confirmationCode} setConfirmationCode={setConfirmationCode} />}
+                {showConfirmationField && <CodeInput confirmationCode={confirmationCode} setConfirmationCode={setConfirmationCode} frontend_token={state.frontend_token!} />}
                 {showConfirmationField && (
                     <button
-                        type="button"
-                        onClick={confirmAccount}
+                        type="submit"
                         className="bg-gradient-to-r from-[#18455F] via-[#4B7A87] to-black h-12 rounded-[50px] text-white shadow-xl font-bold mt-6 col-span-2 w-[260px] mx-auto text-center"
                     >
                         <ScaleLoader color="#fff" loading={loading} className="h-9 w-1/2 mx-auto" />
@@ -129,8 +156,7 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
                 )}
                 {showSignUpButton && (
                     <button
-                        type="button"
-                        onClick={createAccount}
+                        type="submit"
                         className="bg-gradient-to-r from-[#18455F] via-[#4B7A87] to-black h-12 rounded-[50px] text-white shadow-xl font-bold mt-6 col-span-2 w-[260px] mx-auto text-center"
                     >
                         <ScaleLoader color="#fff" loading={loading} className="h-9 w-1/2 mx-auto" />
@@ -143,6 +169,15 @@ export default function SignUpForm({ ref_code }: { ref_code?: string }) {
 }
 
 
-function TextField({ name, type, placeholder, hidden, onChange }: { name: string, type?: string, placeholder: string, hidden?: boolean, onChange: (arg: string) => void }) {
-    return <input name={name} type={type ? type : 'text'} onChange={(e) => { onChange(e.target.value); localStorage.setItem(name, e.target.value) }} placeholder={placeholder} className={`h-12 text-white bg-transparent outline-none border-b-[1px] border-b-white focus:outline-1 focus:outline-black focus:border-b-0 placeholder:text-white ${hidden && 'hidden'}`} />
+function TextField({ label, value, type, placeholder, hidden, onChange }: { label: string, value: string, type?: string, placeholder: string, hidden?: boolean, onChange: (arg: string) => void }) {
+    return <div className={`relative w-full max-w-sm mx-auto ${hidden && 'hidden'}`}>
+        <input type={type ? type : 'text'} value={value}
+            className="text-black peer w-full px-4 py-2 bg-white border border-gray-300 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent placeholder-transparent transition-all duration-200"
+            placeholder={placeholder} onChange={(e) => onChange(e.target.value)} />
+        <label htmlFor="fancy-input"
+            className="absolute left-4 -top-2.5 text-gray-400 text-sm transition-all duration-200 peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-500 peer-focus:-top-4 peer-focus:text-sm peer-focus:text-white">
+            {label}
+        </label>
+    </div>
+
 }

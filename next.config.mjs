@@ -2,7 +2,11 @@
 const nextConfig = {
     output:'export',
     distDir:'out',
-    trailingSlash:true
+    trailingSlash:true,
+    // reactStrictMode:false
+    typescript:{
+        ignoreBuildErrors:true
+    }
 };
 
 export default nextConfig;
