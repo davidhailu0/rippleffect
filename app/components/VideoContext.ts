@@ -2,6 +2,7 @@ import { createContext,useContext } from "react";
 
 export type Video = {
     id:number,
+    tag_list:string[],
     title:string,
     mux_playback_id:string
 }

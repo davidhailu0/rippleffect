@@ -35,6 +35,7 @@ const BookingCalendar: React.FC = () => {
     const [showRegistration, setShowRegistration] = useState<boolean>(false)
 
     async function fetchAvailablities(date: Date) {
+        setCurrentDate(date)
         setAvailablities(null)
         const dates = await fetchAvailableDates(date.getMonth() + 1, date.getFullYear())
         if (Object.keys(dates).includes(new Date().toLocaleDateString('en-CA'))) {
@@ -81,7 +82,8 @@ const BookingCalendar: React.FC = () => {
                     headers: {
                         "Content-Type": "application/json",
                         'Origin': window.location.origin,
-                        'Authorization': token || ''
+                        'Authorization': token || '',
+                        'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
                     },
                     body: JSON.stringify({ start_time, end_time, "timezone": selectedTimezone?.value })
                 })
@@ -131,14 +133,14 @@ const BookingCalendar: React.FC = () => {
 
                     <div className="w-full md:w-1/4 pb-4">
                         <div className="flex justify-between mb-4 items-center">
-                            <p className='text-black'><span className='font-bold text-lg'>{days[new Date(value!.toString()).getDay()]}</span> {new Date(value!.toString()).getDate()}</p>
+                            {value && <p className='text-black'><span className='font-bold text-lg'>{days[new Date(value!.toString()).getDay()]}</span> {new Date(value!.toString()).getDate()}</p>}
                             <div className='p-2 border border-gray-500 rounded-lg flex gap-x-1'>
                                 <button onClick={() => setHourFormat('12')} className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}>12h</button>
                                 <button onClick={() => setHourFormat('24')} className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}>24h</button>
                             </div>
                         </div>
                         <div className="space-y-2 overflow-y-auto h-96 custom-scrollbar pr-1">
-                            {availablities[new Date(value!.toString()).toLocaleDateString('en-CA')].map(({ start_time, end_time }) => new Date(currentDate.toLocaleString('en-US', { timeZone: selectedTimezone?.value })).getTime() <= new Date(start_time).getTime() ? (
+                            {value && availablities[new Date(value!.toString()).toLocaleDateString('en-CA')].map(({ start_time, end_time }) => new Date(currentDate.toLocaleString('en-US', { timeZone: selectedTimezone?.value })).getTime() <= new Date(start_time).getTime() ? (
                                 <button
                                     key={start_time}
                                     onClick={() => bookSession({ start_time, end_time })}
@@ -175,7 +177,8 @@ function ScheduleMeetingRegistration({ callback }: { callback: () => void }) {
             headers: {
                 'Content-Type': 'application/json',
                 'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
-                'Authorization': token || ''
+                'Authorization': token || '',
+                'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             },
             body: JSON.stringify({
                 "lead": {

@@ -1,7 +1,9 @@
+'use client'
 import Image from "next/image";
 import VideoPlayer from "@/app/components/videoComponent";
 import SignUpForm from "@/app/components/SignUp";
 import Logo from "@/app/components/LogoComponent";
+import { GetVideoContext } from "@/app/components/VideoContext";
 
 export default function Home({
     params,
@@ -11,6 +13,8 @@ export default function Home({
     };
 }) {
     const ref = params?.ref;
+    const videoContext = GetVideoContext()
+    const landing_page = videoContext?.videos.find(({ tag_list }) => tag_list.includes('landing'))
     return (
         <div className="flex flex-col items-center w-full min-h-screen py-8 px-4">
 
@@ -32,7 +36,7 @@ export default function Home({
                 </p>
 
                 {/* Video Player */}
-                <VideoPlayer playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs" videoID={12233} />
+                <VideoPlayer playBackId={landing_page!.mux_playback_id} />
 
                 {/* Note */}
                 <p className="text-base md:text-lg text-gray-400 font-medium leading-6 mt-4 md:mt-8 text-center">

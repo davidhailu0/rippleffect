@@ -45,11 +45,11 @@ abbr{
 
 .react-calendar__navigation__prev-button:hover{
   border:1px solid gray;
-  background: #0F2C40;
+  background: #bbbbbb;
 }
 .react-calendar__navigation__next-button:hover{
   border:1px solid gray;
-  background: #0F2C40;
+  background: #bbbbbb;
 }
 .react-calendar__navigation__prev-button{
   right: 2.3rem;

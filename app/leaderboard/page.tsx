@@ -11,10 +11,10 @@ export default function Leaderboard() {
                 <p className="text-xl md:text-4xl font-bold text-white">Leaderboard</p>
                 <p className={`${lato.className} text-white text-start md:text-center text-base px-0 leading-7 md:text-lg font-medium md:leading-[23.4px]`}>Compare your progress with our top users</p>
                 <div className="grid grid-cols-1 md:grid-cols-4 w-full gap-4">
-                    <LeaderboardCard title="Today" data={[{ id: 1, name: 'Abebe', score: '10' }]} />
-                    <LeaderboardCard title="Last 7 Days" data={[{ id: 1, name: 'Abebe', score: '10' }]} />
-                    <LeaderboardCard title="Last 30 Days" data={[{ id: 1, name: 'Abebe', score: '10' }]} />
-                    <LeaderboardCard title="All Time" data={[{ id: 1, name: 'Abebe', score: '10' }]} />
+                    <LeaderboardCard title="Today" data={[{ id: 1, name: 'Nate', score: '10' }, { id: 1, name: 'Nate', score: '10' }]} />
+                    <LeaderboardCard title="Last 7 Days" data={[{ id: 1, name: 'Nate', score: '10' }, { id: 1, name: 'Nate', score: '10' }]} />
+                    <LeaderboardCard title="Last 30 Days" data={[{ id: 1, name: 'Nate', score: '10' }, { id: 1, name: 'Nate', score: '10' }]} />
+                    <LeaderboardCard title="All Time" data={[{ id: 1, name: 'Nate', score: '10' }, { id: 1, name: 'Nate', score: '10' }]} />
                 </div>
             </div>
         </>

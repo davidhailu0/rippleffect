@@ -14,7 +14,7 @@ interface MuxPlayerElement extends HTMLVideoElement {
 }
 
 
-export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd }: { playBackId: string, videoID: number, className?: string, onVideoEnd?: () => void }) {
+export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd }: { playBackId: string, videoID?: number, className?: string, onVideoEnd?: () => void }) {
     const [lastTime, setLastTime] = useState(0);
     const videoRef = useRef<MuxPlayerElement>(null);
 
@@ -52,15 +52,17 @@ export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd
             videoElement.currentTime = lastTime;
         } else {
             setLastTime(currentTime);
-            updateVideoStatus()
+            if (videoID) {
+                updateVideoStatus()
+            }
         }
     };
 
     const updateVideoStatus = async () => {
         const token = Cookies.get('token') as string
         const id = Cookies.get('id') as string
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
-            headers: { 'Content-Type': 'application/json', 'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string, 'Authorization': token }, method: "POST", body: JSON.stringify(
+        await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+            headers: { 'Content-Type': 'application/json', 'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string, 'Authorization': token, 'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string }, method: "POST", body: JSON.stringify(
                 {
                     "video": {
                         "id": videoID,
@@ -72,7 +74,7 @@ export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd
                 }
             )
         })
-        const json = await resp.json()
+        // const json = await resp.json()
     }
 
 
