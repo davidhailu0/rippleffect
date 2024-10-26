@@ -61,7 +61,7 @@ export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd
     const updateVideoStatus = async () => {
         const token = Cookies.get('token') as string
         const id = Cookies.get('id') as string
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+        await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
             headers: { 'Content-Type': 'application/json', 'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string, 'Authorization': token, 'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string }, method: "POST", body: JSON.stringify(
                 {
                     "video": {
@@ -74,7 +74,7 @@ export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd
                 }
             )
         })
-        const json = await resp.json()
+        // const json = await resp.json()
     }
 
 
