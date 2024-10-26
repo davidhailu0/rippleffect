@@ -7,11 +7,15 @@ import Logo from "@/app/components/LogoComponent";
 import { useEffect, useState } from "react";
 import { toast } from 'react-toastify';
 import { GetVideoContext } from "@/app/components/VideoContext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
     const [videoWatched, setVideoWatched] = useState<number>(0);
+    const router = useRouter()
     const VideoContext = GetVideoContext()
-    const step_3_intro = VideoContext?.videos.find(({ title }: { title: string }) => title === 'step_3_introduction')
+    const step_3_intro = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('intro'))
+    const step_3_usd = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('usd'))
+
     useEffect(() => {
         toast.warn("Please Watch All the Videos", { icon: false })
         if (localStorage.getItem("step-3-watched") === "true") {
@@ -24,6 +28,10 @@ export default function Home() {
             localStorage.setItem("step-3-watched", "true")
         }
         setVideoWatched(prev => prev + 1)
+    }
+
+    const goToTraining = () => {
+        router.push('/training')
     }
     return (
         <>
@@ -47,11 +55,11 @@ export default function Home() {
                 <p className="text-2xl font-bold text-white my-4">3. The Perfect Business Model</p>
                 <VideoPlayer videoID={step_3_intro!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_intro!.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">4. My Best Strategy to get Started</p>
-                <VideoPlayer videoID={step_3_intro!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_intro!.mux_playback_id} />
+                <VideoPlayer videoID={step_3_usd!.id} onVideoEnd={handleVideoEnd} playBackId={step_3_usd!.mux_playback_id} />
                 <p className={`${videoWatched == 4} text-md text-gray-200 mb-5`}>Make sure to watch all videos before you call if not you will not be able to understand my business or ask the right question</p>
                 <div className={`${videoWatched == 4 ? 'flex' : 'hidden'} justify-between w-full md:w-1/2`}>
                     <Button title="f Join our Facebook Group" type="button" />
-                    <Button title="Next >" type="button" />
+                    <Button title="Next >" type="button" callBack={goToTraining} />
                 </div>
             </div>
         </>

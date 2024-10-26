@@ -6,6 +6,7 @@ import { ClipLoader } from "react-spinners"
 import Cookies from "js-cookie"
 import MuxPlayer from "@mux/mux-player-react";
 import { fetchSurveys } from "../lib/actions"
+import { GetVideoContext, Video } from "./VideoContext"
 type Answer = { question_id: number, response: string }
 type Survey = { id: number, title: string, question_type: string, choices: { [key: string]: string } }
 type Question = { id: number, questions: Survey[] }
@@ -14,11 +15,19 @@ export default function DisplayQuestion() {
     const [surveys, setSurveys] = useState<Question | null>(null)
     const [selectedValue, setSelectedValue] = useState<Answer | null>(null)
     const [answers, setAnswer] = useState<Answer[]>([])
-    const [videoIDS] = useState<string[]>(['4BjjZhfTBSreAxmajsADfsiaWPaatTdI1500l3Qp02lHY', 'JhPOiFSDvpQCnpnGKkjSW0202ZVAPOvuOnfoH3gp7QhD00', '6200L5XkOS79Ps8ZreWXNh5Ch009oFv8fNFm6skYuQYEY', 'x8DKk6SWzqjhO00t1BaGiI014NeTA14foj4fVBIRh70048', 'G3g7M8iFcLf3itsskcw934JiX8pFdHEILq5101x00TKLc', '6iOlTRsT00xCjPk2eUmdS3Jta3xU4seoDU02029V2MrF58', 'ebIk9v7MELSMYooiHXXw81ohEE5dV2TvWrMhy3NQRcg', 'WtHvwzZrvUGUv7aGsgN7m01rx5GRuMh3Nfkz3BNtZ7UY', '4r9u45ssnxmUWnbI2I00KjfAaj3MTMO9Rjkoeirytqkc', '87DpQQcre2fvSITRiolDftE11PdH9tH00F952uiXRLIY', '3ucTdfD1hY2M5IJldQlSgQGbCuIsjCxxHmFbOHE46yo', 'BogiJiGKpwuMxHKmMNypLzADmIFzggYYaX01qa9vCFPc'])
+    const [videoIDS, setVideoIDS] = useState<Video[]>([])
     const [index, setIndex] = useState(0)
     const videoRef = useRef<HTMLVideoElement>(null);
     const [lastTime, setLastTime] = useState(0);
     const router = useRouter()
+
+    const videoContext = GetVideoContext()
+
+    const compareVideoTitle = (a: Video, b: Video) => {
+        const questionNuma = parseInt(a.title.substring(a.title.indexOf(' ') + 1, a.title.indexOf(':')))
+        const questionNumb = parseInt(b.title.substring(b.title.indexOf(' ') + 1, b.title.indexOf(':')))
+        return questionNuma - questionNumb
+    }
 
     useEffect(() => {
         async function fetchRequest() {
@@ -34,9 +43,7 @@ export default function DisplayQuestion() {
             setSurveys(question)
         }
         fetchRequest()
-    }, [])
-
-    useEffect(() => {
+        setVideoIDS(videoContext!.videos.filter(({ tag_list }) => tag_list.includes('survey')).sort(compareVideoTitle))
         const handleVisibilityChange = () => {
             const videoElement = videoRef.current;
             if (videoElement) {
@@ -138,7 +145,7 @@ export default function DisplayQuestion() {
     return <div className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
         <div className="h-auto w-full mx-auto flex flex-col gap-7 bg-white px-8 py-10">
             <Image src="/logo.png" alt="logo.png" height={95} width={90} className="mx-auto" unoptimized />
-            <MuxPlayer ref={videoRef} playbackId={videoIDS[index]} onTimeUpdate={handleTimeUpdate} className={"h-[300px] md:h-[500px] overflow-x-hidden"} />
+            <MuxPlayer ref={videoRef} playbackId={videoIDS[index].mux_playback_id} onTimeUpdate={handleTimeUpdate} className={"h-[300px] md:h-[500px] overflow-x-hidden"} />
             {surveys.questions[index]?.question_type === 'multiple_choice' && <p className={`text-blue-400`}>
                 {surveys.questions[index]?.title}
             </p>}
@@ -167,8 +174,6 @@ export default function DisplayQuestion() {
 }
 
 function TextField({ label, value, placeholder, onChange }: { label: string, value?: string, type?: string, placeholder: string, hidden?: boolean, onChange: (arg: ChangeEvent<HTMLInputElement>) => void }) {
-
-
     return <div>
         <label htmlFor="first-name" className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
         <input type="text" placeholder={placeholder} id="first-name" name="first-name" required

@@ -1,8 +1,9 @@
-import { lato } from "@/app/fonts/lato";
+'use client'
 import Image from "next/image";
 import VideoPlayer from "@/app/components/videoComponent";
 import SignUpForm from "@/app/components/SignUp";
 import Logo from "@/app/components/LogoComponent";
+import { GetVideoContext } from "@/app/components/VideoContext";
 
 export default function Home({
     params,
@@ -12,6 +13,8 @@ export default function Home({
     };
 }) {
     const ref = params?.ref;
+    const videoContext = GetVideoContext()
+    const landing_page = videoContext?.videos.find(({ tag_list }) => tag_list.includes('landing'))
     return (
         <div className="flex flex-col items-center min-h-screen py-8 px-4">
 
@@ -22,7 +25,7 @@ export default function Home({
                 <div className="col-span-1 flex justify-center md:max-h-[90%]">
                     <VideoPlayer
                         className="w-full h-auto rounded-lg overflow-hidden"
-                        playBackId="EcHgOK9coz5K4rjSwOkoE7Y7O01201YMIC200RI6lNxnhs"
+                        playBackId={landing_page!.mux_playback_id}
                     />
                 </div>
 
