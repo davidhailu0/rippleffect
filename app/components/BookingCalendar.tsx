@@ -81,7 +81,6 @@ const BookingCalendar: React.FC = () => {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
-                        'Origin': window.location.origin,
                         'Authorization': token || '',
                         'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
                     },
@@ -176,7 +175,6 @@ function ScheduleMeetingRegistration({ callback }: { callback: () => void }) {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
                 'Authorization': token || '',
                 'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             },

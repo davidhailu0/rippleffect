@@ -93,8 +93,7 @@ export default function DisplayQuestion() {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': token as string,
-                'Origin': window.location.origin
+                'Authorization': token as string
             },
             body: JSON.stringify({
                 "email": email,

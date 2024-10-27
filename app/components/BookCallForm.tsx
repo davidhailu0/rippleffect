@@ -37,7 +37,6 @@ export default function BookCallForm({ availablities, currentDate }: { availabli
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json",
-                        'Origin': window.location.origin,
                         'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
                         'Authorization': token || ''
                     },

@@ -23,7 +23,6 @@ import Cookies from 'js-cookie'
 //     }
 //     const resp = await fetch(`${process.env.APP_DOMAIN}/api/v1/leads`,{method:'POST',headers:{
 //         'Content-Type':'application/json',
-//         'Origin': process.env.APP_ORIGIN as string
 //     },body:JSON.stringify(data)})
 //     const jsonResp = await resp.json()
 //     return jsonResp;
@@ -33,7 +32,6 @@ import Cookies from 'js-cookie'
 //     const confirmation_token = formData.get('token')
 //      await fetch(`${process.env.APP_DOMAIN}/api/v1/leads/confirm`,{method:'POST',headers:{
 //         'Content-Type':'application/json',
-//         'Origin': process.env.APP_ORIGIN as string
 //     },body:JSON.stringify({
 //         lead: {
 //             "confirmation_token": confirmation_token,
@@ -53,7 +51,6 @@ export const fetchFilteredMembers = async()=>{
     const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/?email=${email}&referral_code=${referral_code}`,{
         headers:{
             'Content-Type':'application/json',
-            'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             'Authorization':token||''
         },
@@ -70,7 +67,6 @@ export const fetchAvailableDates = async(month:number,year:number)=>{
   const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities/?year=${year}&month=${month}`,{
       headers:{
           'Content-Type':'application/json',
-          'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Authorization':token||''
       },
@@ -87,7 +83,6 @@ export const fetchSurveys = async()=>{
   const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys`,{
       headers:{
           'Content-Type':'application/json',
-          'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Authorization':token||''
       },
