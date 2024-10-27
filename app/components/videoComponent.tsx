@@ -1,98 +1,124 @@
 'use client';
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from 'react';
 import MuxPlayer from '@mux/mux-player-react';
-import Cookies from 'js-cookie'
+import Cookies from 'js-cookie';
 
-type GenericEventListener<T extends Event> = (event: T) => void;
-
-// mux-player.d.ts
+// Improved typing for the MuxPlayer element
 interface MuxPlayerElement extends HTMLVideoElement {
     currentTime: number;
     paused: boolean;
-    // Add more methods and properties as needed based on the Mux player API
+    duration: number;
 }
 
+interface VideoPlayerProps {
+    playBackId: string;
+    videoID?: number;
+    className?: string;
+    onVideo80?: () => void;
+}
 
-export default function VideoPlayer({ playBackId, videoID, className, onVideoEnd }: { playBackId: string, videoID?: number, className?: string, onVideoEnd?: () => void }) {
-    const [lastTime, setLastTime] = useState(0);
-    const videoRef = useRef<MuxPlayerElement>(null);
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, className, onVideo80 }) => {
+    const [lastUpdate, setLastUpdate] = useState({ lastTime: 0, lastTime30Sec: 0 });
+    const videoRef = useRef<MuxPlayerElement | null>(null);
 
+    // Handle video visibility change
     useEffect(() => {
-        //toast.warn("Click on the Video to Play", { icon: false })
         const handleVisibilityChange = () => {
             const videoElement = videoRef.current;
-            if (videoElement) {
-                if (document.visibilityState === "hidden" && !videoElement.paused) {
-                    videoElement.pause();
-                }
+            if (document.visibilityState === 'hidden' && videoElement && !videoElement.paused) {
+                videoElement.pause();
             }
         };
 
-        document.addEventListener("visibilitychange", handleVisibilityChange);
-
         const handleContextMenu = (e: MouseEvent) => e.preventDefault();
-        document.addEventListener("contextmenu", handleContextMenu);
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        document.addEventListener('contextmenu', handleContextMenu);
 
         return () => {
-            document.removeEventListener("visibilitychange", handleVisibilityChange);
-            document.removeEventListener("contextmenu", handleContextMenu);
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            document.removeEventListener('contextmenu', handleContextMenu);
         };
     }, []);
 
+    // Debounced API update function
+    const updateVideoStatus = useCallback(async () => {
+        const token = Cookies.get('token');
+        const id = Cookies.get('id');
 
+        if (!token || !id || !videoID) return;
+        const videoElement = videoRef.current;
+        if (!videoElement) return;
 
-    const handleTimeUpdate: GenericEventListener<Event> = (e) => {
-        const videoElement = e.currentTarget as HTMLMediaElement
-        const currentTime = videoElement.currentTime
-        if ((videoElement.currentTime / videoElement.duration) >= 0.75 && Boolean(onVideoEnd)) {
-            onVideoEnd!()
-        }
-        if (currentTime - lastTime > 2) {
-            videoElement.currentTime = lastTime;
-        } else {
-            setLastTime(currentTime);
-            if (videoID) {
-                updateVideoStatus()
-            }
-        }
-    };
-
-    const updateVideoStatus = async () => {
-        const token = Cookies.get('token') as string
-        const id = Cookies.get('id') as string
-        await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
-            headers: { 'Content-Type': 'application/json', 'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string, 'Authorization': token, 'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string }, method: "POST", body: JSON.stringify(
-                {
-                    "video": {
-                        "id": videoID,
-                        "lead_id": parseInt(id),
-                        "duration": videoRef.current?.duration,
-                        "current_time": videoRef.current?.currentTime,
-                        "progress": (videoRef.current!.currentTime / videoRef.current!.duration) * 100
+        try {
+            await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': token,
+                    'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
+                    'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
+                },
+                body: JSON.stringify({
+                    video: {
+                        id: videoID,
+                        lead_id: parseInt(id, 10),
+                        duration: videoElement.duration,
+                        current_time: videoElement.currentTime,
+                        progress: (videoElement.currentTime / videoElement.duration) * 100,
                     }
+                }),
+            });
+        } catch (error) {
+            console.error('Failed to update video status:', error);
+        }
+    },
+        [videoID]
+    );
+
+    // Handle video time updates
+    const handleTimeUpdate = useCallback(
+        (e: Event) => {
+            const videoElement = e.currentTarget as HTMLVideoElement;
+            const currentTime = videoElement.currentTime;
+            const progress = Math.round((currentTime / videoElement.duration) * 100);
+
+            // Trigger onVideo80 if progress reaches 80%
+            if (progress >= 80 && onVideo80) {
+                onVideo80();
+                updateVideoStatus();
+            }
+
+            // Adjust video playback to prevent skipping
+            if (currentTime - lastUpdate.lastTime > 2) {
+                videoElement.currentTime = lastUpdate.lastTime;
+            } else {
+                // Update status every 30 seconds
+                if (videoID && currentTime - lastUpdate.lastTime30Sec >= 30) {
+                    updateVideoStatus();
+                    setLastUpdate((prev) => ({ ...prev, lastTime30Sec: currentTime }));
                 }
-            )
-        })
-        // const json = await resp.json()
-    }
+                setLastUpdate((prev) => ({ ...prev, lastTime: currentTime }));
+            }
+        },
+        [videoID, lastUpdate, onVideo80, updateVideoStatus]
+    );
 
-
-    return <>
-        {/* <ToastContainer autoClose={false} position="top-center" theme="colored" /> */}
-        {/* <video onClick={handlePlayPauseBtn} ref={videoRef} id="videoPlayer" onTimeUpdate={handleTimeUpdate} onEnded={onVideoEnd} controlsList="nodownload nofastforward" className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] hover:scale-110 transition ease-in-out duration-200 object-contain hover:cursor-pointer ${className}`}>
-            <source className="h-full" src={src} type="video/mp4" />
-        </video> */}
+    return (
         <MuxPlayer
             className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
             onTimeUpdate={handleTimeUpdate}
             playbackId={playBackId}
             ref={videoRef}
             metadata={{
-                video_id: "video-id-54321",
-                video_title: "Test video title",
-                viewer_user_id: "user-id-007",
+                video_id: 'video-id-54321',
+                video_title: 'Test video title',
+                viewer_user_id: 'user-id-007',
             }}
         />
-    </>
-}
+    );
+};
+
+
+export default VideoPlayer;

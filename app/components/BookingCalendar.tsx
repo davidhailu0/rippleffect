@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Calendar from "react-calendar";
 import Cookies from "js-cookie";
 import { Availablities, TimezoneOption } from '../lib/models';
@@ -12,18 +12,6 @@ type ValuePiece = Date | null;
 
 type Value = ValuePiece | [ValuePiece, ValuePiece];
 
-const timezoneOptions: TimezoneOption[] = Intl.supportedValuesOf('timeZone').map((tz) => {
-    const currentDate = new Date(new Date().toLocaleDateString());
-    const dateInTimezone = new Date(currentDate.toLocaleString('en-US', { timeZone: tz }));
-    const utcOffsetMillis = dateInTimezone.getTime() - currentDate.getTime();
-
-    return {
-        value: tz,
-        label: tz.replace('_', ' '),
-        offsetFromUTC: utcOffsetMillis,
-    };
-});
-
 const days: string[] = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 const BookingCalendar: React.FC = () => {
@@ -34,7 +22,19 @@ const BookingCalendar: React.FC = () => {
     const [currentDate, setCurrentDate] = useState<Date>(new Date(new Date().toLocaleDateString()))
     const [showRegistration, setShowRegistration] = useState<boolean>(false)
 
-    async function fetchAvailablities(date: Date) {
+    const timezoneOptions: TimezoneOption[] = useMemo(() => Intl.supportedValuesOf('timeZone').map((tz) => {
+        const currentDate = new Date(new Date().toLocaleDateString());
+        const dateInTimezone = new Date(currentDate.toLocaleString('en-US', { timeZone: tz }));
+        const utcOffsetMillis = dateInTimezone.getTime() - currentDate.getTime();
+
+        return {
+            value: tz,
+            label: tz.replace('_', ' '),
+            offsetFromUTC: utcOffsetMillis,
+        };
+    }), []);
+
+    const fetchAvailablities = useCallback(async (date: Date) => {
         setCurrentDate(date)
         setAvailablities(null)
         const dates = await fetchAvailableDates(date.getMonth() + 1, date.getFullYear())
@@ -53,7 +53,7 @@ const BookingCalendar: React.FC = () => {
         }
         setAvailablities(dates)
 
-    }
+    }, [])
 
     useEffect(() => {
 
@@ -64,7 +64,7 @@ const BookingCalendar: React.FC = () => {
             setSelectedTimezone(timezone);
         }
         fetchAvailablities(new Date())
-    }, []);
+    }, [fetchAvailablities, timezoneOptions]);
 
     if (!availablities) return <CalendarSkeleton />;
 
