@@ -8,7 +8,7 @@ import { GetVideoContext } from "../components/VideoContext";
 export default function Content() {
     const [show, setShow] = useState<boolean>(false)
     const VideoContext = GetVideoContext()
-    const step_2_video = VideoContext?.videos.find(({ title }: { title: string }) => title === 'step_2')
+    const step_2_video = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step2'))
     useEffect(() => {
         if (localStorage.getItem("step-2-watched") === "true") {
             setShow(true)

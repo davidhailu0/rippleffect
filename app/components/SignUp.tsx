@@ -35,7 +35,8 @@ export default function SignUpForm({ ref_code, login_token }: { ref_code?: strin
             const res = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/login_with_token?login_token=${login_token}`, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string
+                    'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+                    'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string
                 }
             })
             const json = await res.json()
@@ -68,6 +69,7 @@ export default function SignUpForm({ ref_code, login_token }: { ref_code?: strin
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
                     "Origin": window.location.origin,
                 },
                 body: JSON.stringify(data),
@@ -97,6 +99,7 @@ export default function SignUpForm({ ref_code, login_token }: { ref_code?: strin
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
                     "Origin": window.location.origin,
                 },
                 body: JSON.stringify({

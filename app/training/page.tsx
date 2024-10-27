@@ -59,6 +59,7 @@ const paidTrainingItems = [
 export default function Training() {
     return (
         <>
+            <Logo />
             <Navbar />
             <div className="flex flex-col gap-7 mt-7 items-center w-full px-4 md:w-[73%] md:px-0 mx-auto">
                 <p className="text-4xl font-bold text-white mb-4 md:mb-9">Training</p>
@@ -67,7 +68,7 @@ export default function Training() {
                         title="Quick start"
                         icon="⚙️"
                         items={quickStartItems}
-                        imageUrl="/image.jpg" // Replace with the correct path for the image
+                        imageUrl="/userEdit.png" // Replace with the correct path for the image
                         buttonText="Quick start"
                     />
 
@@ -75,14 +76,14 @@ export default function Training() {
                         title="Organic Trading"
                         icon="💻"
                         items={organicTrading}
-                        imageUrl="/image.jpg" // Replace with the correct path for the image
+                        imageUrl="/userEdit.png" // Replace with the correct path for the image
                         buttonText="Organic Training"
                     />
                     <TrainingCard
                         title="Quick start"
                         icon="⚙️"
                         items={paidTrainingItems}
-                        imageUrl="/image.jpg" // Replace with the correct path for the image
+                        imageUrl="/userEdit.png" // Replace with the correct path for the image
                         buttonText="Quick start"
                     />
                 </div>
@@ -94,7 +95,6 @@ export default function Training() {
 const TrainingCard = ({ title, icon, items, imageUrl, buttonText }: { title: string, icon: string, items: { title: string, description: string }[], imageUrl: string, buttonText: string }) => {
     return (
         <>
-            <Logo />
             <div className="max-w-sm mx-auto bg-white rounded-xl shadow-lg overflow-hidden hover:-translate-y-10 transition-transform duration-200 ease-in-out">
                 {/* Image Section */}
                 <div className="relative h-48 p-6">

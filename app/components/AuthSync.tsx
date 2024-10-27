@@ -14,16 +14,33 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     async function fetchVideos() {
-      const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+      const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/account`, {
         headers: {
-          'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
-          'Authorization': cookies['token']
+          'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string
         }
       })
       const json = await resp.json()
       setVideos(json['videos'])
     }
-    fetchVideos()
+
+    const fetchAuthorizedVideos = async () => {
+      const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': cookies['token'],
+          'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string
+
+        }
+      })
+      const json = await resp.json()
+      setVideos(json['videos'])
+    }
+    if (cookies['token']) {
+      fetchAuthorizedVideos()
+    }
+    else {
+      fetchVideos()
+    }
   }, [cookies])
 
 

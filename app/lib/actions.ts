@@ -54,6 +54,7 @@ export const fetchFilteredMembers = async()=>{
         headers:{
             'Content-Type':'application/json',
             'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+            'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
             'Authorization':token||''
         },
     })
@@ -70,11 +71,11 @@ export const fetchAvailableDates = async(month:number,year:number)=>{
       headers:{
           'Content-Type':'application/json',
           'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Authorization':token||''
       },
   })
   const respJson = await resp.json()
-  // console.log(respJson.availabilities)
   if(respJson.availabilities){
     return respJson.availabilities;
   }
@@ -87,6 +88,7 @@ export const fetchSurveys = async()=>{
       headers:{
           'Content-Type':'application/json',
           'Origin':process.env.NEXT_PUBLIC_APP_ORIGIN as string,
+          'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
           'Authorization':token||''
       },
   })
