@@ -7,7 +7,7 @@ import { GetVideoContext } from "../components/VideoContext";
 
 export default function Content() {
     const [show, setShow] = useState<boolean>(false);
-    const [progress, setProgress] = useState<number>(0); // New state for progress percentage
+    const [progress, setProgress] = useState<number>(0); // State for progress percentage
     const VideoContext = GetVideoContext();
     const step_2_video = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step2'));
 
@@ -17,9 +17,13 @@ export default function Content() {
         }
     }, []);
 
-    const handleVideoEnd = () => {
-        setShow(true);
-        localStorage.setItem("step-2-watched", "true");
+    const handleProgressUpdate = (progressPercentage: number, currentTime: number) => {
+        console.log(`Progress: ${progressPercentage}% at ${currentTime}s`);
+        setProgress(progressPercentage); // Update progress state
+        if (progressPercentage >= 3) {
+            setShow(true);
+            localStorage.setItem("step-2-watched", "true");
+        }
     };
 
     return (
@@ -27,13 +31,7 @@ export default function Content() {
             <VideoPlayer 
                 videoID={step_2_video!.id} 
                 playBackId={step_2_video!.mux_playback_id} 
-                onProgressUpdate={(progressPercentage, currentTime) => {
-                    console.log(`Progress: ${progressPercentage}% at ${currentTime}s`);
-                    setProgress(progressPercentage); // Update the progress state
-                    if (progressPercentage >= 10) {
-                        localStorage.setItem("step-2-watched", "true");
-                    }
-                }} 
+                onProgressUpdate={handleProgressUpdate} 
             />
             <div className="flex-col w-full mt-8">
                 {/* Display the current progress percentage */}
