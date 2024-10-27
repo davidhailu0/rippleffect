@@ -11,7 +11,7 @@ export default function Content() {
     const step_1_video = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step1'))
     useEffect(() => {
         if (localStorage.getItem("step-1-watched") === "true") {
-            setShow(true)
+            setShow(true);
         }
     }, [])
     const handleVideoEnd = () => {

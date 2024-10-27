@@ -108,7 +108,6 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
     return (
         <MuxPlayer
             className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
-            onTimeUpdate={handleTimeUpdate}
             playbackId={playBackId}
             ref={videoRef}
             metadata={{

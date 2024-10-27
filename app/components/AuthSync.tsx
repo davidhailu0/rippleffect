@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { useCookies } from 'react-cookie';
+import { useCookies } from 'react-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import VideoContext, { Video } from './VideoContext';
 
@@ -92,6 +93,10 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
     checkAuth();
     const intervalID = setInterval(checkBooking, 1000 * 60 * 15);
 
+
+    checkAuth();
+    const intervalID = setInterval(checkBooking, 1000 * 60 * 15);
+
     return () => {
       channel.close();
       clearInterval(intervalID);
@@ -121,8 +126,10 @@ function getHourDifference(date1: Date | string, date2: Date | string): number {
   return diffInMs / msInHour;
 }
 
+
 function getDaysDifference(date1: Date | string, date2: Date | string): number {
   const msInDay = 24 * 60 * 60 * 1000;
   const diffInMs = Math.abs(new Date(date2).getTime() - new Date(date1).getTime());
   return Math.floor(diffInMs / msInDay);
 }
+

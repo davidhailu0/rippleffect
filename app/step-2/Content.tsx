@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import { GetVideoContext } from "../components/VideoContext";
 
 export default function Content() {
-    const [show, setShow] = useState<boolean>(false)
-    const VideoContext = GetVideoContext()
-    const step_2_video = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step2'))
+    const [show, setShow] = useState<boolean>(false);
+    const [progress, setProgress] = useState<number>(0); // State for progress percentage
+    const VideoContext = GetVideoContext();
+    const step_2_video = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step2'));
+
     useEffect(() => {
         if (localStorage.getItem("step-2-watched") === "true") {
-            setShow(true)
+            setShow(true);
         }
     }, [])
     const handleVideoEnd = () => {
