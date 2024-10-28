@@ -36,7 +36,7 @@ export default function Home({
                 </p>
 
                 {/* Video Player */}
-                <VideoPlayer playBackId={landing_page!.mux_playback_id} />
+                <VideoPlayer playBackId={landing_page?.mux_playback_id} />
 
                 {/* Note */}
                 <p className="text-base md:text-lg text-gray-400 font-medium leading-6 mt-4 md:mt-8 text-center">

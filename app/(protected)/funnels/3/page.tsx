@@ -25,7 +25,7 @@ export default function Home({
                 <div className="col-span-1 flex justify-center md:max-h-[90%]">
                     <VideoPlayer
                         className="w-full h-auto rounded-lg overflow-hidden"
-                        playBackId={landing_page!.mux_playback_id}
+                        playBackId={landing_page?.mux_playback_id}
                     />
                 </div>
 

@@ -25,7 +25,7 @@ export default function Home({
             <div className="flex flex-col gap-6 md:gap-8 items-center w-full max-w-6xl mx-auto mt-3 md:mt-10">
 
                 {/* Video Player */}
-                <VideoPlayer playBackId={landing_page!.mux_playback_id} />
+                <VideoPlayer playBackId={landing_page?.mux_playback_id} />
 
                 {/* Headline */}
                 <h1 className="text-2xl md:text-4xl font-bold text-white mt-4 text-center">
