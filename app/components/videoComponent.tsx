@@ -12,7 +12,7 @@ interface MuxPlayerElement extends HTMLVideoElement {
 }
 
 interface VideoPlayerProps {
-    playBackId: string;
+    playBackId?: string;
     videoID?: number;
     className?: string;
     onVideo80?: () => void;
@@ -109,12 +109,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
         <MuxPlayer
             className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
             playbackId={playBackId}
+            placeholder='Loading Video'
             ref={videoRef}
+            onTimeUpdate={handleTimeUpdate}
             metadata={{
                 video_id: 'video-id-54321',
                 video_title: 'Test video title',
                 viewer_user_id: 'user-id-007',
             }}
+
         />
     );
 };
