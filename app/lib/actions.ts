@@ -62,21 +62,7 @@ export const fetchFilteredMembers = async()=>{
     return [];
 }
 
-export const fetchAvailableDates = async(month:number,year:number)=>{
-  const token = Cookies.get('token')
-  const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/availabilities/?year=${year}&month=${month}`,{
-      headers:{
-          'Content-Type':'application/json',
-          'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
-          'Authorization':token||''
-      },
-  })
-  const respJson = await resp.json()
-  if(respJson.availabilities){
-    return respJson.availabilities;
-  }
-  return [];
-}
+
 
 export const fetchSurveys = async()=>{
   const token = Cookies.get('token')
