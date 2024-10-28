@@ -20,7 +20,7 @@ export default function RootLayout({
       <body
         className={`${roboto.className} antialiased`}
       >
-        <NextTopLoader />
+        <NextTopLoader color="#fff" />
         <div className="bg-[url('/background.png')] bg-contain py-4 md:pt-12 md:pb-20 mx-auto relative h-screen box-border overflow-y-scroll bg-no-repeat">
           <AuthSync>
             {children}

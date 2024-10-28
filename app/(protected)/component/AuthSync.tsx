@@ -8,6 +8,7 @@ import VideoContext, { Video } from '../../hooks/VideoContext';
 import { fetchVideos } from '@/app/services/videoServices';
 import { differenceInDays, differenceInHours, parseISO } from 'date-fns';
 import { usePathname } from 'next/navigation';
+import checkEnv from '@/util/CheckEnvironment';
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
   // Fetch videos on component mount
   useEffect(() => {
     checkVideos();
+    checkEnv()
   }, [checkVideos]);
 
   // Handle authentication redirects
