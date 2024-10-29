@@ -58,8 +58,6 @@ const BookingComponent = ({ callback }: { callback: () => void }) => {
 
     if (!availablities) return <CalendarSkeleton />;
 
-    { console.log(availablities[format(new Date(selectedDate!.toString()), 'yyyy-MM-dd')]) }
-
     return (
         <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-white text-black h-auto w-11/12 md:w-2/3 rounded-md">
             <div className="w-full md:w-1/4 border-l-gray-500">

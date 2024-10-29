@@ -1,6 +1,10 @@
+import Cookies from "js-cookie"
 export default function checkFirstTimeLogin(){
-    if(localStorage.getItem("booked")){
-        return "Go to Account"
+    if(Cookies.get("questionFinished")){
+         return "Go to Account"
+    }
+    else if(Cookies.get("booked")){
+        return "Go to Questions"
     }
     else if(localStorage.getItem("step-2-watched")){
          return "Go to Booking"

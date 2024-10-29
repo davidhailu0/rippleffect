@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, ChangeEvent, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, ChangeEvent, useRef, useCallback } from 'react';
 import { ClipLoader } from 'react-spinners';
 import Cookies from 'js-cookie';
 import MuxPlayer from '@mux/mux-player-react';
@@ -23,7 +23,7 @@ export default function DisplayQuestion() {
     const router = useRouter();
 
     // Memoized video context
-    const videoContext = useMemo(() => GetVideoContext(), []);
+    const videoContext = GetVideoContext()
 
     // Function to handle video sorting
     const compareVideoTitle = useCallback((a: Video, b: Video) => {
@@ -180,8 +180,8 @@ export default function DisplayQuestion() {
                     handleOnChange={handleOnChange}
                 />
             </div>
-            <div className="w-full h-16 bg-blue-500 flex justify-end items-center">
-                <button onClick={goToNext} className="text-white h-full w-48 bg-blue-700">Next -&gt;</button>
+            <div className="w-full h-16 bg-orange-500 flex justify-end items-center">
+                <button onClick={goToNext} className="text-white h-full w-48 bg-orange-700">Next -&gt;</button>
             </div>
         </div>
     );

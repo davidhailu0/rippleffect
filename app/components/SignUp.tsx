@@ -2,7 +2,7 @@
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
-import { toast } from 'react-toastify';
+import { toast } from "sonner"
 import { ScaleLoader } from 'react-spinners';
 import clsx from 'clsx';
 import Cookies from 'js-cookie';
@@ -23,8 +23,8 @@ type State = {
 const showToast = (message: string, type: 'error' | 'success') => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     type === 'error' ?
-        toast.error(message, { position: 'top-center' })
-        : toast.warn(message, { position: 'top-center', icon: false });
+        toast(message, { position: 'top-center' })
+        : toast(message, { position: 'top-center', icon: false });
 };
 
 export default function SignUpForm({ ref_code, login_token }: { ref_code?: string; login_token?: string }) {

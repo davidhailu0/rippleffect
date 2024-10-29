@@ -15,10 +15,10 @@ interface VideoPlayerProps {
   playBackId?: string;
   videoID?: number;
   className?: string;
-  onVideo80?: () => void;
+  handleVideoProgress?: () => void;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, className, onVideo80 }) => {
+const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, className, handleVideoProgress }) => {
   const [lastUpdate, setLastUpdate] = useState({ lastTime: 0, lastTime30Sec: 0 });
   const videoRef = useRef<MuxPlayerElement | null>(null);
 
@@ -84,25 +84,25 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
       const currentTime = videoElement.currentTime;
       const progress = Math.round((currentTime / videoElement.duration) * 100);
 
-      // Trigger onVideo80 if progress reaches 80%
-      if (progress >= 80 && onVideo80) {
-        onVideo80();
+      // Trigger handleVideoProgress if progress reaches 80%
+      if (progress >= 80 && handleVideoProgress) {
+        handleVideoProgress();
         updateVideoStatus();
       }
 
       // Adjust video playback to prevent skipping
-      if (currentTime - lastUpdate.lastTime > 2) {
-        videoElement.currentTime = lastUpdate.lastTime;
-      } else {
-        // Update status every 30 seconds
-        if (videoID && currentTime - lastUpdate.lastTime30Sec >= 30) {
-          updateVideoStatus();
-          setLastUpdate((prev) => ({ ...prev, lastTime30Sec: currentTime }));
-        }
-        setLastUpdate((prev) => ({ ...prev, lastTime: currentTime }));
+      // if (currentTime - lastUpdate.lastTime > 2) {
+      //   videoElement.currentTime = lastUpdate.lastTime;
+      // } else {
+      // Update status every 30 seconds
+      if (videoID && currentTime - lastUpdate.lastTime30Sec >= 30) {
+        updateVideoStatus();
+        setLastUpdate((prev) => ({ ...prev, lastTime30Sec: currentTime }));
       }
+      setLastUpdate((prev) => ({ ...prev, lastTime: currentTime }));
+      // }
     },
-    [videoID, lastUpdate, onVideo80, updateVideoStatus]
+    [videoID, lastUpdate, handleVideoProgress, updateVideoStatus]
   );
 
   return (
