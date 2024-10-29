@@ -5,7 +5,7 @@ import Navbar from '@/app/components/Navbar';
 import Button from '@/app/components/Button';
 import Logo from '@/app/components/LogoComponent';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { GetVideoContext, Video } from '@/app/hooks/VideoContext';
 import { useRouter } from 'nextjs-toploader/app';
 import clsx from 'clsx';
