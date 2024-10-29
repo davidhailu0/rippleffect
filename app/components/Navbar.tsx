@@ -1,9 +1,28 @@
 'use client'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
+import Cookies from "js-cookie"
 
 export default function Navbar() {
     const [hidden, setHidden] = useState<boolean>(true)
+    const [showButton, setShowButton] = useState({ step1: false, step2: false, others: false })
+    useEffect(() => {
+        let step1 = false
+        let step2 = false
+        let others = false
+        if (localStorage.getItem("step-1-watched")) {
+            step1 = true
+        }
+        if (localStorage.getItem("step-2-watched")) {
+            step2 = true
+        }
+        if (Cookies.get('booked') && Cookies.get('questionFinished')) {
+            others = true
+        }
+        setShowButton({
+            step1, step2, others
+        })
+    }, [])
     const toggleLinks = () => {
         setHidden((prev) => !prev)
     }
@@ -12,14 +31,14 @@ export default function Navbar() {
             <div className="flex justify-between h-16">
                 <div className="flex justify-end">
                     <div className="hidden md:flex space-x-4">
-                        <Link href={'/step-1'}>Step 1</Link>
-                        <Link href={'/step-2'}>Step 2</Link>
-                        <Link href={'/step-3'}>Step 3</Link>
-                        <Link href={'/training'}>Trainings</Link>
-                        <Link href={'/funnels'}>Funnels</Link>
-                        <Link href={'/leads'}>Leads</Link>
-                        <Link href={'/leaderboard'}>Leaderboard</Link>
-                        <Link href={'/account'}>Account</Link>
+                        {showButton.step1 && <Link href={'/step-1'}>Step 1</Link>}
+                        {showButton.step2 && <Link href={'/step-2'}>Step 2</Link>}
+                        {showButton.others && <Link href={'/step-3'}>Step 3</Link>}
+                        {showButton.others && <Link href={'/training'}>Trainings</Link>}
+                        {showButton.others && <Link href={'/funnels'}>Funnels</Link>}
+                        {showButton.others && <Link href={'/leads'}>Leads</Link>}
+                        {showButton.others && <Link href={'/leaderboard'}>Leaderboard</Link>}
+                        {showButton.others && <Link href={'/account'}>Account</Link>}
                     </div>
                 </div>
                 <div className="flex items-center md:hidden">

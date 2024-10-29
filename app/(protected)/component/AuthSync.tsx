@@ -3,7 +3,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { useCookies } from 'react-cookie';
-import { ToastContainer, toast } from 'react-toastify';
+import { Toaster } from "@/components/ui/sonner"
+import { toast } from "sonner"
 import VideoContext, { Video } from '../../hooks/VideoContext';
 import { fetchVideos } from '@/app/services/videoServices';
 import { differenceInDays, differenceInHours, parseISO } from 'date-fns';
@@ -58,12 +59,12 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
 
     if (daysDifference === 0) {
       if (hoursDifference >= 1) {
-        toast.warn(`Your call is up in ${Math.floor(hoursDifference)} Hour(s) from now`, { icon: false });
+        toast(`Your call is up in ${Math.floor(hoursDifference)} Hour(s) from now`, { icon: false });
       } else if (hoursDifference < 1 && hoursDifference >= 0) {
-        toast.warn(`Your call is up in ${Math.floor(hoursDifference * 60)} minute(s) from now`, { icon: false });
+        toast(`Your call is up in ${Math.floor(hoursDifference * 60)} minute(s) from now`, { icon: false });
       }
     } else if (daysDifference === 1) {
-      toast.warn('Your call is tomorrow. Please watch all videos', { icon: false });
+      toast('Your call is tomorrow. Please watch all videos', { icon: false });
     }
   }, [cookies]);
 
@@ -86,7 +87,7 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <ToastContainer position="top-center" theme="colored" />
+      <Toaster />
       <VideoContext.Provider value={{ videos }}>
         {children}
       </VideoContext.Provider>

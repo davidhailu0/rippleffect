@@ -3,6 +3,9 @@ const directToOtherPages = (btnText:string,redirectTo:(arg:string)=>void)=>{
     if(btnText==='Go to Account'){
         redirectTo('/account')
     }
+    else if(btnText==="Go to Questions"){
+        redirectTo('/questionnaire')
+    }
     else if(btnText==='Go to Booking'){
         redirectTo('/book')
     }

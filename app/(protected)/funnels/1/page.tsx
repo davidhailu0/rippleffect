@@ -16,7 +16,7 @@ export default function Home({
     const videoContext = GetVideoContext()
     const landing_page = videoContext?.videos.find(({ tag_list }) => tag_list.includes('landing'))
     return (
-        <div className="flex flex-col items-center w-full min-h-screen py-8 px-4">
+        <div className="flex flex-col items-center w-full min-h-screen py-8 px-4 absolute top-0 right-0 left-0 bg-gradient-to-r from-green-400 via-green-600 to-teal-500">
 
             {/* Logo */}
             <Logo />

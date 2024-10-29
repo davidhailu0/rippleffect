@@ -19,7 +19,7 @@ export default function Content() {
         localStorage.setItem("step-2-watched", "true")
     }
     return <>
-        <VideoPlayer videoID={step_2_video?.id} playBackId={step_2_video?.mux_playback_id} onVideo80={handleVideoEnd} />
+        <VideoPlayer videoID={step_2_video?.id} playBackId={step_2_video?.mux_playback_id} handleVideoProgress={handleVideoEnd} />
         <div className={`flex-col w-full mt-8`}>
             <p className={`text-white ${lato.className} text-center`}>Once you have <span className="font-medium text-[#d7b398]">watched the videos</span> above click the button below to book your call</p>
             <div className="flex mt-8 flex-col md:flex-row">

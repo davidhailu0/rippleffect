@@ -5,7 +5,7 @@ import Navbar from '@/app/components/Navbar';
 import Button from '@/app/components/Button';
 import Logo from '@/app/components/LogoComponent';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast } from 'sonner';
 import { GetVideoContext, Video } from '@/app/hooks/VideoContext';
 import { useRouter } from 'nextjs-toploader/app';
 import clsx from 'clsx';
@@ -60,13 +60,13 @@ export default function Content({ countryFlagImg, bestStrategyVideo }: { country
                     <li>My Best Strategy to get Started</li>
                 </ol>
                 <p className="text-2xl font-bold text-white my-4">1. Intro to your business journey with Nate</p>
-                <VideoPlayer videoID={step_3_intro?.id} onVideo80={handleVideoEnd} playBackId={step_3_intro?.mux_playback_id} />
+                <VideoPlayer videoID={step_3_intro?.id} handleVideoProgress={handleVideoEnd} playBackId={step_3_intro?.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">2. The Best Product I have found so far</p>
-                <VideoPlayer videoID={step_3_plan?.id} onVideo80={handleVideoEnd} playBackId={step_3_plan?.mux_playback_id} />
+                <VideoPlayer videoID={step_3_plan?.id} handleVideoProgress={handleVideoEnd} playBackId={step_3_plan?.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">3. The Perfect Business Model</p>
-                <VideoPlayer videoID={step_3_plan?.id} onVideo80={handleVideoEnd} playBackId={step_3_plan?.mux_playback_id} />
+                <VideoPlayer videoID={step_3_plan?.id} handleVideoProgress={handleVideoEnd} playBackId={step_3_plan?.mux_playback_id} />
                 <p className="text-2xl font-bold text-white my-4">4. My Best Strategy to get Started</p>
-                <VideoPlayer videoID={bestStrategyVideo?.id} onVideo80={handleVideoEnd} playBackId={bestStrategyVideo?.mux_playback_id} />
+                <VideoPlayer videoID={bestStrategyVideo?.id} handleVideoProgress={handleVideoEnd} playBackId={bestStrategyVideo?.mux_playback_id} />
                 <p className={clsx({ 'text-md text-gray-200 mb-5': videoWatched !== 4, hidden: videoWatched === 4 })}>
                     Make sure to watch all videos before you call, if not you will not be able to understand my business or ask the right question
                 </p>
