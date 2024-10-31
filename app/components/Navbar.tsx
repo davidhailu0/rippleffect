@@ -26,6 +26,7 @@ export function CustomNavbar() {
                     width={40}
                     height={40}
                     className="mr-3"
+                    unoptimized
                 />
                 <span className="text-white text-2xl font-bold">Nate Wells</span>
             </Link>

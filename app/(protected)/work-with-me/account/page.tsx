@@ -12,7 +12,7 @@ const AccountPage: React.FC = () => {
             {/* Side Navigation */}
             <aside className="w-full md:w-1/4 bg-white p-6 shadow-lg">
                 <div className="flex items-center gap-3 mb-8">
-                    <Image src="/profile-setting.png" alt="Profile" width={50} height={50} className="rounded-full" />
+                    <Image src="/profile-setting.png" alt="Profile" width={50} height={50} className="rounded-full" unoptimized />
                     <div>
                         <h2 className="text-xl font-semibold text-gray-800">Nate Wells</h2>
                         <p className="text-sm text-gray-500">nate@nate.com</p>

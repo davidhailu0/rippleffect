@@ -11,12 +11,15 @@ import { usePathname } from 'next/navigation';
 import checkEnv from '@/util/CheckEnvironment';
 // import utilcheckFirstTimeLogin from '@/util/utilCheckLoginStatus';
 import VideoContext, { Video } from '@/app/hooks/VideoContext';
+import YellowNotificationBar, { NotificationBarProps } from './YellowNotificationbar';
+import utilcheckFirstTimeLogin from '@/util/utilCheckLoginStatus';
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname()
   const [cookies] = useCookies(['token', 'email', 'booked', 'bookedTime', 'questionFinished']);
   const [videos, setVideos] = useState<Video[]>([]);
+  const [yellowBarConfig, setYellowBarConfig] = useState<NotificationBarProps>({ message: '' })
 
   // Fetch videos based on authorization status
   const checkVideos = useCallback(async () => {
@@ -34,9 +37,9 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     checkVideos();
     checkEnv()
-    // if (pathname.includes('/work-with-me')) {
-    //   utilcheckFirstTimeLogin(router.push)
-    // }
+    if (pathname.includes('/work-with-me')) {
+      setYellowBarConfig(utilcheckFirstTimeLogin(router.push))
+    }
   }, [checkVideos, pathname, router.push]);
 
   // Handle authentication redirects
@@ -121,6 +124,7 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
     <CookiesProvider defaultSetOptions={{ path: '/' }}>
       <Toaster />
       <VideoContext.Provider value={{ videos }}>
+        <YellowNotificationBar message={yellowBarConfig.message} actionLabel={yellowBarConfig.actionLabel} onAction={yellowBarConfig.onAction} />
         {children}
       </VideoContext.Provider>
     </CookiesProvider>
