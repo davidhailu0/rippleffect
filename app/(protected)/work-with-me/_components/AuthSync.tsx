@@ -34,9 +34,9 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     checkVideos();
     checkEnv()
-    if (pathname.includes('/work-with-me')) {
-      utilcheckFirstTimeLogin(router.push)
-    }
+    // if (pathname.includes('/work-with-me')) {
+    //   utilcheckFirstTimeLogin(router.push)
+    // }
   }, [checkVideos, pathname, router.push]);
 
   // Handle authentication redirects
