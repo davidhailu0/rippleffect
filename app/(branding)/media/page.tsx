@@ -1,8 +1,13 @@
 'use client'
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { InstagramEmbed } from 'react-social-media-embed';
 
 export default function Media() {
+    const [isClient, setIsClient] = useState(false);
+    useEffect(() => {
+        setIsClient(true)
+    }, [])
     return (
         <main className="min-h-screen bg-gradient-to-r from-blue-500 to-cyan-500 flex flex-col items-center justify-center py-10 px-4">
             {/* Media Section */}
@@ -14,7 +19,7 @@ export default function Media() {
 
                 {/* Instagram Embed */}
                 <div className="flex justify-center">
-                    {typeof window !== 'undefined' && <InstagramEmbed
+                    {isClient && <InstagramEmbed
                         url="https://www.instagram.com/natewells.uk/"
                         width={420}
                         className='rounded-md'

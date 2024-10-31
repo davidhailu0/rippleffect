@@ -172,6 +172,7 @@ export default function DisplayQuestion() {
                 <Image src="/logo.png" alt="logo" height={95} width={90} className="mx-auto" unoptimized />
                 <MuxPlayer
                     ref={videoRef}
+                    streamType="on-demand"
                     playbackId={videoIDS[index]?.mux_playback_id || "not-found"}
                     onTimeUpdate={handleTimeUpdate}
                     className={clsx(`h-[300px] md:h-[500px] overflow-x-hidden`)}

@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import MuxPlayer from '@mux/mux-player-react/lazy';
+import MuxPlayer from '@mux/mux-player-react';
 import Cookies from 'js-cookie';
+import { ClipLoader } from 'react-spinners';
 
 // Improved typing for the MuxPlayer element
 interface MuxPlayerElement extends HTMLVideoElement {
@@ -77,6 +78,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
     [videoID]
   );
 
+  const handleError = (e: ErrorEvent) => {
+    console.error('Playback error:', e);
+    // setError("We're having trouble playing this video. Please try again later.");
+  };
+
   // Handle video time updates
   const handleTimeUpdate = useCallback(
     (e: Event) => {
@@ -105,11 +111,17 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
     [videoID, lastUpdate, handleVideoProgress, updateVideoStatus]
   );
 
+  if (!playBackId) {
+    return <VideoPlayerSkeleton />
+  }
+
   return (
     <MuxPlayer
       className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
       playbackId={playBackId || 'not-found'}
       placeholder='Loading Video'
+      streamType="on-demand"
+      onError={handleError}
       ref={videoRef}
       onTimeUpdate={handleTimeUpdate}
       accentColor="#3b82f6"
@@ -120,3 +132,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
 
 
 export default VideoPlayer;
+
+
+function VideoPlayerSkeleton() {
+  return (
+    <div className="relative shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden bg-black flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center">
+        <ClipLoader color="#ffffff" size={50} />
+      </div>
+    </div>
+  );
+}

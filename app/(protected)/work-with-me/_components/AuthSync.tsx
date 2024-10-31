@@ -9,7 +9,7 @@ import { fetchVideos } from '@/app/services/videoServices';
 import { differenceInDays, differenceInHours, parseISO } from 'date-fns';
 import { usePathname } from 'next/navigation';
 import checkEnv from '@/util/CheckEnvironment';
-import utilcheckFirstTimeLogin from '@/util/utilCheckLoginStatus';
+// import utilcheckFirstTimeLogin from '@/util/utilCheckLoginStatus';
 import VideoContext, { Video } from '@/app/hooks/VideoContext';
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {
@@ -34,9 +34,9 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     checkVideos();
     checkEnv()
-    if (pathname.includes('/work-with-me')) {
-      utilcheckFirstTimeLogin(router.push)
-    }
+    // if (pathname.includes('/work-with-me')) {
+    //   utilcheckFirstTimeLogin(router.push)
+    // }
   }, [checkVideos, pathname, router.push]);
 
   // Handle authentication redirects
