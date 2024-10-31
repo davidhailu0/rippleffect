@@ -13,6 +13,7 @@ export default function Home() {
           height={160}
           className="rounded-full border-4 border-white shadow-lg mx-auto"
           priority
+          unoptimized
         />
         <h1 className="text-5xl font-bold text-white mt-4">Nate Wells</h1>
         <p className="text-lg text-white mt-2 font-light">Network Marketing Pro | Business Coach | Enagic 6A3-4</p>

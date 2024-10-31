@@ -1,29 +1,33 @@
-import React, { useState, CSSProperties } from 'react';
+import React, { useState, CSSProperties, useEffect } from 'react';
 
-interface NotificationBarProps {
-    message: string;
+export interface NotificationBarProps {
+    message?: string;
     actionLabel?: string;
     onAction?: () => void;
     style?: CSSProperties;
 }
 
-const NotificationBar: React.FC<NotificationBarProps> = ({ message, actionLabel, onAction, style }) => {
+const YellowNotificationBar: React.FC<NotificationBarProps> = ({ message, actionLabel, onAction, style }) => {
     const [isVisible, setIsVisible] = useState(true);
+
+    useEffect(() => {
+        setIsVisible(true)
+    }, [message, actionLabel, onAction, style])
 
     const handleClose = () => {
         setIsVisible(false);
     };
 
-    if (!isVisible) return null; // If not visible, render nothing
+    if (!isVisible || !message) return null; // If not visible, render nothing
 
     return (
         <div
-            className="fixed top-12 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded shadow-lg flex items-center justify-between"
+            className="fixed top-20 left-4 transition-all ease-in-out duration-150 px-4 py-3 rounded shadow-lg flex items-center justify-between"
             style={{
                 backgroundColor: '#facc15', // Default background color
                 color: '#000000', // Default text color
                 border: '1px solid #fbbf24', // Default border color
-                minWidth: '500px',
+                minWidth: '600px',
                 zIndex: 50,
                 ...style,
             }}
@@ -46,4 +50,4 @@ const NotificationBar: React.FC<NotificationBarProps> = ({ message, actionLabel,
     );
 };
 
-export default NotificationBar;
+export default YellowNotificationBar;
