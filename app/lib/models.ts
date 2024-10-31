@@ -3,5 +3,4 @@ export type Availablities = { [key:string]: [{start_time:string,end_time:string}
 export interface TimezoneOption {
     value: string;
     label: string;
-    offsetFromUTC:number;
 }

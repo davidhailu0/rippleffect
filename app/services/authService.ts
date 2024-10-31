@@ -1,7 +1,7 @@
 'use client'
 
-import ConfirmLead from "../types/ConfirmLead";
-import CreateLead from "../types/CreateLeadType";
+import ConfirmLead from "../../types/ConfirmLead";
+import CreateLead from "../../types/CreateLeadType";
 
 export const createLead = async (data:CreateLead)=>{
     const headers: HeadersInit = {
