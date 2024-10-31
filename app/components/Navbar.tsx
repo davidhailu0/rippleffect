@@ -1,66 +1,107 @@
-'use client'
-import { useEffect, useState } from "react"
-import Link from "next/link"
-import Cookies from "js-cookie"
+"use client";
 
-export default function Navbar() {
-    const [hidden, setHidden] = useState<boolean>(true)
-    const [showButton, setShowButton] = useState({ step1: false, step2: false, others: false })
-    useEffect(() => {
-        let step1 = false
-        let step2 = false
-        let others = false
-        if (localStorage.getItem("step-1-watched")) {
-            step1 = true
-        }
-        if (localStorage.getItem("step-2-watched")) {
-            step2 = true
-        }
-        if (Cookies.get('booked') && Cookies.get('questionFinished')) {
-            others = true
-        }
-        setShowButton({
-            step1, step2, others
-        })
-    }, [])
-    const toggleLinks = () => {
-        setHidden((prev) => !prev)
-    }
-    return <nav className="absolute font-bold text-sm text-white right-3 md:right-9 top-16 md:top-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between h-16">
-                <div className="flex justify-end">
-                    <div className="hidden md:flex space-x-4">
-                        {showButton.step1 && <Link href={'/step-1'}>Step 1</Link>}
-                        {showButton.step2 && <Link href={'/step-2'}>Step 2</Link>}
-                        {showButton.others && <Link href={'/step-3'}>Step 3</Link>}
-                        {showButton.others && <Link href={'/training'}>Trainings</Link>}
-                        {showButton.others && <Link href={'/funnels'}>Funnels</Link>}
-                        {showButton.others && <Link href={'/leads'}>Leads</Link>}
-                        {showButton.others && <Link href={'/leaderboard'}>Leaderboard</Link>}
-                        {showButton.others && <Link href={'/account'}>Account</Link>}
-                    </div>
-                </div>
-                <div className="flex items-center md:hidden">
-                    <button onClick={toggleLinks} id="menu-button" className="text-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                        <svg className="w-6 h-6" fill="none" stroke="#fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                        </svg>
-                    </button>
-                </div>
+import * as React from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+
+export function CustomNavbar() {
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+    const pathname = usePathname(); // Get current path
+
+    // Function to determine the style of the active link
+    const getLinkStyle = (path: string) =>
+        pathname === path || (pathname.includes(path) && path !== '/')
+            ? "text-cyan-200 font-semibold border-b-2 border-cyan-200"
+            : "text-white hover:text-gray-200";
+
+    return (
+        <nav className="flex justify-between items-center w-full px-6 md:px-12 py-4 bg-transparent fixed top-0 right-0 left-0 z-[999] shadow-md">
+            {/* Logo */}
+            <Link href="/" className="flex items-center">
+                <Image
+                    src="/logo_white.png" // Ensure logo image is in the public folder
+                    alt="Nate Wells Logo"
+                    width={40}
+                    height={40}
+                    className="mr-3"
+                />
+                <span className="text-white text-2xl font-bold">Nate Wells</span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex w-10/12 justify-between items-center">
+                {/* Left Links */}
+                <ul className="flex gap-8">
+                    <li>
+                        <Link href="/" className={`${getLinkStyle("/")}`}>
+                            Home
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/about" className={`${getLinkStyle("/about")}`}>
+                            About
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/media" className={`${getLinkStyle("/media")}`}>
+                            Media
+                        </Link>
+                    </li>
+                </ul>
+
+                {/* Right Link */}
+                <ul>
+                    <li>
+                        <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")}`}>
+                            Work with Me
+                        </Link>
+                    </li>
+                </ul>
             </div>
-        </div>
-        <div id="mobile-menu" className={`md:hidden ${hidden && 'hidden'}`}>
-            <div className="px-2 pt-2 pb-3 space-y-1 flex flex-col h-[12.5rem] py-5 bg-white z-50 text-black">
-                <Link href={'/step-1'}>Step 1</Link>
-                <Link href={'/step-2'}>Step 2</Link>
-                <Link href={'/step-3'}>Step 3</Link>
-                <Link href={'/training'}>Trainings</Link>
-                <Link href={'/funnels'}>Funnels</Link>
-                <Link href={'/leads'}>Leads</Link>
-                <Link href={'/leaderboard'}>Leaderboard</Link>
-                <Link href={'/account'}>Account</Link>
+
+            {/* Mobile Hamburger Menu */}
+            <div className="md:hidden">
+                <button
+                    onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                    className="text-white focus:outline-none"
+                >
+                    {isMobileMenuOpen ? (
+                        <XMarkIcon className="h-6 w-6" />
+                    ) : (
+                        <Bars3Icon className="h-6 w-6" />
+                    )}
+                </button>
             </div>
-        </div>
-    </nav>
+
+            {/* Mobile Full-Page Navigation */}
+            {isMobileMenuOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-90 z-20 flex items-center justify-center">
+                    <ul className="flex flex-col items-center space-y-8 text-2xl text-white">
+                        <li>
+                            <Link href="/" className={`${getLinkStyle("/")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                Home
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/about" className={`${getLinkStyle("/about")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                About
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/media" className={`${getLinkStyle("/media")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                Media
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                Work with Me
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            )}
+        </nav>
+    );
 }

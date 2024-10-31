@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import MuxPlayer from '@mux/mux-player-react';
+import MuxPlayer from '@mux/mux-player-react/lazy';
 import Cookies from 'js-cookie';
 
 // Improved typing for the MuxPlayer element
@@ -108,15 +108,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
   return (
     <MuxPlayer
       className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
-      playbackId={playBackId}
+      playbackId={playBackId || 'not-found'}
       placeholder='Loading Video'
       ref={videoRef}
       onTimeUpdate={handleTimeUpdate}
-      metadata={{
-        video_id: 'video-id-54321',
-        video_title: 'Test video title',
-        viewer_user_id: 'user-id-007',
-      }}
+      accentColor="#3b82f6"
 
     />
   );
