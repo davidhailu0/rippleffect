@@ -9,7 +9,7 @@ import { fetchVideos } from '@/app/services/videoServices';
 import { differenceInDays, differenceInHours, parseISO } from 'date-fns';
 import { usePathname } from 'next/navigation';
 import checkEnv from '@/util/CheckEnvironment';
-import utilcheckFirstTimeLogin from '@/util/utilCheckLoginStatus';
+// import utilcheckFirstTimeLogin from '@/util/utilCheckLoginStatus';
 import VideoContext, { Video } from '@/app/hooks/VideoContext';
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {
