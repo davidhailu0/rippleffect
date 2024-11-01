@@ -22,12 +22,11 @@ const YellowNotificationBar: React.FC<NotificationBarProps> = ({ message, action
 
     return (
         <div
-            className="fixed top-20 left-4 transition-all ease-in-out duration-150 px-4 py-3 rounded shadow-lg flex items-center justify-between"
+            className="fixed top-20 min-w-80 md:w-[600px] left-4 transition-all ease-in-out duration-150 px-4 py-3 rounded shadow-lg flex items-center justify-between"
             style={{
                 backgroundColor: '#facc15', // Default background color
                 color: '#000000', // Default text color
                 border: '1px solid #fbbf24', // Default border color
-                minWidth: '600px',
                 zIndex: 50,
                 ...style,
             }}

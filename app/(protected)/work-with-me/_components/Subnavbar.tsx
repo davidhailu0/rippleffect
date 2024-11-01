@@ -26,7 +26,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
 
     const handleBlueBTNClick = () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-        showButton.blueBTN === 'Create Account' ? setShowpop(true) : router.push('/book');
+        showButton.blueBTN === 'Create Account' ? setShowpop(true) : router.push('/work-with-me/book');
     };
 
     const getLinkStyle = (path: string) =>
