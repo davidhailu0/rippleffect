@@ -33,7 +33,7 @@ const App: React.FC = ({
     return (
         <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-to-b from-blue-100 to-white">
             <div className="flex flex-col justify-center flex-1 text-center space-y-4 p-6">
-                <span className="mb-4 px-6 py-2 bg-blue-50 rounded-lg shadow-md">
+                <span className="mb-4 px-6 py-2 bg-pink-50 rounded-lg shadow-md">
                     No Experience Required
                 </span>
                 <h1 className="text-4xl font-bold text-gray-800 mb-4">
@@ -48,7 +48,7 @@ const App: React.FC = ({
             </div>
             <div className="my-10 w-full text-center">
                 {showBtn && (
-                    <Button onClick={() => setShowPopup(true)} className="px-6 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-400">
+                    <Button onClick={() => setShowPopup(true)} className="px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-400">
                         Get Started
                     </Button>
                 )}

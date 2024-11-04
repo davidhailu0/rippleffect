@@ -8,7 +8,7 @@ const NoBookingMessage = () => (
         <p className="text-lg md:text-xl text-gray-300 mb-6">
             It looks like you haven't booked a call yet. Please schedule your 1-on-1 business plan call to proceed.
         </p>
-        <Link href="/work-with-me/book" className="px-6 py-3 bg-white text-blue-500 hover:bg-gray-200 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3">
+        <Link href="/work-with-me/book" className="px-6 py-3 bg-white text-pink-500 hover:bg-gray-200 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3">
             Book a Call
         </Link>
     </div>

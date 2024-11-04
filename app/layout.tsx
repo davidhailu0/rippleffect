@@ -20,7 +20,7 @@ export default function RootLayout({
         className={`${roboto.className} antialiased`}
       >
         <NextTopLoader color="#fff" />
-        <div className="bg-contain bg-gradient-to-r from-blue-500 to-cyan-500 py-4 pt-[4.7rem] md:pb-20 mx-auto relative h-screen box-border overflow-y-scroll bg-no-repeat text-white">
+        <div className="bg-contain bg-[#1E213A] py-4 pt-[4.7rem] md:pb-20 mx-auto relative h-screen box-border overflow-y-scroll bg-no-repeat text-white">
           <CustomNavbar />
           {children}
         </div>

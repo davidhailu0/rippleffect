@@ -45,7 +45,7 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
   // Handle authentication redirects
   const checkAuth = useCallback(() => {
     if (!cookies['token'] && pathname !== '/') {
-      router.replace('/');
+      router.replace('/work-with-me');
     }
   }, [router, cookies, pathname]);
 

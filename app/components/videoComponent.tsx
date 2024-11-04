@@ -5,7 +5,6 @@ import MuxPlayer from '@mux/mux-player-react';
 import Cookies from 'js-cookie';
 import { ClipLoader } from 'react-spinners';
 
-// Improved typing for the MuxPlayer element
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
   paused: boolean;
@@ -23,37 +22,14 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
   const [lastUpdate, setLastUpdate] = useState({ lastTime: 0, lastTime30Sec: 0 });
   const videoRef = useRef<MuxPlayerElement | null>(null);
 
-  // Handle video visibility change
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      const videoElement = videoRef.current;
-      if (document.visibilityState === 'hidden' && videoElement && !videoElement.paused) {
-        videoElement.pause();
-      }
-    };
-
-    const handleContextMenu = (e: MouseEvent) => e.preventDefault();
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    document.addEventListener('contextmenu', handleContextMenu);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, []);
-
   // Debounced API update function
-  const updateVideoStatus = useCallback(async () => {
+  const updateVideoStatus = useCallback(async (watchFrom: number, watchTo: number, progress: number) => {
     const token = Cookies.get('token');
     const id = Cookies.get('id');
 
     if (!token || !id || !videoID) return;
-    const videoElement = videoRef.current;
-    if (!videoElement) return;
-
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/videos`, {
+      await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/video_progresses`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,77 +38,105 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
           'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
         },
         body: JSON.stringify({
-          video: {
-            id: videoID,
-            lead_id: parseInt(id, 10),
-            duration: videoElement.duration,
-            current_time: videoElement.currentTime,
-            progress: (videoElement.currentTime / videoElement.duration) * 100,
-          }
+          video_progress: {
+            video_id: videoID,
+            watch_from: watchFrom,
+            watch_to: watchTo
+          },
         }),
       });
     } catch (error) {
       console.error('Failed to update video status:', error);
     }
-  },
-    [videoID]
-  );
+  }, [videoID]);
 
   const handleError = (e: ErrorEvent) => {
     console.error('Playback error:', e);
-    // setError("We're having trouble playing this video. Please try again later.");
   };
 
-  // Handle video time updates
+  // Track video time updates and save progress at intervals
   const handleTimeUpdate = useCallback(
     (e: Event) => {
       const videoElement = e.currentTarget as HTMLVideoElement;
       const currentTime = videoElement.currentTime;
-      const progress = Math.round((currentTime / videoElement.duration) * 100);
+      const duration = videoElement.duration;
+      const progress = Math.round((currentTime / duration) * 100);
+
+      // Set watch range for this interval
+      const watchFrom = lastUpdate.lastTime;
+      const watchTo = currentTime;
 
       // Trigger handleVideoProgress if progress reaches 80%
       if (progress >= 80 && handleVideoProgress) {
         handleVideoProgress();
-        updateVideoStatus();
       }
 
-      // Adjust video playback to prevent skipping
-      // if (currentTime - lastUpdate.lastTime > 2) {
-      //   videoElement.currentTime = lastUpdate.lastTime;
-      // } else {
-      // Update status every 30 seconds
-      if (videoID && currentTime - lastUpdate.lastTime30Sec >= 30) {
-        updateVideoStatus();
+      // Only update status every 30 seconds or when reaching 80%
+      if (videoID && (currentTime - lastUpdate.lastTime30Sec >= 30 || progress >= 80)) {
+        updateVideoStatus(watchFrom, watchTo, progress);
         setLastUpdate((prev) => ({ ...prev, lastTime30Sec: currentTime }));
       }
+
+      // Update last watched time
       setLastUpdate((prev) => ({ ...prev, lastTime: currentTime }));
-      // }
     },
     [videoID, lastUpdate, handleVideoProgress, updateVideoStatus]
   );
 
+  // Pause or visibility change triggers update to the backend
+  const handlePauseOrVisibilityChange = useCallback(() => {
+    const videoElement = videoRef.current;
+    if (videoElement && !videoElement.paused) {
+      const watchFrom = lastUpdate.lastTime;
+      const watchTo = videoElement.currentTime;
+      const progress = Math.round((watchTo / videoElement.duration) * 100);
+
+      updateVideoStatus(watchFrom, watchTo, progress);
+    }
+  }, [lastUpdate, updateVideoStatus]);
+
+  // Add event listeners for visibility change and pause
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        handlePauseOrVisibilityChange();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    if (videoElement) {
+      videoElement.addEventListener('pause', handlePauseOrVisibilityChange);
+      videoElement.addEventListener('timeupdate', handleTimeUpdate);
+    }
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (videoElement) {
+        videoElement.removeEventListener('pause', handlePauseOrVisibilityChange);
+        videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+      }
+    };
+  }, [handlePauseOrVisibilityChange, handleTimeUpdate]);
+
   if (!playBackId) {
-    return <VideoPlayerSkeleton />
+    return <VideoPlayerSkeleton />;
   }
 
   return (
     <MuxPlayer
       className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden ${className}`}
       playbackId={playBackId || 'not-found'}
-      placeholder='Loading Video'
+      placeholder="Loading Video"
       streamType="on-demand"
       onError={handleError}
       ref={videoRef}
-      onTimeUpdate={handleTimeUpdate}
-      accentColor="#3b82f6"
-
     />
   );
 };
 
-
 export default VideoPlayer;
-
 
 function VideoPlayerSkeleton() {
   return (

@@ -31,11 +31,11 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
 
     const getLinkStyle = (path: string) =>
         pathname === path
-            ? "text-blue-500 border-b-2 border-blue-500"
-            : "text-gray-700 hover:text-blue-500 hover:border-blue-500";
+            ? "text-pink-500 border-b-2 border-pink-500"
+            : "text-gray-700 hover:text-pink-500 hover:border-pink-500";
 
     return (
-        <nav className="flex items-center justify-end w-full h-16 bg-white shadow-md z-50 border-b border-gray-200 mb-4">
+        <nav className="flex items-center justify-end w-full h-16 bg-white shadow-md z-50 border-b border-gray-200 mb-4 px-24">
             {/* Logo */}
 
 
@@ -64,7 +64,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
                     </>
                 )}
                 {showButton.blueBTN && (
-                    <Button onClick={handleBlueBTNClick} className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded">
+                    <Button onClick={handleBlueBTNClick} className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded">
                         {showButton.blueBTN}
                     </Button>
                 )}
@@ -87,7 +87,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
                         </>
                     )}
                     {showButton.blueBTN && (
-                        <Button onClick={handleBlueBTNClick} className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white rounded">
+                        <Button onClick={handleBlueBTNClick} className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded">
                             {showButton.blueBTN}
                         </Button>
                     )}

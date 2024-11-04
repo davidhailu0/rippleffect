@@ -39,7 +39,7 @@ const App: React.FC = ({
                 </header>
                 <div className="flex flex-col md:flex-row gap-6 justify-center items-center">
                     <div className="w-full md:w-1/2 bg-white bg-opacity-20 rounded-xl p-6 shadow-lg backdrop-blur-md text-center">
-                        <span className="text-blue-400 font-semibold tracking-wide text-md">
+                        <span className="text-pink-400 font-semibold tracking-wide text-md">
                             No Experience Required
                         </span>
                         <h2 className="text-3xl font-semibold text-white mt-4 mb-4">
@@ -47,7 +47,7 @@ const App: React.FC = ({
                         </h2>
                         <p className="text-gray-300 mb-6">Gain access to exclusive resources designed to grow your sales.</p>
                         {showBtn && (
-                            <Button onClick={() => setShowPopup(true)} className="bg-blue-500 px-8 py-3 rounded-full shadow-xl text-white font-medium hover:bg-blue-600">
+                            <Button onClick={() => setShowPopup(true)} className="bg-pink-500 px-8 py-3 rounded-full shadow-xl text-white font-medium hover:bg-pink-600">
                                 Join Now
                             </Button>
                         )}

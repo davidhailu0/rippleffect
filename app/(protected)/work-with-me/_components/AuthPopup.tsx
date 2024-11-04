@@ -62,18 +62,13 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ closePopup, ref_code }) => {
         try {
             const response = await confirmLead(data);
             setLoading(false);
-
             if (response.login_token) {
-                const channel = new BroadcastChannel('auth');
-                channel.postMessage('login');
-                channel.close();
-
                 Cookies.set('id', response.id, { expires: 365 * 30, path: '/', sameSite: 'Strict' });
                 Cookies.set('token', response.login_token, { expires: 365, path: '/', sameSite: 'Strict' });
                 Cookies.set('referral_code', response.referral_code, { expires: 365, path: '/', sameSite: 'Strict' });
                 Cookies.set('email', email, { expires: 365 * 30, path: '/', sameSite: 'Strict' });
+                router.push('/work-with-me/step-1');
                 closePopup()
-                router.push('/step-1');
             } else {
                 setError('Incorrect Confirmation Token, Please try again.');
             }
@@ -85,7 +80,7 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ closePopup, ref_code }) => {
     }, [confirmationCode, Authstate.frontend_token, email, closePopup, router]);
     return (
         <>
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 text-black">
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 text-black z-[999]">
                 <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg relative transform transition-transform duration-300 scale-100">
 
                     {/* Close Button with SVG */}
