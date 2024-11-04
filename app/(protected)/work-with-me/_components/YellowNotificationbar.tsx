@@ -1,4 +1,4 @@
-import React, { useState, CSSProperties, useEffect } from 'react';
+import React, { useState, CSSProperties, useEffect } from "react";
 
 export interface NotificationBarProps {
     message?: string;
@@ -7,12 +7,17 @@ export interface NotificationBarProps {
     style?: CSSProperties;
 }
 
-const YellowNotificationBar: React.FC<NotificationBarProps> = ({ message, actionLabel, onAction, style }) => {
+const YellowNotificationBar: React.FC<NotificationBarProps> = ({
+    message,
+    actionLabel,
+    onAction,
+    style,
+}) => {
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-        setIsVisible(true)
-    }, [message, actionLabel, onAction, style])
+        setIsVisible(true);
+    }, [message, actionLabel, onAction, style]);
 
     const handleClose = () => {
         setIsVisible(false);
@@ -22,26 +27,29 @@ const YellowNotificationBar: React.FC<NotificationBarProps> = ({ message, action
 
     return (
         <div
-            className="fixed top-3 min-w-80 md:w-[700px] right-16 transition-all ease-in-out duration-150 px-4 py-3 rounded shadow-lg flex items-center justify-between"
+            className="fixed bottom-10 max-w-[300px] flex-col gap-3 left-4 transition-all ease-in-out duration-150 px-4 py-3 rounded shadow-lg flex"
             style={{
-                backgroundColor: '#facc15', // Default background color
-                color: '#000000', // Default text color
-                border: '1px solid #fbbf24', // Default border color
-                zIndex: 999,
+                backgroundColor: "#facc15", // Default background color
+                color: "#000000", // Default text color
+                border: "1px solid #fbbf24", // Default border color
+                zIndex: 50,
                 ...style,
             }}
         >
-            <span className="font-bold mr-4">{message}</span>
-            <div className="flex items-center space-x-3">
+            <span className="font-bold w-[] max-w-[94%]">{message}</span>
+            <div className="flex  w-full">
                 {actionLabel && (
                     <button
                         onClick={onAction}
-                        className="bg-black text-white px-3 py-1 rounded hover:bg-gray-800 transition"
+                        className="bg-black w-full text-white px-5 py-3 rounded hover:bg-gray-800 transition"
                     >
                         {actionLabel}
                     </button>
                 )}
-                <button onClick={handleClose} className="text-black font-bold hover:text-gray-700">
+                <button
+                    onClick={handleClose}
+                    className="text-black absolute right-3 text-xl top-3 font-bold hover:text-gray-700"
+                >
                     ✕
                 </button>
             </div>
