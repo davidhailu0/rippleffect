@@ -74,9 +74,9 @@ function BookingRegistration({ callback }: { callback: () => void }) {
 
             <div className="flex items-start mt-4">
                 <input type="checkbox" id="terms" name="terms" required
-                    className="h-4 w-4 text-blue-600 focus:ring-[#d7b398] border-gray-300 rounded mt-0.5" />
+                    className="h-4 w-4 text-pink-600 focus:ring-[#d7b398] border-gray-300 rounded mt-0.5" />
                 <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
-                    I agree to the <span className="text-blue-600 underline">terms and conditions</span> provided by the company. By providing my phone number, I agree to receive text messages from the business.
+                    I agree to the <span className="text-pink-600 underline">terms and conditions</span> provided by the company. By providing my phone number, I agree to receive text messages from the business.
                 </label>
             </div>
             <div className="flex justify-between items-center mt-6">

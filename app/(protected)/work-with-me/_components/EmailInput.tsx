@@ -19,7 +19,7 @@ const EmailInput: React.FC<EmailInputProps> = ({ email, setEmail, handleSubmit, 
             />
             <button
                 type="submit"
-                className={`w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition ${loading ? 'cursor-not-allowed' : ''
+                className={`w-full mt-4 px-4 py-2 bg-pink-600 text-white rounded-md font-semibold hover:bg-pink-700 transition ${loading ? 'cursor-not-allowed' : ''
                     }`}
                 disabled={loading}
             >

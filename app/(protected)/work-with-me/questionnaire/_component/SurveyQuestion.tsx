@@ -16,7 +16,7 @@ export default function SurveyQuestion({
 }) {
     return (
         <>
-            {survey.question_type === 'multiple_choice' && <p className="text-blue-400">{survey.title}</p>}
+            {survey.question_type === 'multiple_choice' && <p className="text-pink-400">{survey.title}</p>}
             {survey.question_type === 'multiple_choice' ? (
                 <div className="grid grid-cols-4 space-x-3">
                     {Object.entries(survey.choices).map(([key, value]) => (
@@ -32,7 +32,7 @@ export default function SurveyQuestion({
                                         handleNext();
                                     }
                                 }}
-                                className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                                className="form-radio h-4 w-4 text-pink-600 transition duration-150 ease-in-out"
                             />
                             <span className="ml-2 text-gray-700">{value}</span>
                         </label>

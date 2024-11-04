@@ -17,7 +17,7 @@ export function CustomNavbar() {
             : "text-white hover:text-gray-200";
 
     return (
-        <nav className="flex justify-between items-center w-full px-6 md:px-12 py-4 bg-transparent fixed top-0 right-0 left-0 z-[999] shadow-md">
+        <nav className="flex justify-between items-center w-full px-6 md:px-36 py-4 bg-[#1E213A] fixed top-0 right-0 left-0 z-[999] shadow-md">
             {/* Logo */}
             <Link href="/" className="flex items-center">
                 <Image
@@ -55,7 +55,7 @@ export function CustomNavbar() {
                 {/* Right Link */}
                 <ul>
                     <li>
-                        <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")}`}>
+                        <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")} border border-white p-4`}>
                             Work with Me
                         </Link>
                     </li>

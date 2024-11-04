@@ -83,10 +83,26 @@ const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmation
       </div>
       <button
         type="submit"
-        className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md font-semibold hover:bg-blue-700 transition"
+        className="w-full mt-4 px-4 py-2 bg-pink-600 text-white rounded-md font-semibold hover:bg-pink-700 transition"
         disabled={loading} // Disable submit button when loading
       >
-        Confirm Code
+        {loading ? <svg
+          className="animate-spin h-6 w-6 text-white mx-auto"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-100"
+            cx="12"
+            cy="12"
+            r="6"
+            stroke="currentColor"
+            strokeDasharray="28"
+            strokeLinecap="round"
+            strokeWidth="4"
+          ></circle>
+        </svg> : "Confirm Code"}
       </button>
     </form>
   );

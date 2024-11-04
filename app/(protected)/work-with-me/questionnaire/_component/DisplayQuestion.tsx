@@ -94,7 +94,7 @@ export default function DisplayQuestion() {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: token,
-                    Origin: window.location.origin,
+                    'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string
                 },
                 body: JSON.stringify({
                     email,

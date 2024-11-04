@@ -50,7 +50,7 @@ const App: React.FC = ({
                 {showBtn && (
                     <Button
                         onClick={() => setShowPopup(true)}
-                        className="px-6 py-3 h-12 bg-white text-blue-500 hover:bg-gray-200 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3"
+                        className="px-6 py-3 h-12 bg-white text-pink-500 hover:bg-gray-200 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3"
                     >
                         Create Account
                     </Button>

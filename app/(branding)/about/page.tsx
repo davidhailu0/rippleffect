@@ -1,8 +1,10 @@
 import Link from "next/link";
+import WaterMark from "../_components/Watermark";
 
 export default function Bio() {
     return (
-        <main className="min-h-screen bg-gradient-to-r from-blue-500 to-cyan-500 flex flex-col items-center justify-center py-10 px-4">
+        <main className="min-h-screen flex flex-col justify-center py-10 px-36">
+            <WaterMark />
             <div className="text-justify max-w-3xl">
                 {/* Title */}
                 <h1 className="text-4xl font-bold text-white mb-4">About Nate Wells</h1>
@@ -37,7 +39,7 @@ export default function Bio() {
                 </section>
 
                 {/* Call-to-Action / Back to Home */}
-                <Link href="/" className="mt-8 inline-block bg-white text-blue-600 font-semibold px-6 py-2 rounded-md hover:bg-gray-100">
+                <Link href="/" className="mt-8 inline-block bg-white text-pink-600 font-semibold px-6 py-2 rounded-md hover:bg-gray-100">
                     Back to Home
                 </Link>
             </div>
