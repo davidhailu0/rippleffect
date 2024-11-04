@@ -30,7 +30,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
     };
 
     const getLinkStyle = (path: string) =>
-        pathname === path
+        pathname.includes(path)
             ? "text-pink-500 border-b-2 border-pink-500"
             : "text-gray-700 hover:text-pink-500 hover:border-pink-500";
 

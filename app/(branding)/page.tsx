@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { icons } from "lucide-react"
-import WaterMark from './_components/Watermark';
 
 export default function Home() {
   const Facebook = icons['Facebook'];
@@ -9,7 +8,6 @@ export default function Home() {
   const Instagram = icons['Instagram'];
   return (
     <main className="container mx-auto min-h-screen flex flex-col py-12 md:px-36">
-      <WaterMark />
       <div className="flex flex-col lg:flex-row items-center gap-12">
         {/* Hero Content */}
         <div className="lg:w-1/2 space-y-8">
@@ -94,7 +92,7 @@ export default function Home() {
           </p>
           <Link
             href="/work-with-me"
-            className="mt-6 inline-block bg-white text-pink-600 font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-gray-100 transition-all duration-300"
+            className="mt-6 inline-block bg-pink-400 text-white font-semibold px-8 py-3 rounded-lg shadow-lg hover:bg-pink-600 transition-all duration-300"
           >
             Get in Touch
           </Link>
