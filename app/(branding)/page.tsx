@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { icons, Play } from "lucide-react"
+import { icons } from "lucide-react"
 import WaterMark from './_components/Watermark';
 
 export default function Home() {

@@ -23,7 +23,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
   const videoRef = useRef<MuxPlayerElement | null>(null);
 
   // Debounced API update function
-  const updateVideoStatus = useCallback(async (watchFrom: number, watchTo: number, progress: number) => {
+  const updateVideoStatus = useCallback(async (watchFrom: number, watchTo: number) => {
     const token = Cookies.get('token');
     const id = Cookies.get('id');
 
@@ -73,7 +73,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
 
       // Only update status every 30 seconds or when reaching 80%
       if (videoID && (currentTime - lastUpdate.lastTime30Sec >= 30 || progress >= 80)) {
-        updateVideoStatus(watchFrom, watchTo, progress);
+        updateVideoStatus(watchFrom, watchTo);
         setLastUpdate((prev) => ({ ...prev, lastTime30Sec: currentTime }));
       }
 
@@ -89,9 +89,8 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
     if (videoElement && !videoElement.paused) {
       const watchFrom = lastUpdate.lastTime;
       const watchTo = videoElement.currentTime;
-      const progress = Math.round((watchTo / videoElement.duration) * 100);
 
-      updateVideoStatus(watchFrom, watchTo, progress);
+      updateVideoStatus(watchFrom, watchTo);
     }
   }, [lastUpdate, updateVideoStatus]);
 
