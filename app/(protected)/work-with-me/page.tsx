@@ -5,21 +5,18 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "./_components/AuthPopup";
+import React from "react";
+import { useSearchParams } from "next/navigation";
 
 
-const App: React.FC = ({
-    params,
-}: {
-    params?: {
-        ref?: string;
-    };
-}) => {
-    const ref = params?.ref;
+const App: React.FC = () => {
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [showBtn, setShowBtn] = useState(false)
     const videoContext = GetVideoContext();
     const landing_page = videoContext?.videos.find(({ tag_list }) => tag_list.includes('landing'));
+    const searchParams = useSearchParams()
 
+    const ref_code = searchParams.get('ref_code')
     useEffect(() => {
         if (!Cookies.get('token')) {
             setShowBtn(true)
@@ -55,7 +52,7 @@ const App: React.FC = ({
                         Create Account
                     </Button>
                 )}
-                {showPopup && <AuthPopup ref_code={ref} closePopup={closePopup} />}
+                {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />}
             </div>
 
             <footer className="mt-auto mb-4 text-sm">

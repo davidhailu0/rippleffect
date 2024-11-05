@@ -7,7 +7,7 @@ import { useRouter } from "nextjs-toploader/app";
 
 interface AuthPopupProps {
     closePopup: () => void;
-    ref_code?: string
+    ref_code?: string | null
 }
 
 type AuthState = {
