@@ -8,7 +8,7 @@
     "start": "next start",
     "export": "next export",
     "lint": "next lint",
-    "deploy": "bin/write_build_env.sh && dotenv kamal deploy "
+    "deploy": "bin/write_build_env.sh && dotenv  -f '.env.production,.env.build' kamal deploy "
   },
   "dependencies": {
     "@heroicons/react": "^2.1.5",
