@@ -9,7 +9,8 @@ RUN npm ci
 
 # Copy all files and build the project
 COPY . .
-RUN npm run build
+RUN export $(grep -v '^#' .env | xargs) && npm run build
+# RUN npm run build
 
 # Use a lightweight node image to serve the static files
 FROM node:18-alpine AS runner

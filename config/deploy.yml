@@ -40,6 +40,7 @@ builder:
 env:
   clear:
     BUILD_INFO: "<%= ENV['BUILD_INFO']&.gsub('"', '\"') %>"
+    NEXT_PUBLIC_BUILD_INFO: "<%= ENV['BUILD_INFO']&.gsub('"', '\"') %>"
     NEXT_PUBLIC_APP_DOMAIN: "<%= ENV['NEXT_PUBLIC_APP_DOMAIN'] %>"
     NEXT_PUBLIC_APP_ORIGIN: "<%= ENV['NEXT_PUBLIC_APP_ORIGIN'] %>"
 
