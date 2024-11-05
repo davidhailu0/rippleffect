@@ -1,25 +1,17 @@
 'use client'
 import VideoPlayer from "@/app/components/videoComponent";
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "./_components/AuthPopup";
+import React from "react";
 
-
-const App: React.FC = ({
-    params,
-}: {
-    params?: {
-        ref?: string;
-    };
-}) => {
-    const ref = params?.ref;
+const App: React.FC = () => {
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [showBtn, setShowBtn] = useState(false)
     const videoContext = GetVideoContext();
     const landing_page = videoContext?.videos.find(({ tag_list }) => tag_list.includes('landing'));
-
     useEffect(() => {
         if (!Cookies.get('token')) {
             setShowBtn(true)
@@ -55,7 +47,7 @@ const App: React.FC = ({
                         Create Account
                     </Button>
                 )}
-                {showPopup && <AuthPopup ref_code={ref} closePopup={closePopup} />}
+                {showPopup && <Suspense><AuthPopup closePopup={closePopup} /></Suspense>}
             </div>
 
             <footer className="mt-auto mb-4 text-sm">

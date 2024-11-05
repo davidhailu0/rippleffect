@@ -15,7 +15,7 @@ export default function utilcheckFirstTimeLogin(redirect:(arg:string)=>void):Not
       }
         return { message:`You've booked your call, but haven't answered the important questions yet.`, 
           actionLabel: "Complete Questionnaire",
-          onAction: ()=>{sessionStorage.setItem('go-to-question','true');redirect('/work-with-me/questionnire')}}
+          onAction: ()=>{sessionStorage.setItem('go-to-question','true');redirect('/work-with-me/questionnaire')}}
     }
     else if(Cookies.get("step-2-watched")){
       if(sessionStorage.getItem('go-to-book')){

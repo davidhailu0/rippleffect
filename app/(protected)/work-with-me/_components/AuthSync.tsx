@@ -42,7 +42,8 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
 
   // Handle authentication redirects
   const checkAuth = useCallback(() => {
-    if (!cookies['token'] && pathname !== '/') {
+    const regex = /^\/work-with-me(?:\/(landing_pages\/\d+\/?)?)?(?:\?ref_code=[a-zA-Z0-9]+)?\/?$/;
+    if (!cookies['token'] && !regex.test(pathname)) {
       router.replace('/work-with-me');
     }
   }, [router, cookies, pathname]);
