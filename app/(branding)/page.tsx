@@ -98,6 +98,23 @@ export default function Home() {
           </Link>
         </div>
       </section>
+
+      {/* Debug info */}
+      <section className="container mt-12">
+        <div className="max-w-3xl">
+          <p className="text-sm text-gray-600 mt-4 leading-relaxed font-light">
+            Thanks for reading. Website made with Crib CRM. Software info below:
+            <br />
+            BUILD_INFO = {`${process.env.NEXT_PUBLIC_BUILD_INFO}`}
+            <br />
+            APP_DOMAIN (api) = {`${process.env.NEXT_PUBLIC_APP_DOMAIN}`}
+            <br />
+            ORIGIN = {`${process.env.NEXT_PUBLIC_APP_ORIGIN}`}
+          </p>
+        </div>
+      </section>
+
+
     </main>
   )
 }
