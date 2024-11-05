@@ -49,8 +49,8 @@ build_project:
   script:
     - docker version
     - kamal version
-    - echo "$PRODUCTION_KAMAL_SECRETS" > .env.production
-    - echo "BUILD_INFO='$(./bin/generate_build_info.sh)'" >> .env.production
+    - echo "$PRODUCTION_KAMAL_SECRETS" > .env
+    - echo "BUILD_INFO='$(./bin/generate_build_info.sh)'" >> .env
     - 'echo "${RAILS_ENV}:${RAILS_MASTER_KEY:0:3} <-- R.ENV R._MASTER_KEY"'
     - dotenv kamal deploy 
     - echo 'Kamal deploy done.'
