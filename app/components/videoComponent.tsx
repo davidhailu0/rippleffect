@@ -5,6 +5,7 @@ import MuxPlayer from '@mux/mux-player-react';
 import Cookies from 'js-cookie';
 import { ClipLoader } from 'react-spinners';
 import { useDebouncedCallback } from 'use-debounce';
+import { updateVideoProgress } from '../services/videoServices';
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -32,21 +33,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
     if (!token || !id || !videoID) return;
 
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/video_progresses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': token,
-          'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
+      updateVideoProgress({
+        video_progress: {
+          video_id: videoID,
+          watch_from: watchFrom,
+          watch_to: watchTo
         },
-        body: JSON.stringify({
-          video_progress: {
-            video_id: videoID,
-            watch_from: watchFrom,
-            watch_to: watchTo
-          },
-        }),
-      });
+      })
     } catch (error) {
       console.error('Failed to update video status:', error);
     }
@@ -107,7 +100,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [handlePauseOrVisibilityChange, handleTimeUpdate]);
+  }, [handlePauseOrVisibilityChange, handleTimeUpdate, handleSeeked]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 
@@ -118,6 +111,9 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
       playbackId={playBackId ?? 'not-found'}
       placeholder="Loading Video"
       streamType="on-demand"
+      playbackRate={1.0}
+      preload="auto"
+      startTime={0.1}
       onError={(e) => console.error('Playback error:', e)}
     />
   );

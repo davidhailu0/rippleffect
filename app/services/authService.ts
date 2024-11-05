@@ -2,46 +2,38 @@
 
 import ConfirmLead from "../../types/ConfirmLead";
 import CreateLead from "../../types/CreateLeadType";
+import { axiosInstance } from "@/config/axiosConfig";
+
+type updateRegistrationParam = {
+      "lead": {
+          "email"?: string,
+          "first_name"?:string,
+          "last_name"?: string,
+          "phone"?: string,
+          "terms_accepted"?: boolean
+      }
+}
+  
 
 export const createLead = async (data:CreateLead)=>{
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        'Origin': window.location.origin,
-        'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
-      };
-      const url = `${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads`;
-      const response = await fetch(url, {
-        headers,
-        body: JSON.stringify(data),
-        method:'POST'
-      });
-      return await response.json();
+      const url = `/api/v1/leads`;
+      const response = await axiosInstance.post(url,data)
+      return response.data;
 }
 
 export const confirmLead = async(data:ConfirmLead)=>{
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        'Origin': window.location.origin,
-        'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
-      };
-      const url = `${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/confirm`;
-      const response = await fetch(url, {
-        headers,
-        body: JSON.stringify(data),
-        method:'POST'
-      });
-      return await response.json();
+      const url = `/api/v1/leads/confirm`;
+      const response = await axiosInstance.post(url, data);
+      return await response.data;
 }
 
 export const verifyLoginTokenRequest = async(login_token:string)=>{
-    const headers: HeadersInit = {
-        'Content-Type': 'application/json',
-        'Origin': window.location.origin,
-        'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN || '',
-    };
-    const url = `${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/login_with_token?login_token=${login_token}`;
-    const response = await fetch(url, {
-        headers,
-    });
-    return await response.json();
+    const url = `/api/v1/login_with_token?login_token=${login_token}`;
+    const response = await axiosInstance.get(url)
+    return await response.data;
+}
+
+export const updateRegistration = async (id:string|undefined,data:updateRegistrationParam)=>{
+  const resp = await axiosInstance.put(`/api/v1/leads/${id}`, data)
+  return resp.data
 }

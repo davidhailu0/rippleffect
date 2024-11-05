@@ -3,6 +3,7 @@ import { useRouter } from "nextjs-toploader/app"
 import { differenceInDays } from 'date-fns';
 import Cookies from 'js-cookie';
 import { bookSession } from "@/app/services/bookingServices";
+import { updateRegistration } from "@/app/services/authService";
 
 function BookingRegistration({ callback }: { callback: () => void }) {
     const [firstName, setFirstName] = useState(Cookies.get('name') ? Cookies.get('name') : '')
@@ -17,25 +18,16 @@ function BookingRegistration({ callback }: { callback: () => void }) {
         const id = Cookies.get('id')
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         bookSession(JSON.parse(sessionStorage.getItem("reservedTime") as any))
-        const resp = await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/leads/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
-                'Authorization': token || '',
-                'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string,
-            },
-            body: JSON.stringify({
-                "lead": {
-                    "email": email,
-                    "first_name": firstName,
-                    "last_name": lastName,
-                    "phone": phone,
-                    "terms_accepted": true
-                }
-            })
+
+        const respJson = await updateRegistration(id, {
+            "lead": {
+                "email": email,
+                "first_name": firstName,
+                "last_name": lastName,
+                "phone": phone,
+                "terms_accepted": true
+            }
         })
-        const respJson = await resp.json()
         if (respJson.message === 'Lead has been updated.') {
             Cookies.set('name', firstName!, { path: '/', expires: 365 * 10 })
             Cookies.set('lname', lastName!, { path: '/', expires: 365 * 10 })
