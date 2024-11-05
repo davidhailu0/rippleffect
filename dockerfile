@@ -22,8 +22,7 @@ COPY . .
 
 # Check if required environment variables are set, and exit if any are missing
 RUN : "${NEXT_PUBLIC_APP_DOMAIN:?NEXT_PUBLIC_APP_DOMAIN is not set}" \
-    && : "${NEXT_PUBLIC_BUILD_INFO:?NEXT_PUBLIC_BUILD_INFO is not set}" \
-    && : "${NEXT_PUBLIC_APP_ORIGIN:?NEXT_PUBLIC_APP_ORIGIN is not set}"
+    && : "${NEXT_PUBLIC_BUILD_INFO:?NEXT_PUBLIC_BUILD_INFO is not set}"
 
 RUN npm run build
 
