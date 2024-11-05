@@ -3,8 +3,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'nextjs-toploader/app';
 import { CookiesProvider, useCookies } from 'react-cookie';
-import { Toaster } from "@/components/ui/sonner"
-import { toast } from "sonner"
 import { fetchVideos } from '@/app/services/videoServices';
 import { differenceInDays, differenceInHours, parseISO } from 'date-fns';
 import { usePathname } from 'next/navigation';
@@ -60,48 +58,12 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
 
     if (daysDifference === 0) {
       if (hoursDifference >= 1) {
-        toast(`Your call is up in ${Math.floor(hoursDifference)} Hour(s) from now`, {
-          style: {
-            backgroundColor: '#facc15', // Yellow color
-            color: '#000000', // Black text color for contrast
-            border: '1px solid #fbbf24', // Darker yellow border
-            fontWeight: 'bold',
-            width: '90%', // Set a longer width
-            maxWidth: '600px', // Set a max-width to prevent overflow on large screens
-            margin: '0 auto', // Center the toast horizontally
-          },
-          position: 'top-center', // Position at the top center
-          duration: Infinity, // Show for 5 seconds
-        })
+        setYellowBarConfig({ message: `Your call is up in ${Math.floor(hoursDifference)} Hour(s) from now` })
       } else if (hoursDifference < 1 && hoursDifference >= 0) {
-        toast(`Your call is up in ${Math.floor(hoursDifference * 60)} minute(s) from now`, {
-          style: {
-            backgroundColor: '#facc15', // Yellow color
-            color: '#000000', // Black text color for contrast
-            border: '1px solid #fbbf24', // Darker yellow border
-            fontWeight: 'bold',
-            width: '90%', // Set a longer width
-            maxWidth: '600px', // Set a max-width to prevent overflow on large screens
-            margin: '0 auto', // Center the toast horizontally
-          },
-          position: 'top-center', // Position at the top center
-          duration: Infinity, // Show for 5 seconds
-        })
+        setYellowBarConfig({ message: `Your call is up in ${Math.floor(hoursDifference * 60)} minute(s) from now` })
       }
     } else if (daysDifference === 1) {
-      toast('Your call is tomorrow. Please watch all videos in Step 3', {
-        style: {
-          backgroundColor: '#facc15', // Yellow color
-          color: '#000000', // Black text color for contrast
-          border: '1px solid #fbbf24', // Darker yellow border
-          fontWeight: 'bold',
-          width: '90%', // Set a longer width
-          maxWidth: '600px', // Set a max-width to prevent overflow on large screens
-          margin: '0 auto', // Center the toast horizontally
-        },
-        position: 'top-center', // Position at the top center
-        duration: Infinity, // Show for 5 seconds
-      })
+      setYellowBarConfig({ message: 'Your call is tomorrow. Please watch all videos in Step 3' })
     }
   }, [cookies]);
 
@@ -122,7 +84,6 @@ const AuthSync = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <CookiesProvider defaultSetOptions={{ path: '/' }}>
-      <Toaster />
       <VideoContext.Provider value={{ videos }}>
         <YellowNotificationBar message={yellowBarConfig.message} actionLabel={yellowBarConfig.actionLabel} onAction={yellowBarConfig.onAction} />
         {children}

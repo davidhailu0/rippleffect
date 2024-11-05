@@ -3,7 +3,6 @@ import Image from 'next/image';
 import VideoPlayer from '@/app/components/videoComponent';
 import Button from '@/app/components/Button';
 import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
 import { GetVideoContext, Video } from '@/app/hooks/VideoContext';
 import { useRouter } from 'nextjs-toploader/app';
 import clsx from 'clsx';
@@ -16,12 +15,6 @@ export default function Content({ countryFlagImg, bestStrategyVideo }: { country
         if (localStorage.getItem("step-3-watched") === "true") {
             setVideoWatched(4);
         }
-
-        const timeout = setTimeout(() => {
-            toast("Please Watch All the Videos", { icon: false });
-        }, 1000 * 10);
-
-        return () => clearTimeout(timeout);
     }, []);
 
     const VideoContext = GetVideoContext();

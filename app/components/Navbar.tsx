@@ -13,7 +13,7 @@ export function CustomNavbar() {
     // Function to determine the style of the active link
     const getLinkStyle = (path: string) =>
         pathname === path || (pathname.includes(path) && path !== '/')
-            ? `text-pink-400 font-semibold border-b-2 border-pink-400 ${path === "/work-with-me" && 'hidden'}`
+            ? `text-pink-400 font-semibold border-b-2 border-pink-400`
             : "text-white hover:text-gray-200";
 
     return (

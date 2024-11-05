@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import MuxPlayer from '@mux/mux-player-react';
 import Cookies from 'js-cookie';
 import { ClipLoader } from 'react-spinners';
-import { debounce } from '@/util/debounce';
+import { useDebouncedCallback } from 'use-debounce';
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -79,18 +79,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
     }
   }, [lastTime, updateVideoStatus]);
 
+  const handleSeeked = useDebouncedCallback(() => {
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      updateVideoStatus(lastTime, videoElement.currentTime);
+      setLastTime30Sec(videoElement.currentTime);
+    }
+  }, 1000);
+
   useEffect(() => {
     const videoElement = videoRef.current;
     const handleVisibilityChange = () => document.visibilityState === 'hidden' && handlePauseOrVisibilityChange();
 
-    const handleSeeked = debounce(() => {
-      console.log("seeked")
-      const videoElement = videoRef.current;
-      if (videoElement) {
-        updateVideoStatus(lastTime, videoElement.currentTime);
-        setLastTime30Sec(videoElement.currentTime);
-      }
-    }, 1000);
 
     if (videoElement) {
       videoElement.addEventListener('pause', handlePauseOrVisibilityChange);
