@@ -1,16 +1,13 @@
 'use client'
 import VideoPlayer from "@/app/components/videoComponent";
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "../../_components/AuthPopup";
 import { useSearchParams } from "next/navigation";
 
 const App: React.FC = () => {
-    const searchParams = useSearchParams()
-
-    const ref_code = searchParams.get('ref_code')
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [showBtn, setShowBtn] = useState(false)
     const videoContext = GetVideoContext();
@@ -57,7 +54,7 @@ const App: React.FC = () => {
                 </div>
             </div>
 
-            {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />}
+            {showPopup && <Suspense><AuthPopup closePopup={closePopup} /></Suspense>}
 
             <footer className="mt-auto mb-4 text-sm">
                 &copy; {new Date().getFullYear()} All rights reserved.

@@ -4,10 +4,10 @@ import CodeInput from "./CodeInput";
 import EmailInput from "./EmailInput";
 import { confirmLead, createLead } from "../../../services/authService";
 import { useRouter } from "nextjs-toploader/app";
+import { useSearchParams } from "next/navigation";
 
 interface AuthPopupProps {
     closePopup: () => void;
-    ref_code?: string | null
 }
 
 type AuthState = {
@@ -15,7 +15,7 @@ type AuthState = {
     errors?: string;
     frontend_token?: string;
 };
-const AuthPopup: React.FC<AuthPopupProps> = ({ closePopup, ref_code }) => {
+const AuthPopup: React.FC<AuthPopupProps> = ({ closePopup }) => {
 
     const [step, setStep] = useState<number>(1)
     const [email, setEmail] = useState<string>('');
@@ -24,6 +24,10 @@ const AuthPopup: React.FC<AuthPopupProps> = ({ closePopup, ref_code }) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState('');
     const router = useRouter()
+
+    const searchParams = useSearchParams()
+
+    const ref_code = searchParams.get('ref_code')
 
     const createAccount = useCallback(async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();

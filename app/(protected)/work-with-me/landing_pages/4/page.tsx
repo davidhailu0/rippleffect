@@ -1,7 +1,7 @@
 'use client'
 import VideoPlayer from "@/app/components/videoComponent";
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "../../_components/AuthPopup";
@@ -9,9 +9,6 @@ import { useSearchParams } from "next/navigation";
 
 
 const App: React.FC = () => {
-    const searchParams = useSearchParams()
-
-    const ref_code = searchParams.get('ref_code')
     const [showPopup, setShowPopup] = useState<boolean>(false);
     const [showBtn, setShowBtn] = useState(false)
     const videoContext = GetVideoContext();
@@ -48,7 +45,7 @@ const App: React.FC = () => {
                                 Join Now
                             </Button>
                         )}
-                        {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />}
+                        {showPopup && <Suspense><AuthPopup closePopup={closePopup} /></Suspense>}
                     </div>
                     <div className="w-full md:w-1/2 bg-white bg-opacity-20 rounded-xl shadow-lg backdrop-blur-md p-4">
                         <VideoPlayer videoID={landing_page?.id} playBackId={landing_page?.mux_playback_id} />
