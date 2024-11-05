@@ -6,7 +6,6 @@ import Cookies from "js-cookie";
 import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "../../_components/AuthPopup";
 
-
 const App: React.FC = ({
     params,
 }: {
@@ -31,34 +30,42 @@ const App: React.FC = ({
     };
 
     return (
-        <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-to-b from-blue-100 to-white">
-            <div className="flex flex-col justify-center flex-1 text-center space-y-4 p-6">
-                <span className="mb-4 px-6 py-2 bg-pink-50 rounded-lg shadow-md">
-                    No Experience Required
-                </span>
-                <h1 className="text-4xl font-bold text-gray-800 mb-4">
-                    Join Us Today!
-                </h1>
-                <p className="text-md text-gray-600 mb-8">
-                    Access Our Lead-Generating Sales System, Free!
-                </p>
+        <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-radial from-gray-900 to-black min-h-screen">
+            <div className="flex flex-col md:flex-row w-full items-center justify-between md:justify-center md:space-x-8 space-y-8 md:space-y-0 p-8">
+
+                {/* Left Side: Text Content and Button */}
+                <div className="flex flex-col items-center gap-4 justify-center h-full md:w-1/3 text-center md:text-left">
+                    <span className="mb-4 px-6 py-2 bg-white/20 rounded-lg transition">
+                        No Experience Required
+                    </span>
+                    <h1 className="text-5xl font-semibold mb-4">
+                        Work with Me
+                    </h1>
+                    <p className="text-lg mb-8">
+                        Get Free Access to My Lead-Generating Sales System!
+                    </p>
+                    {showBtn && (
+                        <Button
+                            onClick={() => setShowPopup(true)}
+                            className="px-6 py-3 h-12 bg-pink-400 text-white hover:bg-pink-600 transition rounded-[50px] shadow-xl font-bold mt-4"
+                        >
+                            Create Account
+                        </Button>
+                    )}
+                </div>
+
+                {/* Right Side: Video Player */}
+                <div className="flex flex-col items-center md:w-2/3">
+                    <VideoPlayer videoID={landing_page?.id} playBackId={landing_page?.mux_playback_id} className="md:h-[460px]" />
+                </div>
             </div>
-            <div className="flex items-center w-full md:w-3/4 p-4">
-                <VideoPlayer videoID={landing_page?.id} playBackId={landing_page?.mux_playback_id} />
-            </div>
-            <div className="my-10 w-full text-center">
-                {showBtn && (
-                    <Button onClick={() => setShowPopup(true)} className="px-6 py-2 bg-pink-500 text-white rounded-full hover:bg-pink-400">
-                        Get Started
-                    </Button>
-                )}
-                {showPopup && <AuthPopup ref_code={ref} closePopup={closePopup} />}
-            </div>
-            <footer className="mt-auto mb-4 text-sm text-gray-600">
+
+            {showPopup && <AuthPopup ref_code={ref} closePopup={closePopup} />}
+
+            <footer className="mt-auto mb-4 text-sm">
                 &copy; {new Date().getFullYear()} All rights reserved.
             </footer>
         </div>
-
     );
 };
 

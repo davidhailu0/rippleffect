@@ -10,14 +10,13 @@ import Question from '@/types/Question';
 import Answer from '@/types/Answers';
 import SurveyQuestion from './SurveyQuestion';
 import { GetVideoContext, Video } from '@/app/hooks/VideoContext';
-import { fetchSurveys } from '@/app/lib/actions';
+import { answerSurvey, fetchSurveys } from '@/app/services/SurveyService';
 
 
 
 export default function DisplayQuestion() {
     const [surveys, setSurveys] = useState<Question | null>(null);
     const [selectedValue, setSelectedValue] = useState<Answer | null>(null);
-    const [answers, setAnswers] = useState<Answer[]>([]);
     const [videoIDS, setVideoIDS] = useState<Video[]>([]);
     const [index, setIndex] = useState(0);
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -43,7 +42,6 @@ export default function DisplayQuestion() {
                 if (firstQuestionTitle && localStorage.getItem(firstQuestionTitle)) {
                     const response = localStorage.getItem(firstQuestionTitle) as string;
                     setSelectedValue({ question_id: question.questions[0].id, response });
-                    setAnswers([{ question_id: question.questions[0].id, response }]);
                 }
                 setSurveys(question);
             }
@@ -84,40 +82,19 @@ export default function DisplayQuestion() {
 
     // Submit answers to the survey
     const answerQuestion = useCallback(async () => {
-        try {
-            const email = Cookies.get('email');
-            const token = Cookies.get('token');
-            if (!email || !token) return;
-
-            await fetch(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys/${surveys?.id}/answer`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: token,
-                    'Origin-Override': process.env.NEXT_PUBLIC_APP_ORIGIN as string
-                },
-                body: JSON.stringify({
-                    email,
-                    answers,
-                }),
-            });
-        } catch (error) {
-            console.error('Error submitting answers:', error);
-        }
-    }, [surveys, answers]);
+        answerSurvey({
+            "answer": {
+                "question_id": surveys?.questions[index].id,
+                "response": selectedValue?.response
+            }
+        }, surveys?.id)
+    }, [surveys, index, selectedValue]);
 
     // Go to the next question
     const goToNext = useCallback(() => {
-        if (!surveys || surveys.questions.length === 0) return;
+        if (!surveys || surveys.questions.length === 0 || selectedValue == null || selectedValue.response == '') return;
 
-        if (selectedValue) {
-            setAnswers((prev) => {
-                const newAnswers = [...prev];
-                newAnswers[index] = selectedValue;
-                return newAnswers;
-            });
-        }
-
+        answerQuestion();
         if (index + 1 < surveys.questions.length) {
             setIndex((prev) => prev + 1);
             setSelectedValue(null);
@@ -127,14 +104,8 @@ export default function DisplayQuestion() {
             if (nextResponse) {
                 const nextAnswer: Answer = { question_id: surveys.questions[index + 1].id, response: nextResponse };
                 setSelectedValue(nextAnswer);
-                setAnswers((prev) => {
-                    const newAnswers = [...prev];
-                    newAnswers[index + 1] = nextAnswer;
-                    return newAnswers;
-                });
             }
         } else {
-            answerQuestion();
             Cookies.set('questionFinished', 'true', { path: '/', expires: 365 });
             router.replace('/work-with-me/step-3');
         }
@@ -145,11 +116,6 @@ export default function DisplayQuestion() {
         if (!surveys || surveys.questions.length === 0) return;
         localStorage.setItem(surveys?.questions[index].title, val.response);
         setSelectedValue(val);
-        setAnswers((prev) => {
-            const newAnswers = [...prev];
-            newAnswers[index] = val;
-            return newAnswers;
-        });
     };
 
     // Handle video time update
