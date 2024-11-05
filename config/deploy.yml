@@ -35,13 +35,15 @@ registry:
 # Configure builder setup.
 builder:
   arch: amd64
-
-
-env:
-  clear:
+  args:
     NEXT_PUBLIC_BUILD_INFO: "<%= ENV['BUILD_INFO']&.gsub('"', '\"') %>"
     NEXT_PUBLIC_APP_DOMAIN: "<%= ENV['NEXT_PUBLIC_APP_DOMAIN'] %>"
     NEXT_PUBLIC_APP_ORIGIN: "<%= ENV['NEXT_PUBLIC_APP_ORIGIN'] %>"
+
+
+env:
+  clear: {}
+    # We run a static site, that's why we need these vars to be passed at build time.
 
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
