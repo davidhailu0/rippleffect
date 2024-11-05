@@ -15,6 +15,7 @@ export default function Content() {
         if (cookies["step-1-watched"]) {
             setShow(true);
         }
+        setCookie("step-1-watched", "true", { path: '/', maxAge: 24 * 365 * 3600 })
     }, [cookies])
     const handleVideoEnd = () => {
         setShow(true)
