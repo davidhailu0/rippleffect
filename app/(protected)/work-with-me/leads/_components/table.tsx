@@ -1,6 +1,6 @@
 'use client'
-import { fetchFilteredMembers } from "@/app/lib/actions";
 import { Lead } from "@/app/lib/models";
+import { fetchFilteredMembers } from "@/app/services/membersService";
 import { useEffect, useState } from "react";
 
 

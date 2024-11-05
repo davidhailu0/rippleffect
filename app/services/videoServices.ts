@@ -1,6 +1,14 @@
 import { axiosInstance } from "@/config/axiosConfig";
 import Cookies from "js-cookie";
 
+type VideoProgressParam = {
+  video_progress: {
+    video_id: number,
+    watch_from: number,
+    watch_to: number
+  },
+}
+
 export const fetchVideos = async(isAuthorized: boolean) => {
     try {
       const endpoint = isAuthorized ? '/api/v1/videos' : '/api/v1/account';
@@ -15,6 +23,6 @@ export const fetchVideos = async(isAuthorized: boolean) => {
     }
   }
 
-export const updateVideoProgress = async(data:any)=>{
+export const updateVideoProgress = async(data:VideoProgressParam)=>{
   await axiosInstance.post(`/api/v1/video_progresses`, data,{headers:{Authorization:Cookies.get('token')||''}});
 }

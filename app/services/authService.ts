@@ -4,6 +4,17 @@ import ConfirmLead from "../../types/ConfirmLead";
 import CreateLead from "../../types/CreateLeadType";
 import { axiosInstance } from "@/config/axiosConfig";
 
+type updateRegistrationParam = {
+      "lead": {
+          "email"?: string,
+          "first_name"?:string,
+          "last_name"?: string,
+          "phone"?: string,
+          "terms_accepted"?: boolean
+      }
+}
+  
+
 export const createLead = async (data:CreateLead)=>{
       const url = `/api/v1/leads`;
       const response = await axiosInstance.post(url,data)
@@ -22,7 +33,7 @@ export const verifyLoginTokenRequest = async(login_token:string)=>{
     return await response.data;
 }
 
-export const updateRegistration = async (id:string|undefined,data:any)=>{
+export const updateRegistration = async (id:string|undefined,data:updateRegistrationParam)=>{
   const resp = await axiosInstance.put(`/api/v1/leads/${id}`, data)
   return resp.data
 }

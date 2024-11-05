@@ -100,7 +100,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
       }
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [handlePauseOrVisibilityChange, handleTimeUpdate]);
+  }, [handlePauseOrVisibilityChange, handleTimeUpdate, handleSeeked]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 

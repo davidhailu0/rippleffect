@@ -1,6 +1,12 @@
 import Cookies from "js-cookie";
 import { axiosInstance } from "@/config/axiosConfig";
 
+type AnswerSurveyParam = {
+    "answer": {
+        "question_id"?: string,
+        "response"?: string
+    }
+}
 
 export const fetchSurveys = async()=>{
     const resp = await axiosInstance(`/api/v1/surveys`)
@@ -11,12 +17,12 @@ export const fetchSurveys = async()=>{
     }
     return [];
 }
-export const answerSurvey = async(data:any,id?:number)=>{
+export const answerSurvey = async(data:AnswerSurveyParam,id?:number)=>{
     try {
         const token = Cookies.get('token');
         if (!token) return;
 
-        await axiosInstance.post(`${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/v1/surveys/${id}/answer`, data);
+        await axiosInstance.post(`/api/v1/surveys/${id}/answer`, data);
     } catch (error) {
         console.error('Error submitting answers:', error);
     }
