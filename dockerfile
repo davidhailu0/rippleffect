@@ -19,7 +19,7 @@ RUN npm ci
 
 # Copy all files and build the project
 COPY . .
-RUN echo $NEXT_PUBLIC_APP_DOMAIN
+RUN echo "$NEXT_PUBLIC_APP_DOMAIN"
 RUN npm run build
 # RUN npm run build
 
