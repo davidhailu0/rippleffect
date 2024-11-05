@@ -19,9 +19,8 @@ RUN npm ci
 
 # Copy all files and build the project
 COPY . .
-RUN echo "$NEXT_PUBLIC_APP_DOMAIN"
-RUN npm run build
-# RUN npm run build
+
+RUN export $(grep -v '^#' .env.production | xargs) && npm run build
 
 # Use a lightweight node image to serve the static files
 FROM node:18-alpine AS runner
