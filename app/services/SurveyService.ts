@@ -3,7 +3,7 @@ import { axiosInstance } from "@/config/axiosConfig";
 
 type AnswerSurveyParam = {
     "answer": {
-        "question_id"?: string,
+        "question_id"?: number,
         "response"?: string
     }
 }
