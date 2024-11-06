@@ -1,5 +1,7 @@
 default:
   image: node:18-alpine
+  tags:
+    -  external-vps-runner
 
 stages:
   - build
