@@ -1,13 +1,13 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { icons } from "lucide-react"
+import Image from "next/image";
+import Link from "next/link";
+import { icons } from "lucide-react";
 
 export default function Home() {
-  const Facebook = icons['Facebook'];
-  const Linkedin = icons['Linkedin'];
-  const Instagram = icons['Instagram'];
+  const Facebook = icons["Facebook"];
+  const Linkedin = icons["Linkedin"];
+  const Instagram = icons["Instagram"];
   return (
-    <main className="container mx-auto min-h-screen flex flex-col py-12 md:px-36">
+    <main className="container bg-pink-300 mx-auto min-h-screen flex flex-col py-12 md:px-36">
       <div className="flex flex-col lg:flex-row items-center gap-12">
         {/* Hero Content */}
         <div className="lg:w-1/2 space-y-8">
@@ -15,21 +15,24 @@ export default function Home() {
           <div className="flex gap-4">
             <a
               href="https://www.facebook.com/natewells.uk"
-              target="_blank" rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-10 h-10 rounded-full border border-pink-400 flex items-center justify-center hover:bg-pink-400 transition-colors"
             >
               <Facebook className="w-5 h-5" />
             </a>
             <a
               href="https://www.linkedin.com/in/nate-wells/"
-              target="_blank" rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-10 h-10 rounded-full border border-pink-400 flex items-center justify-center hover:bg-pink-400 transition-colors"
             >
               <Linkedin className="w-5 h-5" />
             </a>
             <a
               href="https://www.instagram.com/natewells.uk"
-              target="_blank" rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-10 h-10 rounded-full border border-pink-400 flex items-center justify-center hover:bg-pink-400 transition-colors"
             >
               <Instagram className="w-5 h-5" />
@@ -37,11 +40,10 @@ export default function Home() {
           </div>
 
           <div className="space-y-4">
-            <h1 className="text-5xl lg:text-6xl font-bold">I am Nate Wells</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold">I am Nate</h1>
             <p className="text-xl text-gray-300">
               Business coach and network marketing professional with
-              <br />
-              a passion for helping others achieve success
+              <br />a passion for helping others achieve success
             </p>
           </div>
         </div>
@@ -63,9 +65,12 @@ export default function Home() {
         <div className="max-w-3xl">
           <h2 className="text-3xl font-semibold text-white">Welcome!</h2>
           <p className="text-lg text-white mt-4 leading-relaxed font-light">
-            I'm Nate Wells, a business coach and network marketing professional with a passion for helping individuals and teams
-            achieve financial independence and personal growth. Through years of experience in the field, I've had the privilege of
-            guiding aspiring entrepreneurs and business owners on their journeys to success. Let's connect and make things happen!
+            I'm Nate Wells, a business coach and network marketing professional
+            with a passion for helping individuals and teams achieve financial
+            independence and personal growth. Through years of experience in the
+            field, I've had the privilege of guiding aspiring entrepreneurs and
+            business owners on their journeys to success. Let's connect and make
+            things happen!
           </p>
         </div>
       </section>
@@ -73,11 +78,22 @@ export default function Home() {
       {/* Professional Achievements */}
       <section className="container mt-12">
         <div className="max-w-3xl">
-          <h2 className="text-3xl font-semibold text-white">Professional Highlights</h2>
+          <h2 className="text-3xl font-semibold text-white">
+            Professional Highlights
+          </h2>
           <ul className="text-lg text-white mt-4 leading-relaxed font-light space-y-3 list-disc list-inside">
-            <li>Achieved Enagic 6A3-4 rank, demonstrating leadership in network marketing.</li>
-            <li>Over a decade of experience mentoring individuals and teams in building sustainable businesses.</li>
-            <li>Specialized in personal branding, leadership development, and strategic growth consulting.</li>
+            <li>
+              Achieved Enagic 6A3-4 rank, demonstrating leadership in network
+              marketing.
+            </li>
+            <li>
+              Over a decade of experience mentoring individuals and teams in
+              building sustainable businesses.
+            </li>
+            <li>
+              Specialized in personal branding, leadership development, and
+              strategic growth consulting.
+            </li>
           </ul>
         </div>
       </section>
@@ -87,8 +103,9 @@ export default function Home() {
         <div className="max-w-3xl">
           <h2 className="text-3xl font-semibold text-white">Work with Me</h2>
           <p className="text-lg text-white mt-4 leading-relaxed font-light">
-            Ready to take your business to the next level? Let's collaborate to create a powerful strategy that aligns with your goals.
-            Click below to start an exciting journey of growth and achievement.
+            Ready to take your business to the next level? Let's collaborate to
+            create a powerful strategy that aligns with your goals. Click below
+            to start an exciting journey of growth and achievement.
           </p>
           <Link
             href="/work-with-me"
@@ -113,8 +130,6 @@ export default function Home() {
           </p>
         </div>
       </section>
-
-
     </main>
-  )
+  );
 }
