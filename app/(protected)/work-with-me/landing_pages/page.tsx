@@ -11,8 +11,8 @@ export default function Funnel() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full gap-y-7">
                     <ReferalComponent page={1} />
                     <ReferalComponent page={2} />
-                    <ReferalComponent page={3} />
-                    <ReferalComponent page={4} />
+                    {/* <ReferalComponent page={3} />
+                    <ReferalComponent page={4} /> */}
                     {/*<ReferalComponent />
                     <ReferalComponent /> */}
                 </div>

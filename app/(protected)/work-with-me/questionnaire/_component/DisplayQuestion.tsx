@@ -150,8 +150,8 @@ export default function DisplayQuestion() {
                     handleNext={goToNext}
                 />
             </div>
-            <div className="w-full h-16 bg-orange-500 flex justify-end items-center">
-                <button onClick={goToNext} className="text-white h-full w-48 bg-orange-700">Next -&gt;</button>
+            <div className="w-full h-16 bg-pink-400 flex justify-end items-center">
+                <button onClick={goToNext} className="text-white h-full w-48 bg-pink-600">Next -&gt;</button>
             </div>
         </div>
     );
