@@ -1,4 +1,4 @@
-import { ENVIRONMENT } from "@/app/lib/constants";
+import { ENVIRONMENT } from "@/lib/constants";
 import { AxiosError } from "axios";
 import { toast } from "sonner";
 
