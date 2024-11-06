@@ -21,7 +21,7 @@ export function CustomNavbar() {
             {/* Logo */}
             <Link href="/" className="flex items-center">
                 <Image
-                    src="/logo_white.png" // Ensure logo image is in the public folder
+                    src="/logo_white.webp"
                     alt="Nate Wells Logo"
                     width={40}
                     height={40}
