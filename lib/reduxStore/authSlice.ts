@@ -10,7 +10,7 @@ export type AuthState = {
 };
 
 const initialState: AuthState = {
-  isLogged: true,
+  isLogged: false,
   isLoggedOut: false,
   isAuthFailed: false,
   user: null,
