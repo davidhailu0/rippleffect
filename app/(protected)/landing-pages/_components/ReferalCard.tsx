@@ -17,13 +17,13 @@ const ReferalComponent = ({ page }: { page: number }) => {
     }, []);
 
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(`${origin}/landing_pages/${page}/?ref_code=${referal}`);
+        navigator.clipboard.writeText(`${origin}/landing-pages/${page}/?ref_code=${referal}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
     const goToPreview = () => {
-        router.push(`/landing_pages/${page}/?ref_code=${referal}`);
+        router.push(`/landing-pages/${page}/?ref_code=${referal}`);
     };
 
     if (referal === '') {
@@ -52,7 +52,7 @@ const ReferalComponent = ({ page }: { page: number }) => {
                     </button>
                 </div>
                 <p className="text-black font-medium h-14 w-full bg-white self-center pt-2 text-center">
-                    {`${origin}/landing_pages/${page}/?ref_code=${referal}`}
+                    {`${origin}/landing-pages/${page}/?ref_code=${referal}`}
                 </p>
             </div>
         </div>

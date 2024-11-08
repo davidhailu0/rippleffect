@@ -111,7 +111,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
               <Link
                 href="/landing_pages"
                 className={`${getLinkStyle(
-                  "/landing_pages"
+                  "/landing-pages"
                 )} px-2 py-1`}
               >
                 Landing Pages
@@ -192,7 +192,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
                 Training
               </Link>
               <Link
-                href="/landing_pages"
+                href="/landing-pages"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Landing Pages
