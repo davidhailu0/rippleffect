@@ -3,14 +3,14 @@ import VideoPlayer from "@/app/components/videoComponent";
 import { Button } from "@/components/ui/button";
 import { Suspense, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "../../work-with-me-old/_components/AuthPopup";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
 
 const App: React.FC = () => {
   const [showPopup, setShowPopup] = useState<boolean>(false);
   const [showBtn, setShowBtn] = useState(false);
-  const videoContext = GetVideoContext();
-  const landing_page = videoContext?.videos.find(({ tag_list }) =>
+  const videos = useAppSelector((state) => state.user.videos);
+  const landing_page = videos?.find(({ tag_list }) =>
     tag_list.includes("landing")
   );
 

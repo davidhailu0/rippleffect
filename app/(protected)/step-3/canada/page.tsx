@@ -6,5 +6,5 @@ export default function Home() {
     const VideoContext = GetVideoContext()
     const step_3_cad_strt = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('cad'))
 
-    return (<Content countryFlagImg={'/canada.png'} bestStrategyVideo={step_3_cad_strt} />);
+    return (<Content countryFlagImg={'/canadawebp'} bestStrategyVideo={step_3_cad_strt} />);
 }

@@ -5,7 +5,7 @@ import { useRouter } from "nextjs-toploader/app";
 import { useSearchParams } from "next/navigation";
 import CodeInput from "@/app/(protected)/work-with-me-old/_components/CodeInput";
 import EmailInput from "@/app/(protected)/work-with-me-old/_components/EmailInput";
-import { createLead } from "@/app/services/authService";
+import { createLead } from "@/services/authService";
 
 interface AuthPopupProps {
   closePopup: () => void;
@@ -65,26 +65,6 @@ const SignUp: React.FC<AuthPopupProps> = ({ closePopup }) => {
         const response = await confirmLead(data);
         setLoading(false);
         if (response.login_token) {
-          Cookies.set("id", response.id, {
-            expires: 365 * 30,
-            path: "/",
-            sameSite: "Strict",
-          });
-          Cookies.set("token", response.login_token, {
-            expires: 365,
-            path: "/",
-            sameSite: "Strict",
-          });
-          Cookies.set("referral_code", response.referral_code, {
-            expires: 365,
-            path: "/",
-            sameSite: "Strict",
-          });
-          Cookies.set("email", email, {
-            expires: 365 * 30,
-            path: "/",
-            sameSite: "Strict",
-          });
           router.push("/work-with-me/step-1");
           closePopup();
         } else {

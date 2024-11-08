@@ -1,0 +1,32 @@
+import Cookies from "js-cookie";
+import { axiosInstance } from "@/config/axiosConfig";
+import { asyncHandler } from "@/util/asyncHandler";
+
+type AnswerSurveyParam = {
+  answer: {
+    question_id?: number;
+    response?: string;
+  };
+};
+
+export const fetchSurveys = asyncHandler(async () => {
+  const resp = await axiosInstance(`/surveys`);
+  const respJson = await resp.data;
+  // console.log(respJson.availabilities)
+  if (respJson.questions) {
+    return respJson;
+  }
+  return [];
+});
+export const answerSurvey = asyncHandler(
+  async (data: AnswerSurveyParam, id?: number) => {
+    try {
+      const token = Cookies.get("token");
+      if (!token) return;
+
+      await axiosInstance.post(`/surveys/${id}/answer`, data);
+    } catch (error) {
+      console.error("Error submitting answers:", error);
+    }
+  }
+);

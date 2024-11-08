@@ -1,9 +1,9 @@
 "use client";
 
 import { asyncHandler } from "@/util/asyncHandler";
-import ConfirmLead from "../../types/ConfirmLead";
-import CreateLead from "../../types/CreateLeadType";
+import CreateLead from "../types/CreateLeadType";
 import { axiosInstance } from "@/config/axiosConfig";
+import { ConfirmLead } from "@/types/ConfirmLead";
 
 type updateRegistrationParam = {
   lead: {
@@ -16,27 +16,28 @@ type updateRegistrationParam = {
 };
 
 export const createLead = asyncHandler(async (data: CreateLead) => {
-  const url = `/api/v1/leads`;
+  const url = `/leads`;
   const response = await axiosInstance.post(url, data);
   return response.data;
 });
 
 export const confirmLead = asyncHandler(async (data: ConfirmLead) => {
-  const url = `/api/v1/leads/confirm`;
+  const url = `/leads/confirm`;
   const response = await axiosInstance.post(url, data);
   return await response.data;
 });
 
-export const verifyLoginTokenRequest = async (login_token: string) => {
-  const url = `/api/v1/login_with_token?login_token=${login_token}`;
-  const response = await axiosInstance.get(url);
-  return await response.data;
-};
+export const verifyLoginTokenRequest = asyncHandler(
+  async (login_token: string) => {
+    const url = `/login_with_token?login_token=${login_token}`;
+    const response = await axiosInstance.get(url);
+    return await response.data;
+  }
+);
 
-export const updateRegistration = async (
-  id: string | undefined,
-  data: updateRegistrationParam
-) => {
-  const resp = await axiosInstance.put(`/api/v1/leads/${id}`, data);
-  return resp.data;
-};
+export const updateRegistration = asyncHandler(
+  async (id: string | undefined, data: updateRegistrationParam) => {
+    const resp = await axiosInstance.put(`/leads/${id}`, data);
+    return resp.data;
+  }
+);

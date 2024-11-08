@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import {
   UserCircleIcon,
-  CogIcon,
-  KeyIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
@@ -31,7 +29,7 @@ const AccountPage: React.FC = () => {
       <aside className="w-full md:w-1/4 bg-[#2A2D47] p-6 shadow-lg rounded-lg mb-4 md:mb-0">
         <div className="flex items-center gap-3 mb-6">
           <Image
-            src="/profile-setting.png"
+            src="/profile-setting.webp"
             alt="Profile"
             width={50}
             height={50}
@@ -87,11 +85,10 @@ const NavItem = ({
 }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 p-3 rounded-lg transition ${
-      isActive
-        ? "bg-pink-400 text-white"
-        : "bg-transparent text-white hover:bg-pink-600"
-    }`}
+    className={`flex items-center gap-2 p-3 rounded-lg transition ${isActive
+      ? "bg-pink-400 text-white"
+      : "bg-transparent text-white hover:bg-pink-600"
+      }`}
   >
     {icon}
     <span className="text-base">{label}</span>

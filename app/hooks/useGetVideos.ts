@@ -4,7 +4,7 @@ import { FetchVideosResponse } from "@/types/VideosType";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { fetchVideos } from "../services/videoServices";
+import { fetchVideos } from "../../services/videoServices";
 
 const useGetVideos = () => {
   const dispatch = useDispatch();

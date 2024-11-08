@@ -21,7 +21,7 @@ const BookedContent = () => (
             {['us', 'eu', 'uk', 'canada', 'australia', 'mexico'].map((country) => (
                 <Link href={`/work-with-me/step-3/${country}`} key={country}>
                     <Image
-                        src={`/${country}.png`}
+                        src={`/${country}.webp`}
                         alt={country.toUpperCase()}
                         height={80}
                         width={80}

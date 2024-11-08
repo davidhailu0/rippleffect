@@ -1,6 +1,6 @@
 "use client";
 import EmailInput from "@/app/(protected)/work-with-me-old/_components/EmailInput";
-import { createLead } from "@/app/services/authService";
+import { createLead } from "@/services/authService";
 import { useMutation } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";

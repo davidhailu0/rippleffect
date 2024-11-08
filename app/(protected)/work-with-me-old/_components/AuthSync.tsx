@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "nextjs-toploader/app";
 import { CookiesProvider, useCookies } from "react-cookie";
-import { fetchVideos } from "@/app/services/videoServices";
+import { fetchVideos } from "@/services/videoServices";
 import { differenceInDays, differenceInHours, parseISO } from "date-fns";
 import { usePathname } from "next/navigation";
 import checkEnv from "@/util/CheckEnvironment";

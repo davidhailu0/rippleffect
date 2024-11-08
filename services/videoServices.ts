@@ -14,17 +14,19 @@ export const fetchVideos = asyncHandler(async () => {
   const token = localStorage.getItem("token");
   let response;
   if (token) {
-    response = await axiosInstance.get("/api/v1/videos", {
+    response = await axiosInstance.get("/videos", {
       headers: { Authorization: token },
     });
   } else {
-    response = await axiosInstance.get("/api/v1/account");
+    response = await axiosInstance.get("/account");
   }
   return response.data;
 });
 
-export const updateVideoProgress = async (data: VideoProgressParam) => {
-  await axiosInstance.post(`/api/v1/video_progresses`, data, {
-    headers: { Authorization: Cookies.get("token") || "" },
-  });
-};
+export const updateVideoProgress = asyncHandler(
+  async (data: VideoProgressParam) => {
+    await axiosInstance.post(`/video_progresses`, data, {
+      headers: { Authorization: Cookies.get("token") || "" },
+    });
+  }
+);

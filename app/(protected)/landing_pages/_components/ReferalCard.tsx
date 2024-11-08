@@ -17,13 +17,13 @@ const ReferalComponent = ({ page }: { page: number }) => {
     }, []);
 
     const copyToClipboard = () => {
-        navigator.clipboard.writeText(`${origin}/work-with-me/landing_pages/${page}/?ref_code=${referal}`);
+        navigator.clipboard.writeText(`${origin}/landing_pages/${page}/?ref_code=${referal}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
     const goToPreview = () => {
-        router.push(`/work-with-me/landing_pages/${page}/?ref_code=${referal}`);
+        router.push(`/landing_pages/${page}/?ref_code=${referal}`);
     };
 
     if (referal === '') {
@@ -32,7 +32,7 @@ const ReferalComponent = ({ page }: { page: number }) => {
 
     return (
         <div className="bg-gradient-to-br from-[#0F2C40] to-[#8A6A60] h-auto w-full rounded-lg text-white flex flex-col justify-between font-sans">
-            <Image src={`/landing_page_${page}.png`} alt={`landing_page_${page}`} height={200} width={465} className="overflow-hidden object-contain" />
+            <Image src={`/landing_page_${page}.webp`} alt={`landing_page_${page}`} height={200} width={465} className="overflow-hidden object-contain" />
             <div>
                 <div className="h-7 flex items-center justify-center bg-white">
                     {copied && <p className="text-pink-600 text-sm">Link copied!</p>}
@@ -52,7 +52,7 @@ const ReferalComponent = ({ page }: { page: number }) => {
                     </button>
                 </div>
                 <p className="text-black font-medium h-14 w-full bg-white self-center pt-2 text-center">
-                    {`${origin}/work-with-me/landing_pages/${page}/?ref_code=${referal}`}
+                    {`${origin}/landing_pages/${page}/?ref_code=${referal}`}
                 </p>
             </div>
         </div>

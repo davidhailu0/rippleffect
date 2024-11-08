@@ -3,9 +3,9 @@ import { roboto } from "./fonts/roboto";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 import { CustomNavbar } from "./components/Navbar";
+import { Toaster } from "sonner";
 import ReduxStoreProvider from "@/lib/reduxStore/ReduxStoreProvider";
 import ReactQueryProvider from "@/lib/reactQuery/ReactQueryProvider";
-import { Toaster } from "sonner";
 import FetchVideos from "@/components/fetch-videos";
 
 export const metadata: Metadata = {
@@ -25,13 +25,13 @@ export default function RootLayout({
           <ReactQueryProvider>
             <Toaster position="top-center" duration={4000} richColors />
             <FetchVideos />
-            <div className="bg-contain min-h-dvh bg-bgColor py-4 pt-[4.7rem] md:pb-20 mx-auto relative box-border  bg-no-repeat text-white">
+            <div className="bg-contain min-h-dvh bg-bgColor py-4 pt-[4.7rem] md:pb-20 mx-auto h-dvh relative box-border  bg-no-repeat text-white overflow-y-scroll">
               <CustomNavbar />
               {children}
             </div>
+            <NextTopLoader color="#fff" />
           </ReactQueryProvider>
         </ReduxStoreProvider>
-        <NextTopLoader color="#fff" />
       </body>
     </html>
   );

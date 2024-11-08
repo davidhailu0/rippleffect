@@ -51,7 +51,7 @@ export default function Home() {
         {/* Hero Image */}
         <div className="lg:w-1/2 relative h-[400px] lg:h-[600px] w-full">
           <Image
-            src="/natewells.png"
+            src="/natewells.webp"
             alt="Professional portrait of Nate Wells"
             fill
             className="object-contain"

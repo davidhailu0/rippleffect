@@ -64,7 +64,7 @@ export default function Training() {
                         title="Quick start"
                         icon="⚙️"
                         items={quickStartItems}
-                        imageUrl="/userEdit.png" // Replace with the correct path for the image
+                        imageUrl="/userEditwebp" // Replace with the correct path for the image
                         buttonText="Quick start"
                     />
 
@@ -72,14 +72,14 @@ export default function Training() {
                         title="Organic Trading"
                         icon="💻"
                         items={organicTrading}
-                        imageUrl="/userEdit.png" // Replace with the correct path for the image
+                        imageUrl="/userEditwebp" // Replace with the correct path for the image
                         buttonText="Organic Training"
                     />
                     <TrainingCard
                         title="Paid Ads"
                         icon="⚙️"
                         items={paidTrainingItems}
-                        imageUrl="/userEdit.png" // Replace with the correct path for the image
+                        imageUrl="/userEditwebp" // Replace with the correct path for the image
                         buttonText="Quick start"
                     />
                 </div>

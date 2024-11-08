@@ -5,7 +5,7 @@ import MuxPlayer from '@mux/mux-player-react';
 import Cookies from 'js-cookie';
 import { ClipLoader } from 'react-spinners';
 import { useDebouncedCallback } from 'use-debounce';
-import { updateVideoProgress } from '../services/videoServices';
+import { updateVideoProgress } from '../../services/videoServices';
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;

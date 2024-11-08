@@ -1,6 +1,6 @@
 "use client";
 import CodeInput from "@/app/(protected)/work-with-me-old/_components/CodeInput";
-import { confirmLead } from "@/app/services/authService";
+import { confirmLead } from "@/services/authService";
 import { setIsLogged, setUser } from "@/lib/reduxStore/authSlice";
 import { User } from "@/types/Common";
 import { useMutation } from "@tanstack/react-query";

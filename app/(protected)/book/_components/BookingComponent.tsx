@@ -1,88 +1,89 @@
-'use client'
+'use client';
 
-import { useCallback, useEffect, useMemo, useState } from 'react'
-import { isBefore, isSameDay, parseISO, format } from 'date-fns'
-import { formatInTimeZone, toZonedTime } from 'date-fns-tz'
-import Calendar from 'react-calendar'
-import { fetchAvailableDates } from '@/app/services/bookingServices'
-import { TimezoneOption } from '@/app/lib/models'
-import { DAYS, TIMEZONEOPTIONS } from '@/app/lib/constants'
-import { CalendarSkeleton } from './BookingSkeleton'
-import TimezoneSelect from './TimeZoneSelect'
-import Availabilities from '@/types/AvailabilitiesType'
-import SelectedDate from '@/types/SelectedDateType'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { isBefore, parseISO, format, isSameDay } from 'date-fns';
+import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
+import Calendar from 'react-calendar';
+import { fetchAvailableDates } from '@/services/bookingServices';
+import { TimezoneOption } from '@/app/lib/models';
+import { DAYS, TIMEZONEOPTIONS } from '@/app/lib/constants';
+import { CalendarSkeleton } from './BookingSkeleton';
+import TimezoneSelect from './TimeZoneSelect';
+import Availabilities from '@/types/AvailabilitiesType';
+import SelectedDate from '@/types/SelectedDateType';
+import { useQuery } from '@tanstack/react-query';
+
+const DATE_FORMAT = 'yyyy-MM-dd';
+const TIME_FORMAT_12H = 'hh:mm a';
+const TIME_FORMAT_24H = 'HH:mm';
 
 type BookingComponentProps = {
-    callback: () => void
-}
+    callback: () => void;
+};
 
 export default function BookingComponent({ callback }: BookingComponentProps) {
-    const [selectedDate, setSelectedDate] = useState<SelectedDate>(null)
-    const [selectedTimezone, setSelectedTimezone] = useState<TimezoneOption | null>(null)
-    const [hourFormat, setHourFormat] = useState<'12' | '24'>('12')
-    const [availabilities, setAvailabilities] = useState<Availabilities | null>(null)
-    const [currentDate, setCurrentDate] = useState<Date>(new Date())
+    const [selectedDate, setSelectedDate] = useState<SelectedDate | null>(null);
+    const [hourFormat, setHourFormat] = useState<'12' | '24'>('12');
+    const [currentDate, setCurrentDate] = useState<Date>(new Date());
 
-    const fetchAvailabilities = useCallback(async (date: Date) => {
-        setCurrentDate(date)
-        setAvailabilities(null)
-        const dates: Availabilities = await fetchAvailableDates(date.getMonth() + 1, date.getFullYear())
-        const today = new Date()
-        let newSelectedDate = null
+    const initialTimezone = useMemo<TimezoneOption>(() => {
+        const savedTimezone = sessionStorage.getItem('timezone');
+        return savedTimezone
+            ? JSON.parse(savedTimezone)
+            : TIMEZONEOPTIONS.find((tz) => tz.value === Intl.DateTimeFormat().resolvedOptions().timeZone) as TimezoneOption;
+    }, []);
 
-        if (dates[format(today, 'yyyy-MM-dd')]) {
-            const todayAvailables = dates[format(today, 'yyyy-MM-dd')].filter(
-                ({ start_time }) => Date.now() <= new Date(start_time).getTime()
-            )
-            if (todayAvailables.length !== 0) {
-                newSelectedDate = today
-                setCurrentDate(today)
-            }
-        } else {
-            for (const dt of Object.keys(dates)) {
-                const parsedDate = parseISO(dt)
-                if (isBefore(today, parsedDate) && dates[format(parsedDate, 'yyyy-MM-dd')].length > 0) {
-                    newSelectedDate = parsedDate
-                    setCurrentDate(parsedDate)
-                    break
-                }
-            }
-        }
+    const [selectedTimezone, setSelectedTimezone] = useState<TimezoneOption | null>(initialTimezone);
 
-        if (newSelectedDate != null) {
-            setSelectedDate(newSelectedDate)
-        }
-        setAvailabilities(dates)
-    }, [])
+    const { data: availabilities, isLoading, error } = useQuery<Availabilities, Error>({
+        queryKey: ['availabilities', currentDate],
+        queryFn: () => fetchAvailableDates(currentDate.getMonth() + 1, currentDate.getFullYear()),
+        staleTime: 1000 * 60 * 5
+    }
+    );
 
     const handleTimezoneChange = useCallback((option: TimezoneOption | null) => {
-        setSelectedTimezone(option)
-        sessionStorage.setItem('timezone', JSON.stringify(option))
-    }, [])
+        setSelectedTimezone(option);
+        sessionStorage.setItem('timezone', JSON.stringify(option));
+    }, []);
 
-    useEffect(() => {
-        const storedTimezone = sessionStorage.getItem('timezone')
-        if (storedTimezone) {
-            setSelectedTimezone(JSON.parse(storedTimezone))
-        } else {
-            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
-            const timezone = TIMEZONEOPTIONS.find((tz) => tz.value === userTimezone)
-            if (timezone) {
-                setSelectedTimezone(timezone)
+    const updateSelectedDate = useCallback((availabilities: Availabilities | null) => {
+        const today = new Date();
+        const todayKey = format(today, DATE_FORMAT);
+
+        if (availabilities && availabilities[todayKey]) {
+            const todayAvailable = availabilities[todayKey].some(({ start_time }) =>
+                Date.now() <= new Date(start_time).getTime()
+            );
+            if (todayAvailable) {
+                setSelectedDate(today);
+                setCurrentDate(today);
+                return;
             }
         }
 
-        const reservedTime = sessionStorage.getItem('reservedTime')
-        fetchAvailabilities(reservedTime ? new Date(JSON.parse(reservedTime).start_time) : new Date())
-    }, [fetchAvailabilities])
+        const nextAvailableDate = Object.keys(availabilities || {}).map(date => parseISO(date)).find(date =>
+            isBefore(today, date) && availabilities![format(date, DATE_FORMAT)].length > 0
+        );
+
+        if (nextAvailableDate) {
+            setSelectedDate(nextAvailableDate);
+            setCurrentDate(nextAvailableDate);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (availabilities) updateSelectedDate(availabilities);
+    }, [availabilities, updateSelectedDate]);
 
     const availableTimeSlots = useMemo(() => {
-        if (!selectedDate || !availabilities || !selectedTimezone) return []
-        const dateKey = format(new Date(selectedDate.toString()), 'yyyy-MM-dd')
+        if (!selectedDate || !availabilities || !selectedTimezone) return [];
+
+        const dateKey = format(new Date(selectedDate.toString()), DATE_FORMAT);
         return (availabilities[dateKey] || [])
             .filter(({ start_time }) => {
-                const zonedStartTime = toZonedTime(start_time, selectedTimezone.value)
-                return toZonedTime(Date.now(), selectedTimezone.value).getTime() <= zonedStartTime.getTime()
+                const zonedStartTime = toZonedTime(start_time, selectedTimezone.value);
+                return Date.now() <= zonedStartTime.getTime();
             })
             .map(({ start_time, end_time }) => ({
                 start_time,
@@ -90,12 +91,13 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                 formattedTime: formatInTimeZone(
                     start_time,
                     selectedTimezone.value,
-                    hourFormat === '12' ? 'hh:mm a' : 'HH:mm'
+                    hourFormat === '12' ? TIME_FORMAT_12H : TIME_FORMAT_24H
                 ),
-            }))
-    }, [selectedDate, availabilities, selectedTimezone, hourFormat])
+            }));
+    }, [selectedDate, availabilities, selectedTimezone, hourFormat]);
 
-    if (!availabilities) return <CalendarSkeleton />
+    if (isLoading) return <CalendarSkeleton />;
+    if (error) return <p>Error loading availabilities.</p>;
 
     return (
         <div className="flex flex-col space-y-4 md:flex-row space-x-0 md:space-x-4 p-2 md:p-6 bg-white text-black h-auto w-11/12 md:w-2/3 rounded-md">
@@ -118,15 +120,15 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                     activeStartDate={currentDate}
                     onActiveStartDateChange={({ action, activeStartDate }) => {
                         if (['next', 'prev'].includes(action) && activeStartDate) {
-                            fetchAvailabilities(activeStartDate)
+                            setCurrentDate(activeStartDate);
                         }
                     }}
                     onChange={setSelectedDate}
                     minDate={new Date()}
                     tileDisabled={({ activeStartDate, date }) =>
                         date.getMonth() !== activeStartDate.getMonth() ||
-                        !Object.keys(availabilities).includes(format(date, 'yyyy-MM-dd')) ||
-                        availabilities[format(date, 'yyyy-MM-dd')].length <= 0
+                        !Object.keys(availabilities || {}).includes(format(date, DATE_FORMAT)) ||
+                        Boolean(availabilities && availabilities[format(date, DATE_FORMAT)].length <= 0)
                     }
                 />
             </div>
@@ -142,16 +144,14 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                     <div className="p-2 border border-gray-500 rounded-lg flex gap-x-1">
                         <button
                             onClick={() => setHourFormat('12')}
-                            className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'
-                                }`}
+                            className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}
                             aria-pressed={hourFormat === '12'}
                         >
                             12h
                         </button>
                         <button
                             onClick={() => setHourFormat('24')}
-                            className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'
-                                }`}
+                            className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}
                             aria-pressed={hourFormat === '24'}
                         >
                             24h
@@ -166,8 +166,8 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                                 sessionStorage.setItem(
                                     'reservedTime',
                                     JSON.stringify({ start_time, end_time, timezone: selectedTimezone!.value })
-                                )
-                                callback()
+                                );
+                                callback();
                             }}
                             className="w-full py-2 text-left px-3 rounded-md bg-[#d7b398] border border-[#d7b398] text-white"
                         >
@@ -180,5 +180,5 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                 </div>
             </div>
         </div>
-    )
+    );
 }

@@ -1,4 +1,4 @@
-import LeadsTable from "./_components/table";
+import LeadsTable from "./_components/Leadstable";
 import ShowName from "./_components/ShowName";
 
 export default function Leads() {

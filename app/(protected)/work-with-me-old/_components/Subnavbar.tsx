@@ -5,7 +5,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "nextjs-toploader/app";
 import { useCookies } from "react-cookie";
-import AuthPopup from "@/app/(protected)/work-with-me-old/_components/AuthPopup";
+// import AuthPopup from "@/app/(protected)-old/_components/AuthPopup";
 import { usePathname } from "next/navigation";
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
@@ -35,7 +35,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     showButton.blueBTN === "Create Account"
       ? setShowpop(true)
-      : router.push("/work-with-me/book");
+      : router.push("/book");
   };
 
   const getLinkStyle = (path: string) =>
@@ -67,33 +67,41 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
           <>
             <li>
               <Link
-                href="/work-with-me/step-1"
-                className={`${getLinkStyle("/work-with-me/step-1")} px-2 py-1`}
+                href="/step-1"
+                className={`${getLinkStyle("/step-1")} px-2 py-1`}
               >
                 Step 1
               </Link>
             </li>
             <li>
               <Link
-                href="/work-with-me/step-2"
-                className={`${getLinkStyle("/work-with-me/step-2")} px-2 py-1`}
+                href="/step-2"
+                className={`${getLinkStyle("/step-2")} px-2 py-1`}
               >
                 Step 2
               </Link>
             </li>
             <li>
               <Link
-                href="/work-with-me/step-3"
-                className={`${getLinkStyle("/work-with-me/step-3")} px-2 py-1`}
+                href="/step-3"
+                className={`${getLinkStyle("/step-3")} px-2 py-1`}
               >
                 Step 3
               </Link>
             </li>
             <li>
               <Link
-                href="/work-with-me/training"
+                href="/my-bookings"
+                className={`${getLinkStyle("/step-3")} px-2 py-1`}
+              >
+                My Bookings
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/training"
                 className={`${getLinkStyle(
-                  "/work-with-me/training"
+                  "/training"
                 )} px-2 py-1`}
               >
                 Training
@@ -101,9 +109,9 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             </li>
             <li>
               <Link
-                href="/work-with-me/landing_pages"
+                href="/landing_pages"
                 className={`${getLinkStyle(
-                  "/work-with-me/landing_pages"
+                  "/landing_pages"
                 )} px-2 py-1`}
               >
                 Landing Pages
@@ -111,17 +119,17 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             </li>
             <li>
               <Link
-                href="/work-with-me/leads"
-                className={`${getLinkStyle("/work-with-me/leads")} px-2 py-1`}
+                href="/leads"
+                className={`${getLinkStyle("/leads")} px-2 py-1`}
               >
                 Leads
               </Link>
             </li>
             <li>
               <Link
-                href="/work-with-me/leaderboard"
+                href="/leaderboard"
                 className={`${getLinkStyle(
-                  "/work-with-me/leaderboard"
+                  "/leaderboard"
                 )} px-2 py-1`}
               >
                 Leaderboard
@@ -129,8 +137,8 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             </li>
             <li>
               <Link
-                href="/work-with-me/account"
-                className={`${getLinkStyle("/work-with-me/account")} px-2 py-1`}
+                href="/account"
+                className={`${getLinkStyle("/account")} px-2 py-1`}
               >
                 Account
               </Link>
@@ -145,7 +153,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             {showButton.blueBTN}
           </Button>
         )}
-        {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />}
+        {/* {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />} */}
       </ul>
 
       {/* Mobile Full-Screen Navigation */}
@@ -154,49 +162,55 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
           {showButton.step1 && (
             <>
               <Link
-                href="/work-with-me/step-1"
+                href="/step-1"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Step 1
               </Link>
               <Link
-                href="/work-with-me/step-2"
+                href="/step-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Step 2
               </Link>
               <Link
-                href="/work-with-me/step-3"
+                href="/step-3"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Step 3
               </Link>
               <Link
-                href="/work-with-me/training"
+                href="/my-bookings"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                My Booking
+              </Link>
+              <Link
+                href="/training"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Training
               </Link>
               <Link
-                href="/work-with-me/landing_pages"
+                href="/landing_pages"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Landing Pages
               </Link>
               <Link
-                href="/work-with-me/leads"
+                href="/leads"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Leads
               </Link>
               <Link
-                href="/work-with-me/leaderboard"
+                href="/leaderboard"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Leaderboard
               </Link>
               <Link
-                href="/work-with-me/account"
+                href="/account"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Account
@@ -211,9 +225,9 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
               {showButton.blueBTN}
             </Button>
           )}
-          {showPopup && (
+          {/* {showPopup && (
             <AuthPopup ref_code={ref_code} closePopup={closePopup} />
-          )}
+          )} */}
         </div>
       )}
     </nav>

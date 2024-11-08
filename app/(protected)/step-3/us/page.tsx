@@ -6,5 +6,5 @@ export default function Home() {
     const VideoContext = GetVideoContext()
     const step_3_usd = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('usd'))
 
-    return (<Content countryFlagImg={'/us.png'} bestStrategyVideo={step_3_usd} />);
+    return (<Content countryFlagImg={'/uswebp'} bestStrategyVideo={step_3_usd} />);
 }

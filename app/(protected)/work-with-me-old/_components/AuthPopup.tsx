@@ -2,7 +2,7 @@ import { FormEvent, useCallback, useState } from "react";
 import Cookies from "js-cookie";
 import CodeInput from "./CodeInput";
 import EmailInput from "./EmailInput";
-import { confirmLead, createLead } from "../../../services/authService";
+import { confirmLead, createLead } from "../../../../services/authService";
 import { useRouter } from "nextjs-toploader/app";
 import { useSearchParams } from "next/navigation";
 
