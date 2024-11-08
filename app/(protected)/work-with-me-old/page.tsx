@@ -3,7 +3,6 @@ import VideoPlayer from "@/app/components/videoComponent";
 import { Button } from '@/components/ui/button';
 import { Suspense, useEffect, useState } from "react";
 import Cookies from "js-cookie";
-import { GetVideoContext } from "@/app/hooks/VideoContext";
 import AuthPopup from "./_components/AuthPopup";
 import React from "react";
 

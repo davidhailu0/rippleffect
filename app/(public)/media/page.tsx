@@ -13,7 +13,7 @@ export default function Media() {
             {/* Media Section */}
             <div className="text-center max-w-2xl">
                 <h1 className="text-4xl font-bold text-white mb-6">Media</h1>
-                <p className="text-lg text-white mb-8 text-justify">
+                <p className="text-lg text-white mb-8 text-justify px-4">
                     Discover the latest posts from Nate Wells' Instagram, where he shares moments from his travels, photography tips, and stories from around the world.
                 </p>
 
@@ -21,8 +21,8 @@ export default function Media() {
                 <div className="flex justify-center">
                     {isClient && <InstagramEmbed
                         url="https://www.instagram.com/natewells.uk/"
-                        width={420}
-                        className='rounded-md'
+                        // width={420}
+                        className='rounded-md w-[320px] md:w-[420px]'
                     />}
                 </div>
 

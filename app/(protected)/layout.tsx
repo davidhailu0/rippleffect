@@ -3,7 +3,7 @@ import Loader from "@/components/ui/loader/loader";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { useRouter } from "next/navigation";
 import React, { useLayoutEffect } from "react";
-import SubNavbar from "./work-with-me-old/_components/Subnavbar";
+import SubNavbar from "./_components/Subnavbar";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();

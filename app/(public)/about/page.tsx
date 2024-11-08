@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Bio() {
     return (
-        <main className="min-h-screen flex flex-col justify-center py-10 px-36">
+        <main className="min-h-screen flex flex-col justify-center py-10 px-7 md:px-36">
             <div className="text-justify max-w-3xl">
                 {/* Title */}
                 <h1 className="text-4xl font-bold text-white mb-4">About Nate Wells</h1>

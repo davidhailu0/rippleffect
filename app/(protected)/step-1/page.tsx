@@ -11,7 +11,7 @@ export default function Step1() {
   );
   return (
     <>
-      <div className="flex flex-col gap-7 mt-7 items-center w-[95%] md:w-[73%] md:px-0 mx-auto">
+      <div className="flex flex-col gap-7 mt-7 items-center w-full md:w-9/12 mx-auto px-4">
         <p className="text-4xl font-bold text-white mb-4 md:mb-9">Step 1</p>
         <VideoPlayer
           videoID={step_1_video?.id}
@@ -21,16 +21,16 @@ export default function Step1() {
         <div className={`flex-col mt-4 md:mt-7`}>
           <p className={`text-white text-center`}>
             Once you have{" "}
-            <span className="font-medium text-[#d7b398]">watched the videos</span>{" "}
+            <span className="font-medium text-pink-400">watched the videos</span>{" "}
             click the button below to continue to step 2
           </p>
-          <Link
-            href={"/step-2"}
-            className={`px-6 py-3 bg-pink-400 text-white hover:bg-pink-600 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3`}
-          >
-            Next &gt;
-          </Link>
         </div>
+        <Link
+          href={"/step-2"}
+          className={`px-6 py-3 bg-pink-400 text-white hover:bg-pink-600 transition-colors rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3`}
+        >
+          Next &gt;
+        </Link>
       </div>
     </>
   );

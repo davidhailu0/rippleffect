@@ -39,7 +39,7 @@ export default function Content({ countryFlagImg, bestStrategyVideo }: { country
         <>
             <div className="flex flex-col gap-5 mt-7 items-center w-full md:w-9/12 mx-auto px-2">
                 <Image src={countryFlagImg} alt="EU" height={100} width={100} unoptimized />
-                <p className="text-[#d7b398] text-2xl font-bold">Welcome</p>
+                <p className="text-pink-400 text-2xl font-bold">Welcome</p>
                 <p className="text-2xl md:text-4xl font-bold text-white text-center">My Current Business Model</p>
                 <p className="text-xl md:text-2xl font-bold text-gray-400 mb-5">In this 4 Video Module, you will learn about</p>
                 <ol className="text-white text-md font-bold list-decimal">

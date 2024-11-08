@@ -5,13 +5,13 @@ import { isBefore, parseISO, format, isSameDay } from 'date-fns';
 import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
 import Calendar from 'react-calendar';
 import { fetchAvailableDates } from '@/services/bookingServices';
-import { TimezoneOption } from '@/app/lib/models';
-import { DAYS, TIMEZONEOPTIONS } from '@/app/lib/constants';
 import { CalendarSkeleton } from './BookingSkeleton';
 import TimezoneSelect from './TimeZoneSelect';
 import Availabilities from '@/types/AvailabilitiesType';
 import SelectedDate from '@/types/SelectedDateType';
 import { useQuery } from '@tanstack/react-query';
+import { DAYS, TIMEZONEOPTIONS } from '@/lib/constants';
+import TimezoneOption from '@/types/TimezoneType';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 const TIME_FORMAT_12H = 'hh:mm a';
@@ -144,14 +144,14 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                     <div className="p-2 border border-gray-500 rounded-lg flex gap-x-1">
                         <button
                             onClick={() => setHourFormat('12')}
-                            className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}
+                            className={`px-3 py-1 rounded-md ${hourFormat === '12' ? 'bg-pink-400 text-white' : 'bg-white text-black'}`}
                             aria-pressed={hourFormat === '12'}
                         >
                             12h
                         </button>
                         <button
                             onClick={() => setHourFormat('24')}
-                            className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-[#d7b398] text-white' : 'bg-white text-black'}`}
+                            className={`px-3 py-1 rounded-md ${hourFormat === '24' ? 'bg-pink-400 text-white' : 'bg-white text-black'}`}
                             aria-pressed={hourFormat === '24'}
                         >
                             24h
@@ -169,7 +169,7 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
                                 );
                                 callback();
                             }}
-                            className="w-full py-2 text-left px-3 rounded-md bg-[#d7b398] border border-[#d7b398] text-white"
+                            className="w-full py-2 text-left px-3 rounded-md bg-pink-400 border border-pink-400 text-white"
                         >
                             {formattedTime}
                         </button>

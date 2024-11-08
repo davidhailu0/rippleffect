@@ -8,7 +8,7 @@ export default function LeadSkeleton() {
             {/* Mobile Skeleton */}
             <div className="md:hidden space-y-4">
                 {[...Array(3)].map((_, index) => (
-                    <Card key={index} className="p-4 bg-[#3A77BF]">
+                    <Card key={index} className="p-4 bg-pink-400">
                         <CardContent>
                             <div className="flex items-center justify-between border-b border-gray-600 pb-4">
                                 <div>
@@ -28,7 +28,7 @@ export default function LeadSkeleton() {
             {/* Desktop Skeleton */}
             <div className="hidden md:block">
                 <Table className="min-w-full">
-                    <TableHeader className="bg-[#3A77BF] text-white">
+                    <TableHeader className="bg-pink-400 text-white">
                         <TableRow>
                             <TableHead className="px-4 py-5 font-medium sm:pl-6">#</TableHead>
                             <TableHead className="px-4 py-5 font-medium">Name</TableHead>

@@ -6,7 +6,7 @@ import { asyncHandler } from "@/util/asyncHandler";
 export const fetchAvailableDates = asyncHandler(
   async (month: number, year: number) => {
     const resp = await axiosInstance.get(
-      `${process.env.NEXT_PUBLIC_APP_DOMAIN}/availabilities/?year=${year}&month=${month}`
+      `/availabilities/?year=${year}&month=${month}`
     );
     if (resp.data.availabilities) {
       return resp.data.availabilities;

@@ -44,7 +44,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
       : "text-gray-700 hover:text-pink-500 hover:border-pink-500";
 
   return (
-    <nav className="flex items-center justify-end w-full h-16 bg-white shadow-md z-50 border-b border-gray-200 mb-4 px-24">
+    <nav className="flex items-center justify-end w-full h-16 bg-white shadow-md z-50 border-b border-gray-200 mb-4 px-24 sticky top-0">
       {/* Logo */}
 
       {/* Hamburger Icon for Mobile */}
@@ -92,7 +92,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             <li>
               <Link
                 href="/my-bookings"
-                className={`${getLinkStyle("/step-3")} px-2 py-1`}
+                className={`${getLinkStyle("/my-bookings")} px-2 py-1`}
               >
                 My Bookings
               </Link>
@@ -109,30 +109,10 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             </li>
             <li>
               <Link
-                href="/landing_pages"
-                className={`${getLinkStyle(
-                  "/landing-pages"
-                )} px-2 py-1`}
-              >
-                Landing Pages
-              </Link>
-            </li>
-            <li>
-              <Link
                 href="/leads"
                 className={`${getLinkStyle("/leads")} px-2 py-1`}
               >
                 Leads
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/leaderboard"
-                className={`${getLinkStyle(
-                  "/leaderboard"
-                )} px-2 py-1`}
-              >
-                Leaderboard
               </Link>
             </li>
             <li>
@@ -192,22 +172,10 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
                 Training
               </Link>
               <Link
-                href="/landing-pages"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Landing Pages
-              </Link>
-              <Link
                 href="/leads"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Leads
-              </Link>
-              <Link
-                href="/leaderboard"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Leaderboard
               </Link>
               <Link
                 href="/account"

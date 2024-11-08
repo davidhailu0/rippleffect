@@ -4,12 +4,10 @@ import React, { useEffect, useRef } from 'react';
 interface CodeInputProps {
   confirmationCode: string;
   setConfirmationCode: (code: string) => void;
-  frontendToken: string;
-  handleCodeSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  loading: boolean; // Add loading prop to the interface
+  loading: boolean;
 }
 
-const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmationCode, frontendToken, handleCodeSubmit, loading }) => {
+const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmationCode, loading }) => {
   const inputsRef = useRef<HTMLInputElement[]>([]); // Define refs for input elements
 
   // Effect to update input values when confirmationCode changes (e.g., via paste)
@@ -57,54 +55,23 @@ const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmation
   };
 
   return (
-    <form onSubmit={handleCodeSubmit} className="w-full bg-white rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4 text-center">Enter Confirmation Code</h2>
-      {frontendToken && (
-        <p className="text-3xl font-medium mb-4 text-center" style={{ letterSpacing: '0.2em' }}>
-          {frontendToken}
-        </p>
-      )}
-      <div className="flex justify-between">
-        {[...Array(6)].map((_, index) => (
-          <input
-            key={index}
-            type="text"
-            maxLength={1}
-            ref={(el) => {
-              inputsRef.current[index] = el!;
-            }}
-            onChange={(e) => handleInputChange(e, index)}
-            onKeyDown={(e) => handleKeyDown(e, index)}
-            onPaste={handlePaste}
-            className="w-12 h-12 text-center border rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={loading} // Disable input fields when loading
-          />
-        ))}
-      </div>
-      <button
-        type="submit"
-        className="w-full mt-4 px-4 py-2 bg-pink-600 text-white rounded-md font-semibold hover:bg-pink-700 transition"
-        disabled={loading} // Disable submit button when loading
-      >
-        {loading ? <svg
-          className="animate-spin h-6 w-6 text-white mx-auto"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-100"
-            cx="12"
-            cy="12"
-            r="6"
-            stroke="currentColor"
-            strokeDasharray="28"
-            strokeLinecap="round"
-            strokeWidth="4"
-          ></circle>
-        </svg> : "Confirm Code"}
-      </button>
-    </form>
+    <div className="flex justify-between w-full">
+      {[...Array(6)].map((_, index) => (
+        <input
+          key={index}
+          type="text"
+          maxLength={1}
+          ref={(el) => {
+            inputsRef.current[index] = el!;
+          }}
+          onChange={(e) => handleInputChange(e, index)}
+          onKeyDown={(e) => handleKeyDown(e, index)}
+          onPaste={handlePaste}
+          className="w-12 h-12 text-center border rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={loading} // Disable input fields when loading
+        />
+      ))}
+    </div>
   );
 };
 

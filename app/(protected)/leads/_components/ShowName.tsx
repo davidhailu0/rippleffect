@@ -10,5 +10,5 @@ export default function ShowName() {
     useEffect(() => {
         setInfo({ name: Cookies.get("name") as string, email: Cookies.get("email") as string });
     }, [])
-    return <p className={` text-white md:text-center text-lg px-0 leading-7 md:text-lg font-medium md:leading-[23.4px]`}>{info.name}|{info.email}|{month + ' ' + year}</p>
+    return <p className={`my-4 text-white text-lg px-0 leading-7 md:text-lg font-medium md:leading-[23.4px]`}>{info.name}|{info.email}|{month + ' ' + year}</p>
 }

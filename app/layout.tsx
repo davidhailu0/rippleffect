@@ -25,7 +25,7 @@ export default function RootLayout({
           <ReactQueryProvider>
             <Toaster position="top-center" duration={4000} richColors />
             <FetchVideos />
-            <div className="bg-contain min-h-dvh bg-bgColor py-4 pt-[4.7rem] md:pb-20 mx-auto h-dvh relative box-border  bg-no-repeat text-white overflow-y-scroll">
+            <div className="bg-contain bg-bgColor py-4 pt-[4.7rem] md:pb-20 mx-auto h-screen relative box-border bg-no-repeat text-white overflow-y-auto">
               <CustomNavbar />
               {children}
             </div>

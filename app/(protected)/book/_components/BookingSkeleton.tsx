@@ -58,7 +58,7 @@ export function CalendarSkeleton() {
                 <div className="flex justify-between mb-4 items-center">
                     <p className='text-black'><span className='font-bold text-lg'>Today</span> 01</p>
                     <div className='p-2 border border-gray-500 rounded-lg flex gap-x-1'>
-                        <button className={`px-3 py-1 rounded-md text-white bg-[#d7b398]`}>12h</button>
+                        <button className={`px-3 py-1 rounded-md text-white bg-pink-400`}>12h</button>
                         <button className={`px-3 py-1 rounded-md text-black bg-white`}>24h</button>
                     </div>
                 </div>
@@ -66,7 +66,7 @@ export function CalendarSkeleton() {
                     {[...Array(10)].map((_, index) => (
                         <button
                             key={index}
-                            className={`w-full py-2 h-9 text-left px-3 rounded-md bg-[#d7b398] border border-[#d7b398] text-black`}
+                            className={`w-full py-2 h-9 text-left px-3 rounded-md bg-pink-400 border border-pink-400 text-black`}
                         ></button>
                     ))}
                 </div>

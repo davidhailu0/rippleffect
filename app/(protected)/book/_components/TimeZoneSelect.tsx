@@ -2,7 +2,7 @@
 import Select from 'react-select';
 import { FaGlobe } from 'react-icons/fa';
 import TimezoneOption from '@/types/TimezoneType';
-import { TIMEZONEOPTIONS } from '@/app/lib/constants';
+import { TIMEZONEOPTIONS } from '@/lib/constants';
 
 interface TimeZoneProps {
     selectedTimezone: TimezoneOption | null;

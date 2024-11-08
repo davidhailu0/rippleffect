@@ -11,7 +11,7 @@ import checkEnv from "@/util/CheckEnvironment";
 import VideoContext, { Video } from "@/app/hooks/VideoContext";
 import YellowNotificationBar, {
   NotificationBarProps,
-} from "./YellowNotificationbar";
+} from "../../_components/YellowNotificationbar";
 import utilcheckFirstTimeLogin from "@/util/utilCheckLoginStatus";
 
 const AuthSync = ({ children }: { children: React.ReactNode }) => {

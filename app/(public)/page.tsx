@@ -7,7 +7,7 @@ export default function Home() {
   const Linkedin = icons["Linkedin"];
   const Instagram = icons["Instagram"];
   return (
-    <main className="container mx-auto min-h-screen flex flex-col py-12 md:px-36">
+    <main className="container mx-auto min-h-screen flex flex-col py-12 px-10 md:px-36">
       <div className="flex flex-col lg:flex-row items-center gap-12">
         {/* Hero Content */}
         <div className="lg:w-1/2 space-y-8">

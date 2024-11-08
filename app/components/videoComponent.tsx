@@ -107,7 +107,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
   return (
     <MuxPlayer
       ref={videoRef}
-      className={`shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
+      className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
       playbackId={playBackId ?? 'not-found'}
       placeholder="Loading Video"
       streamType="on-demand"

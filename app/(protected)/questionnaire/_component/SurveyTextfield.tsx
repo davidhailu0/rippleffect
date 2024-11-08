@@ -30,7 +30,7 @@ export default function TextField({
                 type="text"
                 id="text-field"
                 placeholder={placeholder}
-                className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d7b398]"
+                className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
                 value={value || ''}
                 onChange={handleInputChange}
                 onKeyDown={(e) => {

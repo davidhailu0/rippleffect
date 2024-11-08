@@ -1,11 +1,11 @@
 'use client';
 
-import { Lead } from "@/app/lib/models";
 import { fetchFilteredMembers } from "@/services/membersService";
 import { useQuery } from "@tanstack/react-query";
 import LeadsSkeleton from "./leadsSkeleton";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
+import { Lead } from "@/types/Lead";
 
 export default function LeadsTable() {
     const { data, isLoading } = useQuery<Lead[], Error>({ queryKey: ['leads'], queryFn: fetchFilteredMembers });
@@ -32,7 +32,7 @@ export default function LeadsTable() {
             {/* Desktop View */}
             <div className="hidden md:block">
                 <Table className="min-w-full text-white">
-                    <TableHeader className="bg-[#3A77BF] text-left text-lg">
+                    <TableHeader className="bg-pink-400 text-left text-lg">
                         <TableRow>
                             <TableHead className="px-4 py-5 font-medium sm:pl-6">#</TableHead>
                             <TableHead className="px-4 py-5 font-medium">Name</TableHead>

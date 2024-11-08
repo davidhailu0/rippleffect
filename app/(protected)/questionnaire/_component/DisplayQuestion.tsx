@@ -6,7 +6,7 @@ import { ClipLoader } from 'react-spinners';
 import Cookies from 'js-cookie';
 import MuxPlayer from '@mux/mux-player-react';
 import clsx from 'clsx';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { fetchSurveys, answerSurvey } from '@/services/SurveyService';
 import SurveyQuestion from './SurveyQuestion';
 import Question from '@/types/Question';
@@ -19,10 +19,10 @@ export default function DisplayQuestion() {
     const videoRef = useRef<HTMLVideoElement | null>(null);
     const [lastTime, setLastTime] = useState(0);
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const surveyVideos = useMemo(() => data?.questions?.sort((a, b) => a.id - b.id), [data]);
 
-    // Fetch surveys and videos
     useEffect(() => {
         if (data && data?.questions?.length > 0) {
             const firstQuestionTitle = data.questions[0]?.title;
@@ -52,19 +52,25 @@ export default function DisplayQuestion() {
         };
     }, []);
 
-    const answerQuestion = useCallback(async () => {
-        await answerSurvey({
-            answer: {
-                question_id: data?.questions[index].id,
-                response: selectedValue?.response
-            }
-        }, data?.id);
-    }, [data, index, selectedValue]);
+    // Use useMutation for answering survey questions
+    const answerSurveyMutation = useMutation({
+        mutationFn: async (answerData: { question_id: number; response: string }) => {
+            return await answerSurvey({ answer: answerData }, data?.id);
+        },
+
+        onError: (error) => {
+            console.error('Failed to submit answer:', error);
+        },
+    });
 
     const goToNext = useCallback(() => {
         if (!data?.questions?.length || !selectedValue?.response) return;
 
-        answerQuestion();
+        answerSurveyMutation.mutate({
+            question_id: data.questions[index].id,
+            response: selectedValue.response,
+        });
+
         if (index + 1 < data.questions.length) {
             setIndex((prev) => prev + 1);
             setSelectedValue(null);
@@ -76,9 +82,9 @@ export default function DisplayQuestion() {
             }
         } else {
             Cookies.set('questionFinished', 'true', { path: '/', expires: 365 });
-            router.replace('/work-with-me/step-3');
+            router.replace('/step-3');
         }
-    }, [data, selectedValue, index, answerQuestion, router]);
+    }, [data, selectedValue, index, answerSurveyMutation, router]);
 
     const handleOnChange = (val: Answer) => {
         if (!data?.questions?.length) return;

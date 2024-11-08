@@ -25,13 +25,13 @@ export default function BookingsPage() {
             {/* Mobile View */}
             <div className="md:hidden text-white space-y-4">
                 {bookings?.map((booking) => (
-                    <Card key={booking.id} className="bg-[#3A77BF] p-4">
+                    <Card key={booking.id} className="bg-pink-400 p-4">
                         <CardHeader>
-                            <CardTitle className="text-[#d7b398]">{booking.name}</CardTitle>
+                            <CardTitle className="text-pink-400">{booking.name}</CardTitle>
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm mt-1">{format(new Date(booking.start_date), 'yyyy-MM-dd hh:mm a')}</p>
-                            <p>Status: <span className="text-[#d7b398]">{booking.status}</span></p>
+                            <p>Status: <span className="text-pink-400">{booking.status}</span></p>
                         </CardContent>
                     </Card>
                 ))}
@@ -42,7 +42,7 @@ export default function BookingsPage() {
                 <p className="text-xl md:text-4xl font-bold text-white mb-4">Your Bookings</p>
                 <Table className="min-w-full text-white">
                     <TableHeader>
-                        <TableRow className="bg-[#3A77BF]">
+                        <TableRow className="bg-pink-400">
                             <TableHead className='text-lg'>ID</TableHead>
                             <TableHead className='text-lg'>Name</TableHead>
                             <TableHead className='text-lg'>Start Date</TableHead>
@@ -53,12 +53,12 @@ export default function BookingsPage() {
                     </TableHeader>
                     <TableBody>
                         {bookings?.map((booking) => (
-                            <TableRow key={booking.id} className="bg-[#3A77BF] h-16 border-b border-gray-600">
+                            <TableRow key={booking.id} className="bg-pink-400 h-16 border-b border-gray-600">
                                 <TableCell>{booking.id}</TableCell>
                                 <TableCell>{booking.name}</TableCell>
                                 <TableCell>{formatFriendlyDate(booking.start_date)}</TableCell>
                                 <TableCell>{formatFriendlyDate(booking.end_date)}</TableCell>
-                                <TableCell className={booking.status === 'active' ? 'text-[#d7b398]' : 'text-red-500'}>
+                                <TableCell className={'text-white'}>
                                     {booking.status}
                                 </TableCell>
                                 <TableCell>{booking.cancel_reason || 'N/A'}</TableCell>

@@ -1,4 +1,4 @@
-import { NotificationBarProps } from "@/app/(protected)/work-with-me-old/_components/YellowNotificationbar";
+import { NotificationBarProps } from "@/app/(protected)/_components/YellowNotificationbar";
 import Cookies from "js-cookie";
 export default function utilcheckFirstTimeLogin(
   redirect: (arg: string) => void
