@@ -4,6 +4,7 @@ import { asyncHandler } from "@/util/asyncHandler";
 import CreateLead from "../types/CreateLeadType";
 import { axiosInstance } from "@/config/axiosConfig";
 import { ConfirmLead } from "@/types/ConfirmLead";
+import { Axios, AxiosError } from "axios";
 
 type updateRegistrationParam = {
   lead: {
@@ -20,6 +21,29 @@ export const createLead = asyncHandler(async (data: CreateLead) => {
   const response = await axiosInstance.post(url, data);
   return response.data;
 });
+
+export const getLeadHandler = async () => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    try {
+      const response = await axiosInstance.get("/leads", {
+        headers: { Authorization: token },
+      });
+      return response.data;
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response !== undefined) {
+          axiosInstance.defaults.headers.common["Authorization"] = "";
+          localStorage.removeItem("token");
+        }
+        throw new AxiosError("Error fetching current user");
+      }
+      throw error;
+    }
+  } else {
+    throw new AxiosError("No token found");
+  }
+};
 
 export const confirmLead = asyncHandler(async (data: ConfirmLead) => {
   const url = `/leads/confirm`;

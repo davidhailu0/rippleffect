@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   useLayoutEffect(() => {
     if (isAuthFailed || isLoggedOut) {
-      router.replace("/sign-in");
+      router.replace("/sign-up");
     }
     if (isLogged === false) {
       return;

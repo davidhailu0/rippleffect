@@ -7,11 +7,12 @@ import ReduxStoreProvider from "@/lib/reduxStore/ReduxStoreProvider";
 import ReactQueryProvider from "@/lib/reactQuery/ReactQueryProvider";
 import FetchVideos from "@/components/fetch-videos";
 import "./globals.css";
+import CheckAuth from "@/components/check-auth";
 
 export const roboto = Roboto({
-  subsets: ['latin'],
-  weight: ["100", "300", "400", "500", "700"]
-})
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700"],
+});
 export const metadata: Metadata = {
   title: "Nate Wells",
   description: "Increase Your Income",
@@ -29,11 +30,12 @@ export default function RootLayout({
           <ReactQueryProvider>
             <Toaster position="top-center" duration={4000} richColors />
             <FetchVideos />
+            <CheckAuth />
             <Navbar />
             <div className="bg-contain bg-bgColor py-4 pt-[4.7rem] md:pt-0 md:pb-20 mx-auto h-screen relative box-border bg-no-repeat text-white overflow-y-auto">
               {children}
             </div>
-            <NextTopLoader color="#fff" />
+            <NextTopLoader showSpinner={false} color="#fff" />
           </ReactQueryProvider>
         </ReduxStoreProvider>
       </body>

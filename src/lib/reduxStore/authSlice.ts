@@ -1,19 +1,19 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { User } from "@/types/Common";
 import { axiosInstance } from "@/config/axiosConfig";
+import { Lead } from "@/types/Lead";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type AuthState = {
   isLogged: boolean;
   isLoggedOut: boolean;
   isAuthFailed: boolean;
-  user: User | null;
+  lead: Lead | null;
 };
 //FIXME: change isLogged to false
 const initialState: AuthState = {
-  isLogged: true,
+  isLogged: false,
   isLoggedOut: false,
   isAuthFailed: false,
-  user: null,
+  lead: null,
 };
 
 export const authSlice = createSlice({
@@ -41,8 +41,8 @@ export const authSlice = createSlice({
       };
       Object.assign(state, resetState);
     },
-    setUser: (state, action: PayloadAction<AuthState["user"]>) => {
-      state.user = action.payload;
+    setLead: (state, action: PayloadAction<AuthState["lead"]>) => {
+      state.lead = action.payload;
     },
     resetAuthSlice: (state) => {
       const resetState = {
@@ -57,7 +57,7 @@ export const {
   setIsLogged,
   setIsAuthFailed,
   resetAuthSlice,
-  setUser,
+  setLead,
   setIsLoggedOut,
 } = authSlice.actions;
 

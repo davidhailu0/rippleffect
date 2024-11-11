@@ -1,142 +1,93 @@
 "use client";
-import { FormEvent, useCallback, useState } from "react";
-import { useRouter } from "nextjs-toploader/app";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSearchParams } from "next/navigation";
-import CodeInput from "@/components/ui/CodeInput";
-import EmailInput from "@/app/(protected)/work-with-me-old/_components/EmailInput";
-import { confirmLead, createLead } from "@/services/authService";
+import { useMutation } from "@tanstack/react-query";
+import { createLead } from "@/services/authService";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import { icons } from "lucide-react";
 
-interface AuthPopupProps {
-  closePopup: () => void;
-}
-
-type AuthState = {
-  error?: string;
-  errors?: string;
-  frontend_token?: string;
-};
-const SignUp: React.FC<AuthPopupProps> = ({ closePopup }) => {
-  const [step, setStep] = useState<number>(1);
-  const [email, setEmail] = useState<string>("");
-  const [confirmationCode, setConfirmationCode] = useState<string>("");
-  const [Authstate, setAuthState] = useState<AuthState>({});
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState("");
+export default function SignIn() {
+  const [email, setEmail] = useState("");
   const router = useRouter();
-
   const searchParams = useSearchParams();
-
   const ref_code = searchParams.get("ref_code");
+  const Spinner = icons["LoaderCircle"];
 
-  const createAccount = (e) => {
+  const { mutate: mutateCreateAccount, isPending: isPendingCreateAccount } =
+    useMutation({
+      mutationFn: createLead,
+      onSuccess: (data: { frontend_token: string }) => {
+        localStorage.setItem("frontend_token", data.frontend_token);
+        router.push("/confirm-account");
+      },
+    });
+
+  const createAccount = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     const leadData = ref_code ? { email, referral_code: ref_code } : { email };
     const data = { lead: leadData };
-
-    try {
-      const response = await createLead(data);
-      setLoading(false);
-      setAuthState(response);
-
-      if (response.error || response.errors) {
-        setError(response.error || response.errors);
-      } else if (response.frontend_token) {
-        setStep(2);
-      }
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (err) {
-      setLoading(false);
-      setError("Network error. Please try again later.");
-    }
+    mutateCreateAccount(data);
   };
-  const confirmAccount = useCallback(
-    async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setLoading(true);
 
-      const data = {
-        lead: {
-          confirmation_token: confirmationCode,
-          frontend_token: Authstate.frontend_token,
-        },
-      };
-
-      try {
-        const response = await confirmLead(data);
-        setLoading(false);
-        if (response.login_token) {
-          router.push("/work-with-me/step-1");
-          closePopup();
-        } else {
-          setError("Incorrect Confirmation Token, Please try again.");
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      } catch (error) {
-        setLoading(false);
-        setError("Confirmation failed. Please try again.");
-      }
-    },
-    [confirmationCode, Authstate.frontend_token, email, closePopup, router]
-  );
   return (
-    <>
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 text-black z-[999]">
-        <div className="bg-white p-8 rounded-lg shadow-2xl w-full max-w-lg relative transform transition-transform duration-300 scale-100">
-          {/* Close Button with SVG */}
-          {step == 1 && (
-            <button
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 focus:outline-none"
-              onClick={closePopup}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-8 w-8" // Larger size for better visibility
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
+    <div className="fixed inset-0 bg-gray-800 flex justify-center items-center">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold text-center">
+            Sign in
+          </CardTitle>
+          <CardDescription className="text-center">
+            Enter your email to create an account or sign in
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={createAccount}>
+            <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="focus:ring-pink-400"
                 />
-              </svg>
-            </button>
-          )}
-
-          {error && <p className="text-red-600">{error}</p>}
-          {/* LeadForm */}
-          {step === 1 && (
-            <>
-              <h2 className="text-2xl font-semibold mb-6 text-center">
-                One more step...
-              </h2>
-              <p className="text-center text-gray-600 mb-4">
-                Please enter your email to continue
-              </p>
-              <EmailInput
-                email={email}
-                setEmail={setEmail}
-                handleSubmit={createAccount}
-                loading={loading}
-                ctaText={"Create"} // Pass buttonCtaText here
-              />
-            </>
-          )}
-
-          {step === 2 && (
-            <CodeInput
-              confirmationCode={confirmationCode}
-              setConfirmationCode={setConfirmationCode}
-              frontendToken={Authstate.frontend_token!}
-              handleCodeSubmit={confirmAccount}
-              loading={loading}
-            />
-          )}
-        </div>
-      </div>
-    </>
+              </div>
+              <Button
+                type="submit"
+                className="bg-pink-400 hover:bg-pink-600 text-white"
+                disabled={isPendingCreateAccount}
+              >
+                {isPendingCreateAccount && (
+                  <Spinner className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {isPendingCreateAccount ? "Creating..." : "Create Account"}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+        <CardFooter className="flex flex-col space-y-4">
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t" />
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
+    </div>
   );
-};
-
-export default SignUp;
+}
