@@ -1,11 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   UserCircleIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
 import Image from "next/image";
+import { updateRegistration } from "@/services/authService";
+import { useMutation } from "@tanstack/react-query";
 
 const AccountPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
@@ -124,10 +126,38 @@ const EditProfile = ({
   name: string;
   email: string;
   phone: string;
-}) => (
-  <section className="flex flex-col gap-6">
+}) => {
+  const updateRegistrationMutation = useMutation({
+    mutationFn: async () => {
+      const id = Cookies.get('id');
+      return await updateRegistration(id, {
+        lead: {
+          email,
+          first_name: name.split(' ')[0],
+          last_name: name.split(' ')[1],
+          phone,
+          terms_accepted: true,
+        },
+      });
+    },
+
+    onSuccess: (response) => {
+      if (response.message === 'Lead has been updated.') {
+
+      }
+    },
+    onError: (error) => {
+      console.error('Failed to update registration:', error);
+    },
+  });
+
+  const handleFormSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    updateRegistrationMutation.mutate();
+  };
+  return (<section className="flex flex-col gap-6">
     <h1 className="text-2xl font-semibold text-gray-100">Edit Profile</h1>
-    <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleFormSubmit}>
       <InputField
         label="First Name"
         defaultValue={name.split(" ")[0]}
@@ -145,7 +175,8 @@ const EditProfile = ({
       </button>
     </form>
   </section>
-);
+  )
+};
 
 /* Card Component for Profile Overview */
 const Card = ({ title, value }: { title: string; value: string }) => (

@@ -28,7 +28,7 @@ export function CustomNavbar() {
                     className="mr-3"
                     unoptimized
                 />
-                <span className="text-white text-2xl font-bold">Nate Wells</span>
+                <Image src={'/NW.webp'} alt="Nate Wells" height={132} width={100} />
             </Link>
 
             {/* Desktop Navigation */}

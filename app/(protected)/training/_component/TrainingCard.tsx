@@ -14,7 +14,7 @@ const TrainingCard = ({
     buttonText: string;
 }) => {
     return (
-        <div className="max-w-sm mx-auto bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:shadow-[0_0_15px_rgba(0,255,0,0.5)]">
+        <div className="max-w-sm mx-auto bg-white rounded-xl shadow-lg overflow-hidden transform transition duration-300 hover:shadow-[0_0_15px_rgba(255,0,0,0.5)]">
             {/* Image Section */}
             <div className="relative h-48">
                 <Image
@@ -48,7 +48,7 @@ const TrainingCard = ({
 
                 {/* Button */}
                 <div className="mt-6">
-                    <button className="bg-gradient-to-r from-green-400 to-blue-500 text-white font-semibold py-2 px-4 rounded-full w-full hover:shadow-lg hover:shadow-green-500/50 transition-shadow duration-300">
+                    <button className="bg-gradient-to-r from-pink-400 to-red-500 text-white font-semibold py-2 px-4 rounded-full w-full hover:shadow-lg hover:shadow-green-500/50 transition-shadow duration-300">
                         {buttonText} &gt;
                     </button>
                 </div>

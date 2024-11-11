@@ -10,7 +10,7 @@ export type AuthState = {
 };
 //FIXME: change isLogged to false
 const initialState: AuthState = {
-  isLogged: false,
+  isLogged: true,
   isLoggedOut: false,
   isAuthFailed: false,
   user: null,

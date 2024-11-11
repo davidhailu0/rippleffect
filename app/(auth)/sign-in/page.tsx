@@ -1,11 +1,10 @@
 "use client";
 import { FormEvent, useCallback, useState } from "react";
-import Cookies from "js-cookie";
 import { useRouter } from "nextjs-toploader/app";
 import { useSearchParams } from "next/navigation";
 import CodeInput from "@/app/(protected)/work-with-me-old/_components/CodeInput";
 import EmailInput from "@/app/(protected)/work-with-me-old/_components/EmailInput";
-import { createLead } from "@/services/authService";
+import { confirmLead, createLead } from "@/services/authService";
 
 interface AuthPopupProps {
   closePopup: () => void;
