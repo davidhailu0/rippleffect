@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/card";
 import { icons } from "lucide-react";
 import Loader from "@/components/ui/loader/loader";
-import { jwtDecode } from "jwt-decode";
 import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import { setIsLogged, setLead } from "@/lib/reduxStore/authSlice";
@@ -44,8 +43,9 @@ export default function SignUp() {
       if (data.error) {
         setUserMessage(data.error);
       } else {
-        const decodedToken = jwtDecode(data.login_token);
-        setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
+        // const decodedToken = jwtDecode(data.login_token);
+        // setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
+        localStorage.setItem("token", data.login_token);
         dispatch(setIsLogged());
         dispatch(setLead(data));
         router.replace("/step-1");

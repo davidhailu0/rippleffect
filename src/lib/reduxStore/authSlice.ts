@@ -1,5 +1,4 @@
 import { axiosInstance } from "@/config/axiosConfig";
-import Cookies from "js-cookie";
 import { Lead } from "@/types/Lead";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -34,7 +33,7 @@ export const authSlice = createSlice({
       state.isAuthFailed = action.payload;
     },
     setIsLoggedOut: (state) => {
-      Cookies.remove("token");
+      localStorage.removeItem("token");
       axiosInstance.defaults.headers.common["Authorization"] = "";
       const resetState = {
         ...initialState,
@@ -46,7 +45,7 @@ export const authSlice = createSlice({
       state.lead = action.payload;
     },
     resetAuthSlice: (state) => {
-      Cookies.remove("token");
+      localStorage.removeItem("token");
       axiosInstance.defaults.headers.common["Authorization"] = "";
       const resetState = {
         ...initialState,

@@ -4,7 +4,6 @@ import { asyncHandler } from "@/util/asyncHandler";
 import CreateLead from "../types/CreateLeadType";
 import { axiosInstance } from "@/config/axiosConfig";
 import { ConfirmLead } from "@/types/ConfirmLead";
-import Cookies from "js-cookie";
 import { AxiosError } from "axios";
 import { UpdateRegistration } from "@/types/UpdateRegistration";
 import { LoginRequest } from "@/types/LoginRequest";
@@ -16,7 +15,7 @@ export const createLead = asyncHandler(async (data: CreateLead) => {
 });
 
 export const getLeadHandler = async () => {
-  const token = Cookies.get("token");
+  const token = localStorage.getItem("token");
   if (token) {
     try {
       const response = await axiosInstance.get("/leads", {

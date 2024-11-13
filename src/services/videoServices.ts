@@ -1,6 +1,5 @@
 import { axiosInstance } from "@/config/axiosConfig";
 import { asyncHandler } from "@/util/asyncHandler";
-import Cookies from "js-cookie";
 
 type VideoProgressParam = {
   video_progress: {
@@ -11,7 +10,7 @@ type VideoProgressParam = {
 };
 
 export const fetchVideos = asyncHandler(async () => {
-  const token = Cookies.get("token");
+  const token = localStorage.getItem("token");
   let response;
   if (token) {
     response = await axiosInstance.get("/videos", {
@@ -25,8 +24,6 @@ export const fetchVideos = asyncHandler(async () => {
 
 export const updateVideoProgress = asyncHandler(
   async (data: VideoProgressParam) => {
-    await axiosInstance.post(`/video_progresses`, data, {
-      headers: { Authorization: Cookies.get("token") || "" },
-    });
+    await axiosInstance.post(`/video_progresses`, data);
   }
 );

@@ -6,7 +6,6 @@ import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { confirmLead } from "@/services/authService";
 import { setIsLogged, setLead } from "@/lib/reduxStore/authSlice";
-import { jwtDecode } from 'jwt-decode'
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,7 +23,6 @@ import { useCookies } from "react-cookie";
 export default function ConfirmAccount() {
   const [confirmationCode, setConfirmationCode] = useState<string>("");
   const [frontendToken, setFrontendToken] = useState<string>("");
-  const [cookie, setCookie] = useCookies(["token"]);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -32,8 +30,9 @@ export default function ConfirmAccount() {
     useMutation<Lead, Error, any>({
       mutationFn: confirmLead,
       onSuccess: (data: Lead) => {
-        const decodedToken = jwtDecode(data.login_token);
-        setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
+        // const decodedToken = jwtDecode(data.login_token);
+        // setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
+        localStorage.setItem("token", data.login_token);
         dispatch(setIsLogged());
         dispatch(setLead(data));
       },

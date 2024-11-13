@@ -1,5 +1,4 @@
 "use client";
-import Cookies from "js-cookie";
 import { axiosInstance } from "@/config/axiosConfig";
 import { asyncHandler } from "@/util/asyncHandler";
 
@@ -27,7 +26,6 @@ export const bookSession = asyncHandler(
       });
       const respJson = await resp.data;
       if (respJson.message) {
-        Cookies.set("bookedTime", start_time);
         return "success";
       }
     } catch (e) {

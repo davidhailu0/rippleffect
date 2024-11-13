@@ -15,7 +15,7 @@ export default function Home() {
                 initial={{ opacity: 0, x: -50 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5 }}
-                className="flex flex-col lg:flex-row items-center gap-36"
+                className="flex flex-col lg:flex-row items-center gap-20 md:gap-36"
             >
                 {/* Hero Content */}
                 <div className="lg:w-1/2 space-y-8">
@@ -60,12 +60,12 @@ export default function Home() {
                 </div>
 
                 {/* Hero Image */}
-                <div className="lg:w-1/2 relative h-[400px] lg:h-[600px] w-full group">
-                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 z-10 rounded-lg"></div>
+                <div className="lg:w-1/2 relative h-[445px] lg:h-[629px] w-full group flex flex-col items-center">
+                    <div className="absolute h-full text-center inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 z-10 rounded-lg"></div>
                     <Image
                         src="/natewells.webp"
                         alt="Professional portrait of Nate Wells"
-                        height={200}
+                        height={500}
                         width={400}
                         className="object-cover rounded-lg"
                         priority

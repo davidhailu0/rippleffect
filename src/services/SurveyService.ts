@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import { axiosInstance } from "@/config/axiosConfig";
 import { asyncHandler } from "@/util/asyncHandler";
 
@@ -21,7 +20,7 @@ export const fetchSurveys = asyncHandler(async () => {
 export const answerSurvey = asyncHandler(
   async (data: AnswerSurveyParam, id?: number) => {
     try {
-      const token = Cookies.get("token");
+      const token = localStorage.getItem("token");
       if (!token) return;
 
       await axiosInstance.post(`/surveys/${id}/answer`, data);
