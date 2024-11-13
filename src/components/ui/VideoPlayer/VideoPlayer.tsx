@@ -27,10 +27,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
 
   // Debounced API update function
   const updateVideoStatus = useCallback(async (watchFrom: number, watchTo: number) => {
-    const token = Cookies.get('token');
-    const id = Cookies.get('id');
-
-    if (!token || !id || !videoID) return;
+    if (!videoID) return;
 
     try {
       updateVideoProgress({
@@ -67,7 +64,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, classNam
 
   const handlePauseOrVisibilityChange = useCallback(() => {
     const videoElement = videoRef.current;
-    if (videoElement && !videoElement.paused) {
+    if (videoElement && videoElement.paused) {
       updateVideoStatus(lastTime, videoElement.currentTime);
     }
   }, [lastTime, updateVideoStatus]);

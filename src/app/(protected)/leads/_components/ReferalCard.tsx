@@ -11,7 +11,6 @@ const ReferalComponent = ({ page }: { page: number }) => {
     const router = useRouter();
     const lead = useAppSelector((state) => state.auth.lead);
     const referal = lead?.referral_code;
-    console.log(lead);
     useEffect(() => {
         setOrigin(window.location.origin);
     }, []);
@@ -51,9 +50,6 @@ const ReferalComponent = ({ page }: { page: number }) => {
                         📋 Copy Link
                     </button>
                 </div>
-                <p className="text-black font-medium h-14 w-full bg-white self-center pt-2 text-center">
-                    {`${origin}/landing-pages/page${page}/?ref_code=${referal}`}
-                </p>
             </div>
         </div>
     );

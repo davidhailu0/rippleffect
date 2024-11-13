@@ -18,7 +18,7 @@ export default function Leads() {
                             Leaderboard
                         </TabsTrigger>
                         <TabsTrigger value="landing-page" className="py-2 px-4 font-semibold">
-                            Landing Pages
+                            Referral Pages
                         </TabsTrigger>
                     </TabsList>
 
@@ -41,8 +41,8 @@ export default function Leads() {
                     </TabsContent>
 
                     <TabsContent value="landing-page" className="p-4 bg-[#2A2D47] rounded shadow-sm">
-                        <p className="text-xl md:text-4xl font-bold text-white">Landing Pages</p>
-                        <p className={`my-4 text-[rgba(255,255,255,0.57)] text-lg px-0 leading-7 md:text-lg font-medium md:leading-[23.4px] mb-4 md:mb-9`}>Choose your favorite Landing Page and Copy Your Personal Link</p>
+                        <p className="text-xl md:text-4xl font-bold text-white">Referral Pages</p>
+                        <p className={`my-4 text-[rgba(255,255,255,0.57)] text-lg px-0 leading-7 md:text-lg font-medium md:leading-[23.4px] mb-4 md:mb-9`}>Choose your favorite Referral Page and Copy Your Referral Link</p>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full gap-y-7">
                             <ReferalComponent page={1} />
                             <ReferalComponent page={2} />
