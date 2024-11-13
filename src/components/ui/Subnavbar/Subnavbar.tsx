@@ -4,38 +4,18 @@ import Link from "next/link";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "nextjs-toploader/app";
-import { useCookies } from "react-cookie";
-// import AuthPopup from "@/app/(protected)-old/_components/AuthPopup";
 import { usePathname } from "next/navigation";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
-  const [showButton, setShowButton] = React.useState({
-    step1: false,
-    blueBTN: "",
-  });
-  const [showPopup, setShowpop] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const router = useRouter();
   const pathname = usePathname();
-  const [cookie] = useCookies(["step-1-watched", "token", "booked"]);
+  const lead = useAppSelector((state) => state.auth.lead);
 
-  const closePopup = () => setShowpop(false);
-
-  React.useEffect(() => {
-    const step1 = Boolean(cookie["step-1-watched"]);
-    const blueBTN = cookie["token"]
-      ? cookie["booked"]
-        ? ""
-        : "Book Now"
-      : "Create Account";
-    setShowButton({ step1, blueBTN });
-  }, [cookie]);
-
-  const handleBlueBTNClick = () => {
+  const handleBTNClick = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    showButton.blueBTN === "Create Account"
-      ? setShowpop(true)
-      : router.push("/book");
+    router.push("/book")
   };
 
   const getLinkStyle = (path: string) =>
@@ -63,7 +43,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
 
       {/* Desktop Navigation */}
       <ul className="hidden md:flex gap-6 px-7 items-center">
-        {showButton.step1 && (
+        {lead && (
           <>
             <li>
               <Link
@@ -125,21 +105,19 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             </li>
           </>
         )}
-        {showButton.blueBTN && (
-          <Button
-            onClick={handleBlueBTNClick}
-            className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded"
-          >
-            {showButton.blueBTN}
-          </Button>
-        )}
+        {!lead?.tag_list.includes('booked') && <Button
+          onClick={handleBTNClick}
+          className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded"
+        >
+          {!lead?.tag_list.includes('booked') && 'Book Now'}
+        </Button>}
         {/* {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />} */}
       </ul>
 
       {/* Mobile Full-Screen Navigation */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-90 z-20 flex flex-col items-center justify-center space-y-6 text-2xl text-white">
-          {showButton.step1 && (
+          {
             <>
               <Link
                 href="/step-1"
@@ -184,18 +162,15 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
                 Account
               </Link>
             </>
-          )}
-          {showButton.blueBTN && (
+          }
+          {!lead?.tag_list.includes('booked') && (
             <Button
-              onClick={handleBlueBTNClick}
+              onClick={handleBTNClick}
               className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded"
             >
-              {showButton.blueBTN}
+              Book Now
             </Button>
           )}
-          {/* {showPopup && (
-            <AuthPopup ref_code={ref_code} closePopup={closePopup} />
-          )} */}
         </div>
       )}
     </nav>

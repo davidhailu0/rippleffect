@@ -1,4 +1,7 @@
+'use client';
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { icons } from "lucide-react";
 
@@ -7,8 +10,13 @@ export default function Home() {
   const Linkedin = icons["Linkedin"];
   const Instagram = icons["Instagram"];
   return (
-    <main className="container mx-auto min-h-screen flex flex-col py-12 px-10 md:px-36">
-      <div className="flex flex-col lg:flex-row items-center gap-12">
+    <main className="container mx-auto min-h-screen flex flex-col py-12 px-10 md:px-36 bg-gray-900">
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col lg:flex-row items-center gap-36"
+      >
         {/* Hero Content */}
         <div className="lg:w-1/2 space-y-8">
           {/* Social Icons */}
@@ -17,7 +25,7 @@ export default function Home() {
               href="https://www.facebook.com/natewells.uk"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-pink-400 flex items-center justify-center hover:bg-pink-400 transition-colors"
+              className="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center hover:bg-pink-600 transition-colors"
             >
               <Facebook className="w-5 h-5" />
             </a>
@@ -25,7 +33,7 @@ export default function Home() {
               href="https://www.linkedin.com/in/nate-wells/"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-pink-400 flex items-center justify-center hover:bg-pink-400 transition-colors"
+              className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors"
             >
               <Linkedin className="w-5 h-5" />
             </a>
@@ -33,32 +41,37 @@ export default function Home() {
               href="https://www.instagram.com/natewells.uk"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-10 h-10 rounded-full border border-pink-400 flex items-center justify-center hover:bg-pink-400 transition-colors"
+              className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 via-red-500 to-yellow-500 text-white flex items-center justify-center hover:opacity-90 transition-opacity"
             >
               <Instagram className="w-5 h-5" />
             </a>
           </div>
 
           <div className="space-y-4">
-            <h1 className="text-5xl lg:text-6xl font-bold">I am Nate</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold text-white">
+              I am Nate
+            </h1>
             <p className="text-xl text-gray-300">
               Business coach and network marketing professional with
-              <br />a passion for helping others achieve success
+              <br />
+              a passion for helping others achieve success
             </p>
           </div>
         </div>
 
         {/* Hero Image */}
-        <div className="lg:w-1/2 relative h-[400px] lg:h-[600px] w-full">
+        <div className="lg:w-1/2 relative h-[400px] lg:h-[600px] w-full group">
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 z-10 rounded-lg"></div>
           <Image
             src="/natewells.webp"
             alt="Professional portrait of Nate Wells"
-            fill
-            className="object-contain border-b-4"
+            height={200}
+            width={400}
+            className="object-cover border-4 border-pink-500 rounded-lg shadow-lg transition-transform transform duration-500"
             priority
           />
         </div>
-      </div>
+      </motion.div>
 
       {/* Introduction Section */}
       <section className="container mt-12">

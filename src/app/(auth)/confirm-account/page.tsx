@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
 import { confirmLead } from "@/services/authService";
 import { setIsLogged, setLead } from "@/lib/reduxStore/authSlice";
-import { User } from "@/types/Common";
+import { jwtDecode } from 'jwt-decode'
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,22 +19,23 @@ import {
 import { LoaderCircle } from "lucide-react";
 import CodeInput from "@/components/ui/CodeInput";
 import { Lead } from "@/types/Lead";
+import { useCookies } from "react-cookie";
 
 export default function ConfirmAccount() {
   const [confirmationCode, setConfirmationCode] = useState<string>("");
   const [frontendToken, setFrontendToken] = useState<string>("");
+  const [cookie, setCookie] = useCookies(["token"]);
   const dispatch = useDispatch();
   const router = useRouter();
 
   const { mutate: mutateConfirmAccount, isPending: isPendingConfirmAccount } =
-    useMutation<User, Error, any>({
+    useMutation<Lead, Error, any>({
       mutationFn: confirmLead,
       onSuccess: (data: Lead) => {
-        localStorage.removeItem("frontend_token");
-        localStorage.setItem("token", data.login_token);
+        const decodedToken = jwtDecode(data.login_token);
+        setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
         dispatch(setIsLogged());
         dispatch(setLead(data));
-        router.push("/dashboard");
       },
     });
 
@@ -53,7 +54,7 @@ export default function ConfirmAccount() {
   };
 
   useEffect(() => {
-    const token = localStorage.getItem("frontend_token");
+    const token = sessionStorage.getItem("frontend_token");
     if (token) {
       setFrontendToken(token);
     } else {
@@ -89,6 +90,7 @@ export default function ConfirmAccount() {
               </div>
               <Button
                 type="submit"
+                className="bg-pink-400 hover:bg-pink-600 text-white"
                 disabled={
                   isPendingConfirmAccount || confirmationCode.length !== 6
                 }

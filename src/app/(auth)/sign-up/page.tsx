@@ -29,7 +29,7 @@ export default function SignUp() {
     useMutation({
       mutationFn: createLead,
       onSuccess: (data: { frontend_token: string }) => {
-        localStorage.setItem("frontend_token", data.frontend_token);
+        sessionStorage.setItem("frontend_token", data.frontend_token);
         router.push("/confirm-account");
       },
     });

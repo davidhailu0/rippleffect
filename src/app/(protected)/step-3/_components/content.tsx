@@ -1,11 +1,12 @@
 'use client';
 import Image from 'next/image';
 import VideoPlayer from '@/components/ui/VideoPlayer/VideoPlayer';
-import Button from '@/app/components/Button';
 import { useEffect, useState } from 'react';
-import { GetVideoContext, Video } from '@/app/hooks/VideoContext';
 import { useRouter } from 'nextjs-toploader/app';
 import clsx from 'clsx';
+import { Button } from '@/components/ui/button';
+import { useAppSelector } from '@/lib/reduxStore/hooks';
+import { Video } from '@/types/Common';
 
 export default function Content({ countryFlagImg, bestStrategyVideo }: { countryFlagImg: string, bestStrategyVideo: Video | undefined }) {
     const [videoWatched, setVideoWatched] = useState<number>(0);
@@ -17,9 +18,10 @@ export default function Content({ countryFlagImg, bestStrategyVideo }: { country
         }
     }, []);
 
-    const VideoContext = GetVideoContext();
-    const step_3_intro = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('intro'));
-    const step_3_plan = VideoContext?.videos.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('plan'));
+    const videos = useAppSelector(state => state.user.videos)
+    console.log(videos)
+    const step_3_intro = videos?.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('intro'));
+    const step_3_plan = videos?.find(({ tag_list }) => tag_list.includes('step3') && tag_list.includes('plan'));
 
     const handleVideoEnd = () => {
         setVideoWatched((prev) => {
@@ -61,7 +63,7 @@ export default function Content({ countryFlagImg, bestStrategyVideo }: { country
                 </p>
                 <div className={clsx({ 'flex justify-between w-full md:w-1/2': videoWatched === 4, hidden: videoWatched !== 4 })}>
                     <Button title="f Join our Facebook Group" type="button" />
-                    <Button title="Next >" type="button" callBack={goToTraining} />
+                    <Button title="Next >" type="button" onClick={goToTraining} />
                 </div>
             </div>
         </>

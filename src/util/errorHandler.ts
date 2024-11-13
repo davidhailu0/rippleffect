@@ -14,6 +14,12 @@ export const errorHandler = (err: Error | AxiosError) => {
         id: responseData.message,
       });
       throw responseData.message;
+    } else if (responseData.error) {
+      toast.error("Error Happened", {
+        description: responseData.error,
+        id: responseData.error,
+      });
+      throw responseData.error;
     } else {
       toast.error("Network Error", {
         id: "Network Error",

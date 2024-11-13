@@ -1,6 +1,5 @@
 import { getLeadHandler } from "@/services/authService";
 import { Lead } from "@/types/Lead";
-import { FetchVideosResponse } from "@/types/VideosType";
 import { useQuery } from "@tanstack/react-query";
 
 const useGetLead = () => {

@@ -10,7 +10,7 @@ export default function Leads() {
         <>
             <div className="flex flex-col gap-4 md:gap-5 md:mt-7 items-start w-[95%] md:w-[85%] mx-auto">
                 <Tabs defaultValue="leads" className="w-full">
-                    <TabsList className="flex justify-start mb-4 shadow-lg py-6">
+                    <TabsList className="flex justify-start mb-4 shadow-lg py-6 gap-4">
                         <TabsTrigger value="leads" className="py-2 px-4 font-semibold">
                             Leads
                         </TabsTrigger>

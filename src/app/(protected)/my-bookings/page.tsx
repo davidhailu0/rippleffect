@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import BookingSkeleton from './BookingSkeleton';
+import BookingSkeleton from './_components/BookingSkeleton';
 import { formatFriendlyDate } from '@/util/UtilformatDateFriendly';
 import { fetchBookings } from '@/services/bookingServices';
-
 
 export default function BookingsPage() {
     const { data: bookings, isLoading, error } = useQuery<Booking[], Error>({ queryKey: ['bookings'], queryFn: fetchBookings });

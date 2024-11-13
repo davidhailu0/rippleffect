@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import {
   UserCircleIcon,
   PencilIcon,
@@ -8,22 +8,15 @@ import Cookies from "js-cookie";
 import Image from "next/image";
 import { updateRegistration } from "@/services/authService";
 import { useMutation } from "@tanstack/react-query";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
+import { UpdateRegistration } from "@/types/UpdateRegistration";
 
 const AccountPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-
-  useEffect(() => {
-    setName(
-      Cookies.get("name")
-        ? `${Cookies.get("name")} ${Cookies.get("lname")}`
-        : "User Name"
-    );
-    setEmail(Cookies.get("email") || "User Email");
-    setPhone(Cookies.get("phone") || "User Phone");
-  }, []);
+  const lead = useAppSelector(state => state.auth.lead)
+  const first_name = lead?.first_name || ""
+  const last_name = lead?.last_name || ""
+  const email = lead?.email_address || ""
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#1E213A] text-gray-200 p-4 md:p-8 md:mx-28">
@@ -39,7 +32,7 @@ const AccountPage: React.FC = () => {
             unoptimized
           />
           <div>
-            <h2 className="text-lg font-semibold text-white">{name}</h2>
+            <h2 className="text-lg font-semibold text-white">{first_name + ' ' + last_name}</h2>
             <p className="text-sm text-gray-400">{email}</p>
           </div>
         </div>
@@ -63,10 +56,10 @@ const AccountPage: React.FC = () => {
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-8 bg-[#252945] rounded-lg shadow-lg overflow-y-auto">
         {activeTab === "profile" && (
-          <Profile name={name} email={email} phone={phone} />
+          <Profile />
         )}
         {activeTab === "edit" && (
-          <EditProfile name={name} email={email} phone={phone} />
+          <EditProfile />
         )}
       </main>
     </div>
@@ -98,47 +91,33 @@ const NavItem = ({
 );
 
 /* Profile Tab */
-const Profile = ({
-  name,
-  email,
-  phone,
-}: {
-  name: string;
-  email: string;
-  phone: string;
-}) => (
-  <section className="flex flex-col gap-6">
+const Profile = () => {
+  const lead = useAppSelector(state => state.auth.lead)
+  const first_name = lead?.first_name || ""
+  const last_name = lead?.last_name || ""
+  const email = lead?.email_address || ""
+  const phone = lead?.phone || ""
+  return (<section className="flex flex-col gap-6">
     <h1 className="text-2xl font-semibold text-gray-100">Profile Overview</h1>
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <Card title="Full Name" value={name} />
-      <Card title="Email" value={email} />
-      <Card title="Phone" value={phone} />
+      <Card title="Full Name" value={first_name + ' ' + last_name} />
+      <Card title="Email" value={email || " "} />
+      <Card title="Phone" value={phone || " "} />
     </div>
-  </section>
-);
+  </section>)
+};
 
 /* Edit Profile Tab */
-const EditProfile = ({
-  name,
-  email,
-  phone,
-}: {
-  name: string;
-  email: string;
-  phone: string;
-}) => {
+const EditProfile = () => {
+  const lead = useAppSelector(state => state.auth.lead)
+  const first_name = lead?.first_name
+  const last_name = lead?.last_name
+  const email = lead?.email_address
+  const phone = lead?.phone
   const updateRegistrationMutation = useMutation({
-    mutationFn: async () => {
+    mutationFn: async (data: UpdateRegistration) => {
       const id = Cookies.get('id');
-      return await updateRegistration(id, {
-        lead: {
-          email,
-          first_name: name.split(' ')[0],
-          last_name: name.split(' ')[1],
-          phone,
-          terms_accepted: true,
-        },
-      });
+      return await updateRegistration(id, data);
     },
 
     onSuccess: (response) => {
@@ -151,25 +130,37 @@ const EditProfile = ({
     },
   });
 
-  const handleFormSubmit = (e: FormEvent) => {
+  const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    updateRegistrationMutation.mutate();
+    const formData = new FormData(e.target as HTMLFormElement)
+    const data = {
+      lead: {
+        email: formData.get('email')?.toString(),
+        first_name: formData.get('first_name')?.toString(),
+        last_name: formData.get('last_name')?.toString(),
+        phone: formData.get('phone')?.toString(),
+        terms_accepted: true,
+      },
+    }
+    updateRegistrationMutation.mutate(data);
   };
   return (<section className="flex flex-col gap-6">
     <h1 className="text-2xl font-semibold text-gray-100">Edit Profile</h1>
     <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleFormSubmit}>
       <InputField
         label="First Name"
-        defaultValue={name.split(" ")[0]}
-        disabled
+        defaultValue={first_name || ""}
+        name="first_name"
+        disabled={Boolean(first_name)}
       />
       <InputField
         label="Last Name"
-        defaultValue={name.split(" ")[1]}
-        disabled
+        name="last_name"
+        defaultValue={last_name || " "}
+        disabled={Boolean(last_name)}
       />
-      <InputField label="Email" defaultValue={email} />
-      <InputField label="Phone" defaultValue={phone} />
+      <InputField label="Email" defaultValue={email || ""} name="email" />
+      <InputField label="Phone" defaultValue={phone || ""} name="phone" />
       <button className="col-span-1 md:col-span-2 bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition">
         Save Changes
       </button>
@@ -190,10 +181,12 @@ const Card = ({ title, value }: { title: string; value: string }) => (
 const InputField = ({
   label,
   defaultValue,
+  name,
   disabled,
 }: {
   label: string;
   defaultValue: string;
+  name: string;
   disabled?: boolean;
 }) => (
   <div className="flex flex-col">
@@ -202,6 +195,7 @@ const InputField = ({
       disabled={Boolean(disabled)}
       type="text"
       defaultValue={defaultValue}
+      required
       className="p-3 rounded-lg text-gray-200 bg-[#1E213A] border border-gray-600 focus:border-[#F97316] focus:outline-none"
     />
   </div>

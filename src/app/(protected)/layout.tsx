@@ -28,8 +28,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (isLogged === true) {
     return (
       <>
-        <YellowNotificationBar message="Hello" />
-        <SubNavbar />
+        {/* FIXME: remove this later */}
+        {/* <SubNavbar /> */}
         {children}
       </>
     );

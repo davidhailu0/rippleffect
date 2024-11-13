@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchFilteredMembers } from "@/services/membersService";
+import { fetchLeads } from "@/services/leadsService";
 import { useQuery } from "@tanstack/react-query";
 import LeadsSkeleton from "./leadsSkeleton";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
@@ -8,10 +8,9 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@
 import { Lead } from "@/types/Lead";
 
 export default function LeadsTable() {
-    const { data, isLoading } = useQuery<Lead[], Error>({ queryKey: ['leads'], queryFn: fetchFilteredMembers });
+    const { data, isLoading } = useQuery<Lead[], Error>({ queryKey: ['leads'], queryFn: fetchLeads });
 
     if (isLoading) return <LeadsSkeleton />;
-    console.log(data)
     return (
         <div className="mt-6 w-full">
             {/* Mobile View */}
@@ -55,9 +54,9 @@ export default function LeadsTable() {
                                 <TableCell className="whitespace-nowrap px-3 py-3">
                                     {member.email_address}
                                 </TableCell>
-                                <TableCell className="whitespace-nowrap px-3 py-3">
+                                {/* <TableCell className="whitespace-nowrap px-3 py-3">
                                     {member.created_at}
-                                </TableCell>
+                                </TableCell> */}
                                 <TableCell className="whitespace-nowrap px-3 py-3">
                                     {/* Display additional member details if needed */}
                                 </TableCell>

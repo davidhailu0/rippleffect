@@ -2,6 +2,7 @@
 import { useRef } from "react";
 import { Provider } from "react-redux";
 import { AppStore, makeStore } from "./store";
+import { CookiesProvider } from "react-cookie";
 
 export default function ReduxStoreProvider({
   children,
@@ -13,5 +14,9 @@ export default function ReduxStoreProvider({
     storeRef.current = makeStore();
   }
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+  return <Provider store={storeRef.current}>
+    <CookiesProvider defaultSetOptions={{ path: "/" }}>
+      {children}
+    </CookiesProvider>
+  </Provider>;
 }

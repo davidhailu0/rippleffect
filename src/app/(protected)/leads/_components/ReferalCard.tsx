@@ -1,18 +1,18 @@
 'use client'
 import { useEffect, useState } from "react";
 import { useRouter } from 'nextjs-toploader/app';
-import Cookies from "js-cookie";
 import Image from "next/image";
 import { ClipLoader } from "react-spinners";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
 
 const ReferalComponent = ({ page }: { page: number }) => {
     const [copied, setCopied] = useState(false);
     const [origin, setOrigin] = useState('');
-    const [referal, setReferal] = useState<string | undefined>('');
     const router = useRouter();
-
+    const lead = useAppSelector((state) => state.auth.lead);
+    const referal = lead?.referral_code;
+    console.log(lead);
     useEffect(() => {
-        setReferal(Cookies.get('referral_code'));
         setOrigin(window.location.origin);
     }, []);
 

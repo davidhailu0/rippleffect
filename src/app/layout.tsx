@@ -31,8 +31,8 @@ export default function RootLayout({
             <Toaster position="top-center" duration={4000} richColors />
             <FetchVideos />
             <CheckAuth />
-            <Navbar />
-            <div className="bg-contain bg-bgColor py-4 pt-[4.7rem] md:pt-0 md:pb-20 mx-auto h-screen relative box-border bg-no-repeat text-white overflow-y-auto">
+            <div className="bg-contain bg-bgColor py-4 pt-[4.7rem] md:pt-0 md:pb-20 mx-auto h-screen relative scroll-smooth box-border bg-no-repeat text-white overflow-y-auto">
+              <Navbar />
               {children}
             </div>
             <NextTopLoader showSpinner={false} color="#fff" />

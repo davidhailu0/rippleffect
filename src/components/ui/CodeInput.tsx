@@ -67,7 +67,7 @@ const CodeInput: React.FC<CodeInputProps> = ({ confirmationCode, setConfirmation
           onChange={(e) => handleInputChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
           onPaste={handlePaste}
-          className="w-12 h-12 text-center border rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-12 h-12 text-center border rounded-md text-lg focus:outline-none focus:ring-2 focus:ring-pink-500"
           disabled={loading} // Disable input fields when loading
         />
       ))}

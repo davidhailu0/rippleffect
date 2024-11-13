@@ -4,17 +4,10 @@ import { asyncHandler } from "@/util/asyncHandler";
 import CreateLead from "../types/CreateLeadType";
 import { axiosInstance } from "@/config/axiosConfig";
 import { ConfirmLead } from "@/types/ConfirmLead";
-import { Axios, AxiosError } from "axios";
-
-type updateRegistrationParam = {
-  lead: {
-    email?: string;
-    first_name?: string;
-    last_name?: string;
-    phone?: string;
-    terms_accepted?: boolean;
-  };
-};
+import Cookies from "js-cookie";
+import { AxiosError } from "axios";
+import { UpdateRegistration } from "@/types/UpdateRegistration";
+import { LoginRequest } from "@/types/LoginRequest";
 
 export const createLead = asyncHandler(async (data: CreateLead) => {
   const url = `/leads`;
@@ -23,7 +16,7 @@ export const createLead = asyncHandler(async (data: CreateLead) => {
 });
 
 export const getLeadHandler = async () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   if (token) {
     try {
       const response = await axiosInstance.get("/leads", {
@@ -34,7 +27,6 @@ export const getLeadHandler = async () => {
       if (error instanceof AxiosError) {
         if (error.response !== undefined) {
           axiosInstance.defaults.headers.common["Authorization"] = "";
-          localStorage.removeItem("token");
         }
         throw new AxiosError("Error fetching current user");
       }
@@ -51,6 +43,13 @@ export const confirmLead = asyncHandler(async (data: ConfirmLead) => {
   return await response.data;
 });
 
+export const requestLogin = asyncHandler(async (data: LoginRequest) => {
+  const url = `/request_login`;
+  const response = await axiosInstance.post(url, data);
+  console.log(response.data);
+  return await response.data;
+});
+
 export const verifyLoginTokenRequest = asyncHandler(
   async (login_token: string) => {
     const url = `/login_with_token?login_token=${login_token}`;
@@ -60,7 +59,7 @@ export const verifyLoginTokenRequest = asyncHandler(
 );
 
 export const updateRegistration = asyncHandler(
-  async (id: string | undefined, data: updateRegistrationParam) => {
+  async (id: string | undefined, data: UpdateRegistration) => {
     const resp = await axiosInstance.put(`/leads/${id}`, data);
     return resp.data;
   }

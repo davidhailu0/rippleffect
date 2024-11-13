@@ -5,6 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Calendar } from "lucide-react";
+import clsx from "clsx";
 
 export default function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
@@ -12,12 +14,10 @@ export default function Navbar() {
 
     // Function to determine the style of the active link
     const getLinkStyle = (path: string) =>
-        pathname === path || (pathname.includes(path) && path !== '/')
-            ? `text-pink-400 font-semibold border-b-2 border-pink-400`
-            : "text-white hover:text-gray-200";
+        clsx({ 'text-pink-400 font-semibold border-b-2 border-pink-400': pathname === path, "text-white hover:text-gray-200": pathname !== path && path !== '/work-with-me' });
 
     return (
-        <nav className="flex justify-between items-center w-full px-6 md:px-36 py-4 bg-[#1E213A] sticky top-0 shadow-md">
+        <nav className="flex justify-between items-center w-full px-6 md:px-36 py-4 bg-[#1E213A] shadow-md z-50 sticky top-0">
             {/* Logo */}
             <Link href="/" className="flex items-center">
                 <Image
@@ -28,7 +28,7 @@ export default function Navbar() {
                     className="mr-3"
                     unoptimized
                 />
-                <Image src={'/NW.webp'} alt="Nate Wells" height={132} width={100} />
+                <Image src={'/NW.webp'} alt="Nate Wells" height={40} width={100} />
             </Link>
 
             {/* Desktop Navigation */}
@@ -53,9 +53,11 @@ export default function Navbar() {
                 </ul>
 
                 {/* Right Link */}
-                <ul>
+                <ul className="flex gap-6 items-center">
+                    <li className="text-yellow-400">
+                        <Link href="/my-bookings" className="flex items-center gap-2 "><Calendar size={'18'} /> Next Booking: Apr 15, 2023</Link></li>
                     <li>
-                        <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")} border border-white p-4`}>
+                        <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")} text-primary border px-4 py-3 border-white bg-white rounded-lg hover:text-pink-400 transition-all ease-in-out duration-300`}>
                             Work with Me
                         </Link>
                     </li>
@@ -77,32 +79,34 @@ export default function Navbar() {
             </div>
 
             {/* Mobile Full-Page Navigation */}
-            {isMobileMenuOpen && (
-                <div className="fixed inset-0 bg-black bg-opacity-90 z-20 flex items-center justify-center">
-                    <ul className="flex flex-col items-center space-y-8 text-2xl text-white">
-                        <li>
-                            <Link href="/" className={`${getLinkStyle("/")}`} onClick={() => setIsMobileMenuOpen(false)}>
-                                Home
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/about" className={`${getLinkStyle("/about")}`} onClick={() => setIsMobileMenuOpen(false)}>
-                                About
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/media" className={`${getLinkStyle("/media")}`} onClick={() => setIsMobileMenuOpen(false)}>
-                                Media
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")}`} onClick={() => setIsMobileMenuOpen(false)}>
-                                Work with Me
-                            </Link>
-                        </li>
-                    </ul>
-                </div>
-            )}
-        </nav>
+            {
+                isMobileMenuOpen && (
+                    <div className="fixed inset-0 bg-black bg-opacity-90 z-20 flex items-center justify-center">
+                        <ul className="flex flex-col items-center space-y-8 text-2xl text-white">
+                            <li>
+                                <Link href="/" className={`${getLinkStyle("/")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                    Home
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/about" className={`${getLinkStyle("/about")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                    About
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/media" className={`${getLinkStyle("/media")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                    Media
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/work-with-me" className={`${getLinkStyle("/work-with-me")}`} onClick={() => setIsMobileMenuOpen(false)}>
+                                    Work with Me
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                )
+            }
+        </nav >
     );
 }

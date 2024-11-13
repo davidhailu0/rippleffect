@@ -11,7 +11,7 @@ type VideoProgressParam = {
 };
 
 export const fetchVideos = asyncHandler(async () => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   let response;
   if (token) {
     response = await axiosInstance.get("/videos", {
