@@ -20,7 +20,7 @@ const App: React.FC = () => {
     <>
       {/* FIXME: remove this later */}
       {/* {isLogged ? <SubNavbar /> : <CreateAccountBar />} */}
-      <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-radial from-gray-900 to-black">
+      <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-radial pt-10 from-gray-900 to-black">
         <div className="flex flex-col justify-center flex-1 text-center">
           <span className="mb-4 px-6 py-2 bg-white/20 rounded-lg transition">
             No Experience Required

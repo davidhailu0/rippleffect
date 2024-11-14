@@ -19,7 +19,7 @@ interface VideoPlayerProps {
   playBackId?: string;
   videoID?: number;
   className?: string;
-  tag: string;
+  tag?: string;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -46,7 +46,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         video_id: videoID!,
         watch_from: watchFrom,
         watch_to: watchTo,
-        tag,
+        tag: tag!,
       },
     });
   };
@@ -103,7 +103,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [videoID]);
+  }, [videoID, playBackId]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 

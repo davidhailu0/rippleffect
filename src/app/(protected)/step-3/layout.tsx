@@ -14,9 +14,7 @@ const step3Layout = ({ children }: { children: React.ReactNode }) => {
     }
   }, [lead]);
 
-  if (lead?.tag_list?.includes("booked_call")) {
-    return children;
-  }
+  return children;
 };
 
 export default step3Layout;

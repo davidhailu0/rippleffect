@@ -14,10 +14,15 @@ import * as React from "react";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
   const isLogged = useAppSelector((state) => state.auth.isLogged);
+
+  const lead = useAppSelector((state) => state.auth.lead);
+
   const pathname = usePathname(); // Get current path
+
   const { data: bookings } = useQuery<Booking[], Error>({
-    queryKey: ["bookings"],
+    queryKey: ["bookings", lead?.tag_list],
     queryFn: fetchBookings,
     enabled: isLogged,
   });

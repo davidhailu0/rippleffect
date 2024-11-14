@@ -23,7 +23,8 @@ export const answerSurvey = asyncHandler(
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      await axiosInstance.post(`/surveys/${surveyId}/answer`, data);
+      const res = await axiosInstance.post(`/surveys/${surveyId}/answer`, data);
+      return res.data?.lead;
     } catch (error) {
       console.error("Error submitting answers:", error);
     }

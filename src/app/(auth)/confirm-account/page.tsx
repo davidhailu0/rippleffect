@@ -19,6 +19,7 @@ import { LoaderCircle } from "lucide-react";
 import CodeInput from "@/components/ui/CodeInput";
 import { Lead } from "@/types/Lead";
 import { useCookies } from "react-cookie";
+import { axiosInstance } from "@/config/axiosConfig";
 
 export default function ConfirmAccount() {
   const [confirmationCode, setConfirmationCode] = useState<string>("");
@@ -30,9 +31,10 @@ export default function ConfirmAccount() {
     useMutation<Lead, Error, any>({
       mutationFn: confirmLead,
       onSuccess: (data: Lead) => {
-        // const decodedToken = jwtDecode(data.login_token);
-        // setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
         localStorage.setItem("token", data.login_token);
+        axiosInstance.defaults.headers.common["Authorization"] =
+          data.login_token;
+        sessionStorage.removeItem("frontend_token");
         dispatch(setIsLogged());
         dispatch(setLead(data));
       },

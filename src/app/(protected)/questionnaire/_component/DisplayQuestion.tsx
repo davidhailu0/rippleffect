@@ -1,12 +1,17 @@
 "use client";
 import { useQueryParams } from "@/hooks/useQueryParams";
+import { setLead } from "@/lib/reduxStore/authSlice";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { answerSurvey, fetchSurveys } from "@/services/SurveyService";
+import { Lead } from "@/types/Lead";
 import Question from "@/types/Question";
 import MuxPlayer from "@mux/mux-player-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import Image from "next/image";
+import { useRouter } from "nextjs-toploader/app";
 import { useRef, useMemo } from "react";
+import { useDispatch } from "react-redux";
 import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -16,6 +21,11 @@ const queryParamSchema = z.object({
 });
 
 export default function DisplayQuestion() {
+  const { queryParams, setQueryParams } = useQueryParams({
+    schema: queryParamSchema,
+    defaultValues: { survey_question: "1" },
+  });
+
   const {
     data: survey,
     isLoading,
@@ -24,26 +34,31 @@ export default function DisplayQuestion() {
     queryKey: ["surveys"],
     queryFn: fetchSurveys,
   });
-
-  const { queryParams, setQueryParams } = useQueryParams({
-    schema: queryParamSchema,
-    defaultValues: { survey_question: "1" },
-  });
   const surveyQuestionNumber = parseInt(queryParams.survey_question) - 1;
-
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const textAnswerRef = useRef<HTMLInputElement | null>(null);
   const radioGroupAnswerRef = useRef<HTMLFormElement | null>(null);
+  const router = useRouter();
+  const lead = useAppSelector((state) => state.auth.lead);
+  const dispatch = useDispatch();
 
   const { mutate: answerSurveyMutation, isPending } = useMutation({
     mutationFn: answerSurvey,
-    onSuccess: () => goToNextQuestion(surveyQuestionNumber + 2),
+    onSuccess: (lead: Lead) => {
+      dispatch(setLead(lead));
+      refetch();
+      goToNextQuestion(surveyQuestionNumber + 2);
+    },
   });
 
   const goToNextQuestion = (nextQuestionNumber: number) => {
     // Check that the next question number is within the bounds of the questions array
     if (survey && nextQuestionNumber <= survey.questions.length) {
       setQueryParams({ survey_question: nextQuestionNumber.toString() });
+    } else if (lead?.tag_list.includes("survey_completed")) {
+      router.push("/step-3");
+    } else {
+      setQueryParams({ survey_question: "1" });
     }
   };
 

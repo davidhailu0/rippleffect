@@ -26,7 +26,6 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
   session,
 }) => {
   const lead = useAppSelector((state) => state.auth.lead!);
-  console.log(lead);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -44,7 +43,11 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
   const { mutate: updateRegistrationMutation, isPending } = useMutation({
     mutationFn: updateRegistration,
     onSuccess: () => {
-      router.replace("/questionnaire");
+      if (lead?.tag_list.includes("survey_completed")) {
+        router.replace("step-3");
+      } else {
+        router.replace("/questionnaire");
+      }
     },
     onError: (error) => {
       console.error("Failed to update registration:", error);
