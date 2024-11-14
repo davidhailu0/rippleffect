@@ -25,6 +25,7 @@ export const getLeadHandler = async () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response !== undefined) {
+          localStorage.removeItem("token");
           axiosInstance.defaults.headers.common["Authorization"] = "";
         }
         throw new AxiosError("Error fetching current user");
@@ -45,7 +46,6 @@ export const confirmLead = asyncHandler(async (data: ConfirmLead) => {
 export const requestLogin = asyncHandler(async (data: LoginRequest) => {
   const url = `/request_login`;
   const response = await axiosInstance.post(url, data);
-  console.log(response.data);
   return await response.data;
 });
 

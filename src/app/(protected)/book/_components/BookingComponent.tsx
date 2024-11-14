@@ -31,8 +31,8 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
     return savedTimezone
       ? JSON.parse(savedTimezone)
       : (TIMEZONEOPTIONS.find(
-          (tz) => tz.value === Intl.DateTimeFormat().resolvedOptions().timeZone
-        ) as TimezoneOption);
+        (tz) => tz.value === Intl.DateTimeFormat().resolvedOptions().timeZone
+      ) as TimezoneOption);
   }, []);
 
   const [selectedTimezone, setSelectedTimezone] =
@@ -49,7 +49,6 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
         currentDate.getMonth() + 1,
         currentDate.getFullYear()
       ),
-    staleTime: 1000 * 60 * 5,
   });
 
   const handleTimezoneChange = useCallback((option: TimezoneOption | null) => {
@@ -68,7 +67,6 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
         );
         if (todayAvailable) {
           setSelectedDate(today);
-          setCurrentDate(today);
           return;
         }
       }
@@ -155,7 +153,7 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
             ) ||
             Boolean(
               availabilities &&
-                availabilities[format(date, DATE_FORMAT)].length <= 0
+              availabilities[format(date, DATE_FORMAT)].length <= 0
             )
           }
         />
@@ -174,22 +172,20 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
           <div className="p-2 border border-gray-500 rounded-lg flex gap-x-1">
             <button
               onClick={() => setHourFormat("12")}
-              className={`px-3 py-1 rounded-md ${
-                hourFormat === "12"
-                  ? "bg-pink-400 text-white"
-                  : "bg-white text-black"
-              }`}
+              className={`px-3 py-1 rounded-md ${hourFormat === "12"
+                ? "bg-pink-400 text-white"
+                : "bg-white text-black"
+                }`}
               aria-pressed={hourFormat === "12"}
             >
               12h
             </button>
             <button
               onClick={() => setHourFormat("24")}
-              className={`px-3 py-1 rounded-md ${
-                hourFormat === "24"
-                  ? "bg-pink-400 text-white"
-                  : "bg-white text-black"
-              }`}
+              className={`px-3 py-1 rounded-md ${hourFormat === "24"
+                ? "bg-pink-400 text-white"
+                : "bg-white text-black"
+                }`}
               aria-pressed={hourFormat === "24"}
             >
               24h
