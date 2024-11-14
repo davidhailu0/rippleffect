@@ -1,129 +1,122 @@
 "use client";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-import { ClipLoader } from "react-spinners";
-import Cookies from "js-cookie";
-import MuxPlayer from "@mux/mux-player-react";
-import clsx from "clsx";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchSurveys, answerSurvey } from "@/services/SurveyService";
-import SurveyQuestion from "./SurveyQuestion";
+import { useQueryParams } from "@/hooks/useQueryParams";
+import { answerSurvey, fetchSurveys } from "@/services/SurveyService";
 import Question from "@/types/Question";
-import Answer from "@/types/Answers";
+import MuxPlayer from "@mux/mux-player-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import Image from "next/image";
+import { useRef, useMemo } from "react";
+import { ClipLoader } from "react-spinners";
+import { toast } from "sonner";
+import { z } from "zod";
+
+const queryParamSchema = z.object({
+  survey_question: z.string(),
+});
 
 export default function DisplayQuestion() {
-  const { data, isLoading } = useQuery<Question, Error>({
+  const {
+    data: survey,
+    isLoading,
+    refetch,
+  } = useQuery<Question, Error>({
     queryKey: ["surveys"],
     queryFn: fetchSurveys,
   });
-  const [selectedValue, setSelectedValue] = useState<Answer | null>(null);
-  const [index, setIndex] = useState(0);
+
+  const { queryParams, setQueryParams } = useQueryParams({
+    schema: queryParamSchema,
+    defaultValues: { survey_question: "1" },
+  });
+  const surveyQuestionNumber = parseInt(queryParams.survey_question) - 1;
+
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [lastTime, setLastTime] = useState(0);
-  const router = useRouter();
-  const queryClient = useQueryClient();
+  const textAnswerRef = useRef<HTMLInputElement | null>(null);
+  const radioGroupAnswerRef = useRef<HTMLFormElement | null>(null);
 
-  const surveyVideos = useMemo(
-    () => data?.questions?.sort((a, b) => a.id - b.id),
-    [data]
-  );
-
-  useEffect(() => {
-    if (data && data?.questions?.length > 0) {
-      const firstQuestionTitle = data.questions[0]?.title;
-      const response = localStorage.getItem(firstQuestionTitle);
-      if (firstQuestionTitle && response) {
-        setSelectedValue({ question_id: data.questions[0].id, response });
-      }
-    }
-  }, [data]);
-
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      const videoElement = videoRef.current;
-      if (videoElement) {
-        document.visibilityState === "hidden"
-          ? videoElement.pause()
-          : videoElement.play();
-      }
-    };
-
-    const handleContextMenu = (e: MouseEvent) => e.preventDefault();
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    document.addEventListener("contextmenu", handleContextMenu);
-
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      document.removeEventListener("contextmenu", handleContextMenu);
-    };
-  }, []);
-
-  // Use useMutation for answering survey questions
-  const answerSurveyMutation = useMutation({
-    mutationFn: async (answerData: {
-      question_id: number;
-      response: string;
-    }) => {
-      return await answerSurvey({ answer: answerData }, data?.id);
-    },
-
-    onError: (error) => {
-      console.error("Failed to submit answer:", error);
-    },
+  const { mutate: answerSurveyMutation, isPending } = useMutation({
+    mutationFn: answerSurvey,
+    onSuccess: () => goToNextQuestion(surveyQuestionNumber + 2),
   });
 
-  const goToNext = useCallback(() => {
-    if (!data?.questions?.length || !selectedValue?.response) return;
-
-    answerSurveyMutation.mutate({
-      question_id: data.questions[index].id,
-      response: selectedValue.response,
-    });
-
-    if (index + 1 < data.questions.length) {
-      setIndex((prev) => prev + 1);
-      setSelectedValue(null);
-      const nextQuestionTitle = data.questions[index + 1]?.title;
-      const nextResponse = localStorage.getItem(nextQuestionTitle);
-
-      if (nextResponse) {
-        setSelectedValue({
-          question_id: data.questions[index + 1].id,
-          response: nextResponse,
-        });
-      }
-    } else {
-      Cookies.set("questionFinished", "true", { path: "/", expires: 365 });
-      router.replace("/step-3");
+  const goToNextQuestion = (nextQuestionNumber: number) => {
+    // Check that the next question number is within the bounds of the questions array
+    if (survey && nextQuestionNumber <= survey.questions.length) {
+      setQueryParams({ survey_question: nextQuestionNumber.toString() });
     }
-  }, [data, selectedValue, index, answerSurveyMutation, router]);
-
-  const handleOnChange = (val: Answer) => {
-    if (!data?.questions?.length) return;
-    localStorage.setItem(data.questions[index].title, val.response);
-    setSelectedValue(val);
   };
 
-  const handleTimeUpdate = (e: Event) => {
-    const videoElement = e.currentTarget as HTMLVideoElement;
-    const currentTime = videoElement.currentTime;
-    if (currentTime - lastTime > 2) {
-      videoElement.currentTime = lastTime;
+  const goToPreviousQuestion = () => {
+    if (surveyQuestionNumber > 0) {
+      setQueryParams({ survey_question: surveyQuestionNumber.toString() });
+    }
+  };
+
+  const currentQuestion = useMemo(
+    () => survey?.questions?.[surveyQuestionNumber],
+    [survey, surveyQuestionNumber]
+  );
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (currentQuestion) {
+      currentQuestion.question_type === "text"
+        ? handleTextAnswer()
+        : handleMultipleChoiceAnswer();
+    }
+  };
+
+  const handleMultipleChoiceAnswer = () => {
+    const selectedOption = Array.from(
+      radioGroupAnswerRef.current?.elements || []
+    ).find((radio) => (radio as HTMLInputElement).checked) as
+      | HTMLInputElement
+      | undefined;
+
+    const defaultAnswer = currentQuestion?.lead_answer?.response;
+
+    if (
+      selectedOption &&
+      selectedOption.value !== currentQuestion?.lead_answer?.response
+    ) {
+      submitAnswer(selectedOption.value);
+    } else if (defaultAnswer) {
+      goToNextQuestion(surveyQuestionNumber + 2);
     } else {
-      setLastTime(currentTime);
+      toast.warning("Please select an option");
+    }
+  };
+
+  const handleTextAnswer = () => {
+    const textAnswer = textAnswerRef.current?.value;
+    if (textAnswer && textAnswer !== currentQuestion?.lead_answer?.response) {
+      submitAnswer(textAnswer);
+    } else {
+      goToNextQuestion(surveyQuestionNumber + 2);
+    }
+  };
+
+  const submitAnswer = (response: string) => {
+    if (currentQuestion && survey) {
+      answerSurveyMutation({
+        data: { answer: { question_id: currentQuestion.id, response } },
+        surveyId: survey.id,
+      });
     }
   };
 
   if (isLoading)
     return <ClipLoader color="#fff" size={70} className="h-10 w-10" />;
-
-  if (!data?.questions?.length)
+  if (!survey?.questions?.length)
     return <p className="text-white text-2xl font-bold">No Questions Found</p>;
 
   return (
-    <form className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
+    <form
+      className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5"
+      onSubmit={handleSubmit}
+      ref={radioGroupAnswerRef}
+    >
       <div className="h-auto w-full mx-auto flex flex-col gap-7 bg-white px-8 py-10">
         <Image
           src="/logo.webp"
@@ -135,23 +128,66 @@ export default function DisplayQuestion() {
         <MuxPlayer
           ref={videoRef as any}
           streamType="on-demand"
-          playbackId={surveyVideos![index].video?.mux_playback_id}
-          onTimeUpdate={handleTimeUpdate}
+          playbackId={currentQuestion?.video?.mux_playback_id}
           className={clsx("h-[300px] md:h-[500px] overflow-x-hidden")}
         />
-        <SurveyQuestion
-          survey={data.questions[index]}
-          selectedValue={selectedValue}
-          handleOnChange={handleOnChange}
-          handleNext={goToNext}
-        />
+        <p className="text-pink-400">{currentQuestion?.title}</p>
+        {currentQuestion?.question_type === "multiple_choice" ? (
+          <div className="grid grid-cols-4 space-x-3">
+            {Object.entries(currentQuestion.choices).map(([key, value]) => (
+              <label key={key} className="inline-flex items-center">
+                <input
+                  type="radio"
+                  name="radio-group"
+                  value={value}
+                  className="form-radio h-4 w-4 text-pink-600 transition duration-150 ease-in-out"
+                  defaultChecked={
+                    value === currentQuestion.lead_answer?.response
+                  }
+                />
+                <span className="ml-2 text-gray-700">{value}</span>
+              </label>
+            ))}
+          </div>
+        ) : (
+          <div>
+            <label
+              htmlFor="text-field"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              {currentQuestion?.title}
+            </label>
+            <input
+              type="text"
+              id="text-field"
+              placeholder={currentQuestion?.title}
+              className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
+              autoFocus
+              defaultValue={currentQuestion?.lead_answer?.response || ""}
+              required
+              key={surveyQuestionNumber}
+              ref={textAnswerRef}
+            />
+          </div>
+        )}
       </div>
-      <div className="w-full h-16 bg-pink-400 flex justify-end items-center">
+      <div className="w-full h-16 bg-pink-400 flex justify-between items-center">
+        {surveyQuestionNumber !== 0 && (
+          <button
+            type="button"
+            className="text-white h-full w-48 bg-pink-600"
+            onClick={goToPreviousQuestion}
+          >
+            Previous
+          </button>
+        )}
+
         <button
-          onClick={goToNext}
-          className="text-white h-full w-48 bg-pink-600"
+          type="submit"
+          className="text-white h-full ml-auto w-48 bg-pink-600"
+          disabled={isPending}
         >
-          Next -&gt;
+          {isPending ? "Submitting..." : "Next"}
         </button>
       </div>
     </form>
