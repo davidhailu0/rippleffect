@@ -1,17 +1,16 @@
 "use client";
 
-import * as React from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Calendar } from "lucide-react";
-import clsx from "clsx";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
-import { stat } from "fs";
 import { fetchBookings } from "@/services/bookingServices";
-import { useQuery } from "@tanstack/react-query";
 import { formatFriendlyDate } from "@/util/UtilformatDateFriendly";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useQuery } from "@tanstack/react-query";
+import clsx from "clsx";
+import { Calendar } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import * as React from "react";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);

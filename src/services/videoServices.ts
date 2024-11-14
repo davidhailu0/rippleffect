@@ -25,6 +25,7 @@ export const fetchVideos = asyncHandler(async () => {
 
 export const updateVideoProgress = asyncHandler(
   async (data: VideoProgressParam) => {
-    await axiosInstance.post(`/video_progresses`, data);
+    const res = await axiosInstance.post(`/video_progresses`, data);
+    return res.data.lead;
   }
 );

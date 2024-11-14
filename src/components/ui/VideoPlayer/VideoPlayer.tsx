@@ -5,6 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { ClipLoader } from "react-spinners";
 import { updateVideoProgress } from "../../../services/videoServices";
+import { useDispatch } from "react-redux";
+import { Lead } from "@/types/Lead";
+import { setLead } from "@/lib/reduxStore/authSlice";
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -28,10 +31,13 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const lastTime30SecRef = useRef(0);
   const videoRef = useRef<MuxPlayerElement | null>(null);
   const seekingRef = useRef(false);
+  const dispatch = useDispatch();
 
   const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
     mutationFn: updateVideoProgress,
-    onSuccess: () => {},
+    onSuccess: (lead: Lead) => {
+      dispatch(setLead(lead));
+    },
   });
 
   const updateVideoStatus = async (watchFrom: number, watchTo: number) => {

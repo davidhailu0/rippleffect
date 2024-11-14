@@ -18,19 +18,12 @@ type BookParams = { start_time: string; end_time: string; timezone: string };
 
 export const bookSession = asyncHandler(
   async ({ start_time, end_time, timezone }: BookParams) => {
-    try {
-      const resp = await axiosInstance.post(`/bookings`, {
-        start_time,
-        end_time,
-        timezone,
-      });
-      const respJson = await resp.data;
-      if (respJson.message) {
-        return "success";
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    const res = await axiosInstance.post(`/bookings`, {
+      start_time,
+      end_time,
+      timezone,
+    });
+    return res.data?.lead;
   }
 );
 
