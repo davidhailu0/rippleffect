@@ -10,6 +10,6 @@ export default function Home() {
   );
 
   return (
-    <Content countryFlagImg={"/mexicowebp"} bestStrategyVideo={step_3_mxn} />
+    <Content countryFlagImg={"/mexico.webp"} bestStrategyVideo={step_3_mxn} />
   );
 }

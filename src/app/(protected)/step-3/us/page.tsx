@@ -9,5 +9,5 @@ export default function Home() {
     ({ tag_list }) => tag_list.includes("step3") && tag_list.includes("usd")
   );
 
-  return <Content countryFlagImg={"/uswebp"} bestStrategyVideo={step_3_usd} />;
+  return <Content countryFlagImg={"/us.webp"} bestStrategyVideo={step_3_usd} />;
 }

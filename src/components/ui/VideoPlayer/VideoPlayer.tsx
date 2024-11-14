@@ -14,7 +14,7 @@ interface MuxPlayerElement extends HTMLVideoElement {
 
 interface VideoPlayerProps {
   playBackId?: string;
-  videoID: number;
+  videoID?: number;
   className?: string;
   tag: string;
 }
@@ -37,7 +37,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const updateVideoStatus = async (watchFrom: number, watchTo: number) => {
     mutateUpdateVideoProgress({
       video_progress: {
-        video_id: videoID,
+        video_id: videoID!,
         watch_from: watchFrom,
         watch_to: watchTo,
         tag,

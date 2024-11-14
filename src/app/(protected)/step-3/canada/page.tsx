@@ -10,6 +10,6 @@ export default function Home() {
   );
 
   return (
-    <Content countryFlagImg={"/canadawebp"} bestStrategyVideo={step_3_cad} />
+    <Content countryFlagImg={"/canada.webp"} bestStrategyVideo={step_3_cad} />
   );
 }
