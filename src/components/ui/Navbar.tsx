@@ -37,7 +37,7 @@ export default function Navbar() {
     });
 
   return (
-    <nav className="flex justify-between items-center w-full px-6 md:px-36 py-4 bg-[#1E213A] shadow-md z-50 sticky top-0">
+    <nav className="flex justify-between items-center w-full px-6 md:px-36 py-4 bg-[#1f2235] shadow-md z-50 sticky top-0">
       {/* Logo */}
       <Link href="/" className="flex items-center">
         <Image
