@@ -1,9 +1,6 @@
 "use client";
 import { FormEvent, useState } from "react";
-import {
-  UserCircleIcon,
-  PencilIcon,
-} from "@heroicons/react/24/outline";
+import { UserCircleIcon, PencilIcon } from "@heroicons/react/24/outline";
 import Cookies from "js-cookie";
 import Image from "next/image";
 import { updateRegistration } from "@/services/authService";
@@ -13,10 +10,10 @@ import { UpdateRegistration } from "@/types/UpdateRegistration";
 
 const AccountPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
-  const lead = useAppSelector(state => state.auth.lead)
-  const first_name = lead?.first_name || ""
-  const last_name = lead?.last_name || ""
-  const email = lead?.email_address || ""
+  const lead = useAppSelector((state) => state.auth.lead);
+  const first_name = lead?.first_name || "";
+  const last_name = lead?.last_name || "";
+  const email = lead?.email_address || "";
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#1E213A] text-gray-200 p-4 md:p-8 md:mx-28">
@@ -32,7 +29,9 @@ const AccountPage: React.FC = () => {
             unoptimized
           />
           <div>
-            <h2 className="text-lg font-semibold text-white">{first_name + ' ' + last_name}</h2>
+            <h2 className="text-lg font-semibold text-white">
+              {first_name + " " + last_name}
+            </h2>
             <p className="text-sm text-gray-400">{email}</p>
           </div>
         </div>
@@ -55,12 +54,8 @@ const AccountPage: React.FC = () => {
 
       {/* Main Content */}
       <main className="flex-1 p-6 md:p-8 bg-[#252945] rounded-lg shadow-lg overflow-y-auto">
-        {activeTab === "profile" && (
-          <Profile />
-        )}
-        {activeTab === "edit" && (
-          <EditProfile />
-        )}
+        {activeTab === "profile" && <Profile />}
+        {activeTab === "edit" && <EditProfile />}
       </main>
     </div>
   );
@@ -80,10 +75,11 @@ const NavItem = ({
 }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 p-3 rounded-lg transition ${isActive
-      ? "bg-pink-400 text-white"
-      : "bg-transparent text-white hover:bg-pink-600"
-      }`}
+    className={`flex items-center gap-2 p-3 rounded-lg transition ${
+      isActive
+        ? "bg-pink-400 text-white"
+        : "bg-transparent text-white hover:bg-pink-600"
+    }`}
   >
     {icon}
     <span className="text-base">{label}</span>
@@ -92,81 +88,88 @@ const NavItem = ({
 
 /* Profile Tab */
 const Profile = () => {
-  const lead = useAppSelector(state => state.auth.lead)
-  const first_name = lead?.first_name || ""
-  const last_name = lead?.last_name || ""
-  const email = lead?.email_address || ""
-  const phone = lead?.phone || ""
-  return (<section className="flex flex-col gap-6">
-    <h1 className="text-2xl font-semibold text-gray-100">Profile Overview</h1>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <Card title="Full Name" value={first_name + ' ' + last_name} />
-      <Card title="Email" value={email || " "} />
-      <Card title="Phone" value={phone || " "} />
-    </div>
-  </section>)
+  const lead = useAppSelector((state) => state.auth.lead);
+  const first_name = lead?.first_name || "";
+  const last_name = lead?.last_name || "";
+  const email = lead?.email_address || "";
+  const phone = lead?.phone || "";
+  return (
+    <section className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold text-gray-100">Profile Overview</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <Card title="Full Name" value={first_name + " " + last_name} />
+        <Card title="Email" value={email || " "} />
+        <Card title="Phone" value={phone || " "} />
+      </div>
+    </section>
+  );
 };
 
 /* Edit Profile Tab */
 const EditProfile = () => {
-  const lead = useAppSelector(state => state.auth.lead)
-  const first_name = lead?.first_name
-  const last_name = lead?.last_name
-  const email = lead?.email_address
-  const phone = lead?.phone
+  const lead = useAppSelector((state) => state.auth.lead);
+  const first_name = lead?.first_name;
+  const last_name = lead?.last_name;
+  const email = lead?.email_address;
+  const phone = lead?.phone;
   const updateRegistrationMutation = useMutation({
     mutationFn: async (data: UpdateRegistration) => {
-      const id = Cookies.get('id');
-      return await updateRegistration(id, data);
+      const id = Cookies.get("id");
+      //FIXME: Need to fix this
+      // return await updateRegistration(id, data);
     },
 
     onSuccess: (response) => {
-      if (response.message === 'Lead has been updated.') {
-
-      }
+      //FIXME: Need to fix this
+      // if (response.message === "Lead has been updated.") {
+      // }
     },
     onError: (error) => {
-      console.error('Failed to update registration:', error);
+      console.error("Failed to update registration:", error);
     },
   });
 
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.target as HTMLFormElement)
+    const formData = new FormData(e.target as HTMLFormElement);
     const data = {
       lead: {
-        email: formData.get('email')?.toString(),
-        first_name: formData.get('first_name')?.toString(),
-        last_name: formData.get('last_name')?.toString(),
-        phone: formData.get('phone')?.toString(),
+        email: formData.get("email")?.toString(),
+        first_name: formData.get("first_name")?.toString(),
+        last_name: formData.get("last_name")?.toString(),
+        phone: formData.get("phone")?.toString(),
         terms_accepted: true,
       },
-    }
+    };
     updateRegistrationMutation.mutate(data);
   };
-  return (<section className="flex flex-col gap-6">
-    <h1 className="text-2xl font-semibold text-gray-100">Edit Profile</h1>
-    <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleFormSubmit}>
-      <InputField
-        label="First Name"
-        defaultValue={first_name || ""}
-        name="first_name"
-        disabled={Boolean(first_name)}
-      />
-      <InputField
-        label="Last Name"
-        name="last_name"
-        defaultValue={last_name || " "}
-        disabled={Boolean(last_name)}
-      />
-      <InputField label="Email" defaultValue={email || ""} name="email" />
-      <InputField label="Phone" defaultValue={phone || ""} name="phone" />
-      <button className="col-span-1 md:col-span-2 bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition">
-        Save Changes
-      </button>
-    </form>
-  </section>
-  )
+  return (
+    <section className="flex flex-col gap-6">
+      <h1 className="text-2xl font-semibold text-gray-100">Edit Profile</h1>
+      <form
+        className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        onSubmit={handleFormSubmit}
+      >
+        <InputField
+          label="First Name"
+          defaultValue={first_name || ""}
+          name="first_name"
+          disabled={Boolean(first_name)}
+        />
+        <InputField
+          label="Last Name"
+          name="last_name"
+          defaultValue={last_name || " "}
+          disabled={Boolean(last_name)}
+        />
+        <InputField label="Email" defaultValue={email || ""} name="email" />
+        <InputField label="Phone" defaultValue={phone || ""} name="phone" />
+        <button className="col-span-1 md:col-span-2 bg-pink-400 text-white py-2 rounded-lg hover:bg-pink-600 transition">
+          Save Changes
+        </button>
+      </form>
+    </section>
+  );
 };
 
 /* Card Component for Profile Overview */

@@ -80,9 +80,11 @@ export default function DisplayQuestion() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (currentQuestion) {
-      currentQuestion.question_type === "text"
-        ? handleTextAnswer()
-        : handleMultipleChoiceAnswer();
+      if (currentQuestion.question_type === "text") {
+        handleTextAnswer();
+      } else {
+        handleMultipleChoiceAnswer();
+      }
     }
   };
 

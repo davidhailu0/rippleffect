@@ -8,7 +8,7 @@ export type Lead = {
   timezone: string;
   score: number;
   tag_list: string[];
-  video_progress: Record<string, any>;
+  video_progress: number;
   name: string;
   confirmed: boolean;
   potential_value: {
