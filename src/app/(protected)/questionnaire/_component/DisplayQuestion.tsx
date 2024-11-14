@@ -123,7 +123,7 @@ export default function DisplayQuestion() {
     return <p className="text-white text-2xl font-bold">No Questions Found</p>;
 
   return (
-    <div className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
+    <form className="mt-7 md:mt-12 flex flex-col w-full md:w-2/5">
       <div className="h-auto w-full mx-auto flex flex-col gap-7 bg-white px-8 py-10">
         <Image
           src="/logo.webp"
@@ -131,10 +131,9 @@ export default function DisplayQuestion() {
           height={95}
           width={90}
           className="mx-auto"
-          unoptimized
         />
         <MuxPlayer
-          ref={videoRef}
+          ref={videoRef as any}
           streamType="on-demand"
           playbackId={surveyVideos![index].video?.mux_playback_id}
           onTimeUpdate={handleTimeUpdate}
@@ -155,6 +154,6 @@ export default function DisplayQuestion() {
           Next -&gt;
         </button>
       </div>
-    </div>
+    </form>
   );
 }

@@ -1,44 +1,55 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { useRouter } from "next/navigation";
-import { differenceInDays } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
 import PhoneInput from "react-phone-input-2";
-import Cookies from "js-cookie";
 import { bookSession } from "@/services/bookingServices";
 import { updateRegistration } from "@/services/authService";
 import "react-phone-input-2/lib/style.css";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
+import { useRouter } from "nextjs-toploader/app";
 
 type BookingRegistrationProps = {
   callback: () => void;
+  session: {
+    start_time: string;
+    end_time: string;
+    timezone: string;
+  };
 };
 
 const BookingRegistration: React.FC<BookingRegistrationProps> = ({
   callback,
+  session,
 }) => {
-  const [firstName, setFirstName] = useState<string>(Cookies.get("name") || "");
-  const [lastName, setLastName] = useState<string>(Cookies.get("lname") || "");
-  const [email, setEmail] = useState<string>(Cookies.get("email") || "");
-  const [phone, setPhone] = useState<string>(Cookies.get("phone") || "");
+  const lead = useAppSelector((state) => state.auth.lead!);
+  console.log(lead);
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [phone, setPhone] = useState<string>("");
   const router = useRouter();
 
-  const bookSessionMutation = useMutation<any, Error>({
-    mutationFn: async () => {
-      const reservedTime = sessionStorage.getItem("reservedTime");
-      if (reservedTime) {
-        await bookSession(JSON.parse(reservedTime));
-      }
+  const { mutateAsync: bookSessionMutation } = useMutation({
+    mutationFn: bookSession,
+  });
+
+  const { mutate: updateRegistrationMutation } = useMutation({
+    mutationFn: updateRegistration,
+    onSuccess: (response) => {
+      router.replace("/questionnaire");
     },
     onError: (error) => {
-      console.error("Failed to book session:", error);
+      console.error("Failed to update registration:", error);
     },
   });
 
-  const updateRegistrationMutation = useMutation({
-    mutationFn: async () => {
-      const id = Cookies.get("id");
-      return await updateRegistration(id, {
+  const handleFormSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await bookSessionMutation(session);
+    updateRegistrationMutation({
+      id: lead.id,
+      leadData: {
         lead: {
           email,
           first_name: firstName,
@@ -46,36 +57,8 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
           phone,
           terms_accepted: true,
         },
-      });
-    },
-
-    onSuccess: (response) => {
-      if (response.message === "Lead has been updated.") {
-        const expires = 365 * 10;
-        Cookies.set("name", firstName, { path: "/", expires });
-        Cookies.set("lname", lastName, { path: "/", expires });
-        Cookies.set("phone", phone, { path: "/", expires });
-
-        const bookedTime = Cookies.get("bookedTime");
-        if (bookedTime) {
-          Cookies.set("booked", "true", {
-            path: "/",
-            expires: differenceInDays(new Date(bookedTime), new Date()) + 1,
-          });
-        }
-
-        router.replace("/questionnaire");
-      }
-    },
-    onError: (error) => {
-      console.error("Failed to update registration:", error);
-    },
-  });
-
-  const handleFormSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    bookSessionMutation.mutate();
-    updateRegistrationMutation.mutate();
+      },
+    });
   };
 
   return (

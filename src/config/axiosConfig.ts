@@ -6,7 +6,5 @@ export const axiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
     "Origin-Override": process.env.NEXT_PUBLIC_APP_ORIGIN,
-    Authorization:
-      typeof window !== "undefined" ? localStorage.getItem("token") : "",
   },
 });

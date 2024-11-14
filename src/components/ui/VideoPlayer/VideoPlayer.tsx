@@ -16,15 +16,18 @@ interface VideoPlayerProps {
   playBackId?: string;
   videoID: number;
   className?: string;
+  tag: string;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   playBackId,
   videoID,
   className = "",
+  tag,
 }) => {
   const lastTime30SecRef = useRef(0);
   const videoRef = useRef<MuxPlayerElement | null>(null);
+  const seekingRef = useRef(false);
 
   const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
     mutationFn: updateVideoProgress,
@@ -37,6 +40,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         video_id: videoID,
         watch_from: watchFrom,
         watch_to: watchTo,
+        tag,
       },
     });
   };
@@ -44,7 +48,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const handleTimeUpdate = (event: Event) => {
     const videoElement = event.currentTarget as HTMLVideoElement;
     const { currentTime } = videoElement;
-    if (currentTime - lastTime30SecRef.current >= 30) {
+    if (!seekingRef.current && currentTime - lastTime30SecRef.current >= 5) {
       updateVideoStatus(lastTime30SecRef.current, currentTime);
       lastTime30SecRef.current = currentTime;
     }
@@ -58,13 +62,15 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   };
 
   const handleSeeked = () => {
-    console.log("seeked", lastTime30SecRef.current);
-
     const videoElement = videoRef.current;
     if (videoElement) {
       lastTime30SecRef.current = videoElement.currentTime;
+      seekingRef.current = false;
     }
-    console.log("after seeled", lastTime30SecRef.current);
+  };
+
+  const handleSeeking = () => {
+    seekingRef.current = true;
   };
 
   useEffect(() => {
@@ -76,6 +82,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       videoElement.addEventListener("pause", handlePauseOrVisibilityChange);
       videoElement.addEventListener("timeupdate", handleTimeUpdate);
       videoElement.addEventListener("seeked", handleSeeked);
+      videoElement.addEventListener("seeking", handleSeeking);
     }
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -90,7 +97,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [videoID]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 
