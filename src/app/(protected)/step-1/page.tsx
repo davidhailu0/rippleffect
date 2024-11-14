@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import Link from "next/link";
@@ -13,15 +13,19 @@ export default function Step1() {
     <>
       <div className="flex flex-col gap-7 mt-7 items-center w-full md:w-9/12 mx-auto px-4">
         <p className="text-4xl font-bold text-white mb-4 md:mb-9">Step 1</p>
-        <VideoPlayer
-          videoID={step_1_video?.id}
-          playBackId={step_1_video?.mux_playback_id}
-        // handleVideoProgress={handleVideoEnd}
-        />
+        {step_1_video && (
+          <VideoPlayer
+            videoID={step_1_video?.id}
+            playBackId={step_1_video?.mux_playback_id}
+            tag={step_1_video?.tag_list[0]}
+          />
+        )}
         <div className={`flex-col mt-4 md:mt-7`}>
           <p className={`text-white text-center`}>
             Once you have{" "}
-            <span className="font-medium text-pink-400">watched the videos</span>{" "}
+            <span className="font-medium text-pink-400">
+              watched the videos
+            </span>{" "}
             click the button below to continue to step 2
           </p>
         </div>

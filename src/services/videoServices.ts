@@ -6,6 +6,7 @@ type VideoProgressParam = {
     video_id: number;
     watch_from: number;
     watch_to: number;
+    tag: string;
   };
 };
 

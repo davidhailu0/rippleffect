@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { isBefore, parseISO, format, isSameDay } from "date-fns";
 import { formatInTimeZone, toZonedTime } from "date-fns-tz";
 import Calendar from "react-calendar";
@@ -19,9 +26,19 @@ const TIME_FORMAT_24H = "HH:mm";
 
 type BookingComponentProps = {
   callback: () => void;
+  setSession: Dispatch<
+    SetStateAction<{
+      start_time: string;
+      end_time: string;
+      timezone: string;
+    }>
+  >;
 };
 
-export default function BookingComponent({ callback }: BookingComponentProps) {
+export default function BookingComponent({
+  callback,
+  setSession,
+}: BookingComponentProps) {
   const [selectedDate, setSelectedDate] = useState<SelectedDate | null>(null);
   const [hourFormat, setHourFormat] = useState<"12" | "24">("12");
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -197,14 +214,11 @@ export default function BookingComponent({ callback }: BookingComponentProps) {
             <button
               key={start_time}
               onClick={() => {
-                sessionStorage.setItem(
-                  "reservedTime",
-                  JSON.stringify({
-                    start_time,
-                    end_time,
-                    timezone: selectedTimezone!.value,
-                  })
-                );
+                setSession({
+                  start_time,
+                  end_time,
+                  timezone: selectedTimezone!.value,
+                });
                 callback();
               }}
               className="w-full py-2 text-left px-3 rounded-md bg-pink-400 border border-pink-400 text-white"

@@ -13,15 +13,20 @@ export default function Step2() {
     <>
       <div className="flex flex-col gap-7 mt-7 items-center w-full md:w-9/12 mx-auto px-4">
         <p className="text-4xl font-bold text-white mb-9">Step 2</p>
-        <VideoPlayer
-          videoID={step_2_video?.id}
-          playBackId={step_2_video?.mux_playback_id}
-        // handleVideoProgress={handleVideoEnd}
-        />
+        {step_2_video && (
+          <VideoPlayer
+            videoID={step_2_video?.id}
+            playBackId={step_2_video?.mux_playback_id}
+            tag={step_2_video?.tag_list[0]}
+          />
+        )}
+
         <div className={`flex-col w-full mt-8`}>
           <p className={`text-white text-center`}>
             Once you have{" "}
-            <span className="font-medium text-pink-400">watched the videos</span>{" "}
+            <span className="font-medium text-pink-400">
+              watched the videos
+            </span>{" "}
             above click the button below to book your call
           </p>
           <div className="flex mt-8 flex-col md:flex-row">

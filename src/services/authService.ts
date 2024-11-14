@@ -21,12 +21,15 @@ export const getLeadHandler = async () => {
       const response = await axiosInstance.get("/leads", {
         headers: { Authorization: token },
       });
-      return response.data;
+      axiosInstance.defaults.headers.common["Authorization"] = token;
+      return response.data.leads;
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response !== undefined) {
           localStorage.removeItem("token");
           axiosInstance.defaults.headers.common["Authorization"] = "";
+          localStorage.removeItem("token");
+          sessionStorage.removeItem("frontend_token");
         }
         throw new AxiosError("Error fetching current user");
       }
@@ -58,8 +61,9 @@ export const verifyLoginTokenRequest = asyncHandler(
 );
 
 export const updateRegistration = asyncHandler(
-  async (id: string | undefined, data: UpdateRegistration) => {
-    const resp = await axiosInstance.put(`/leads/${id}`, data);
+  async ({ id, leadData }: { id: number; leadData: UpdateRegistration }) => {
+    console.log("lead id ", id);
+    const resp = await axiosInstance.put(`/leads/${id}`, leadData);
     return resp.data;
   }
 );
