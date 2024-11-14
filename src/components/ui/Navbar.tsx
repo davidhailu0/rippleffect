@@ -100,16 +100,20 @@ export default function Navbar() {
               </li>
             </>
           ) : (
-            <li>
-              <Link
-                href="/work-with-me"
-                className={`${getLinkStyle(
-                  "/work-with-me"
-                )} text-primary border px-4 py-3 border-white bg-white rounded-lg hover:text-pink-400 transition-all ease-in-out duration-300`}
-              >
-                Work with Me
-              </Link>
-            </li>
+            <>
+              {!pathname.includes("work-with-me") && (
+                <li>
+                  <Link
+                    href="/work-with-me"
+                    className={`${getLinkStyle(
+                      "/work-with-me"
+                    )} text-primary border px-4 py-3 border-white bg-white rounded-lg hover:text-pink-400 transition-all ease-in-out duration-300`}
+                  >
+                    Work with Me
+                  </Link>
+                </li>
+              )}
+            </>
           )}
         </ul>
       </div>
