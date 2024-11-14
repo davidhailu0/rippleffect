@@ -1,11 +1,10 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import MuxPlayer from '@mux/mux-player-react';
-import Cookies from 'js-cookie';
-import { ClipLoader } from 'react-spinners';
-import { useDebouncedCallback } from 'use-debounce';
-import { updateVideoProgress } from '../../../services/videoServices';
+import MuxPlayer from "@mux/mux-player-react";
+import { useMutation } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
+import { ClipLoader } from "react-spinners";
+import { updateVideoProgress } from "../../../services/videoServices";
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -15,107 +14,99 @@ interface MuxPlayerElement extends HTMLVideoElement {
 
 interface VideoPlayerProps {
   playBackId?: string;
-  videoID?: number;
+  videoID: number;
   className?: string;
-  handleVideoProgress?: () => void;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ playBackId, videoID, className = '', handleVideoProgress }) => {
-  const [lastTime, setLastTime] = useState(0);
-  const [lastTime30Sec, setLastTime30Sec] = useState(0);
+const VideoPlayer: React.FC<VideoPlayerProps> = ({
+  playBackId,
+  videoID,
+  className = "",
+}) => {
+  const lastTime30SecRef = useRef(0);
   const videoRef = useRef<MuxPlayerElement | null>(null);
 
-  // Debounced API update function
-  const updateVideoStatus = useCallback(async (watchFrom: number, watchTo: number) => {
-    if (!videoID) return;
+  const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
+    mutationFn: updateVideoProgress,
+    onSuccess: () => {},
+  });
 
-    try {
-      updateVideoProgress({
-        video_progress: {
-          video_id: videoID,
-          watch_from: watchFrom,
-          watch_to: watchTo
-        },
-      })
-    } catch (error) {
-      console.error('Failed to update video status:', error);
+  const updateVideoStatus = async (watchFrom: number, watchTo: number) => {
+    mutateUpdateVideoProgress({
+      video_progress: {
+        video_id: videoID,
+        watch_from: watchFrom,
+        watch_to: watchTo,
+      },
+    });
+  };
+
+  const handleTimeUpdate = (event: Event) => {
+    const videoElement = event.currentTarget as HTMLVideoElement;
+    const { currentTime } = videoElement;
+    if (currentTime - lastTime30SecRef.current >= 30) {
+      updateVideoStatus(lastTime30SecRef.current, currentTime);
+      lastTime30SecRef.current = currentTime;
     }
-  }, [videoID]);
+  };
 
-  const handleTimeUpdate = useCallback(
-    (event: Event) => {
-      const videoElement = event.currentTarget as HTMLVideoElement;
-      const { currentTime, duration } = videoElement;
-      const progress = (currentTime / duration) * 100;
-
-      if (handleVideoProgress && progress >= 80) {
-        handleVideoProgress();
-      }
-
-      if (currentTime - lastTime30Sec >= 30 || progress >= 80) {
-        updateVideoStatus(lastTime, currentTime);
-        setLastTime30Sec(currentTime);
-      }
-
-      setLastTime(currentTime);
-    },
-    [lastTime, lastTime30Sec, handleVideoProgress, updateVideoStatus]
-  );
-
-  const handlePauseOrVisibilityChange = useCallback(() => {
+  const handlePauseOrVisibilityChange = () => {
     const videoElement = videoRef.current;
     if (videoElement && videoElement.paused) {
-      updateVideoStatus(lastTime, videoElement.currentTime);
+      updateVideoStatus(lastTime30SecRef.current, videoElement.currentTime);
     }
-  }, [lastTime, updateVideoStatus]);
+  };
 
-  const handleSeeked = useDebouncedCallback(() => {
+  const handleSeeked = () => {
+    console.log("seeked", lastTime30SecRef.current);
+
     const videoElement = videoRef.current;
     if (videoElement) {
-      updateVideoStatus(lastTime, videoElement.currentTime);
-      setLastTime30Sec(videoElement.currentTime);
+      lastTime30SecRef.current = videoElement.currentTime;
     }
-  }, 1000);
+    console.log("after seeled", lastTime30SecRef.current);
+  };
 
   useEffect(() => {
     const videoElement = videoRef.current;
-    const handleVisibilityChange = () => document.visibilityState === 'hidden' && handlePauseOrVisibilityChange();
-
+    const handleVisibilityChange = () =>
+      document.visibilityState === "hidden" && handlePauseOrVisibilityChange();
 
     if (videoElement) {
-      videoElement.addEventListener('pause', handlePauseOrVisibilityChange);
-      videoElement.addEventListener('timeupdate', handleTimeUpdate);
-      videoElement.addEventListener('seeked', handleSeeked);
+      videoElement.addEventListener("pause", handlePauseOrVisibilityChange);
+      videoElement.addEventListener("timeupdate", handleTimeUpdate);
+      videoElement.addEventListener("seeked", handleSeeked);
     }
 
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       if (videoElement) {
-        videoElement.removeEventListener('pause', handlePauseOrVisibilityChange);
-        videoElement.removeEventListener('timeupdate', handleTimeUpdate);
+        videoElement.removeEventListener(
+          "pause",
+          handlePauseOrVisibilityChange
+        );
+        videoElement.removeEventListener("timeupdate", handleTimeUpdate);
       }
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [handlePauseOrVisibilityChange, handleTimeUpdate, handleSeeked]);
+  }, []);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 
   return (
     <MuxPlayer
-      ref={videoRef}
+      ref={videoRef as any}
       className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
-      playbackId={playBackId ?? 'not-found'}
+      playbackId={playBackId ?? "not-found"}
       placeholder="Loading Video"
       streamType="on-demand"
       playbackRate={1.0}
       preload="auto"
       startTime={0.1}
-      onError={(e) => console.error('Playback error:', e)}
     />
   );
 };
-
 export default VideoPlayer;
 
 function VideoPlayerSkeleton() {

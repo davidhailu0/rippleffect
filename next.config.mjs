@@ -4,9 +4,6 @@ const nextConfig = {
   // distDir:'out',
   trailingSlash: true,
   // reactStrictMode:false
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   images: {
     unoptimized: true,
   },
