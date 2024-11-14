@@ -60,7 +60,11 @@ export default function BookingComponent({
     isLoading,
     error,
   } = useQuery<Availabilities, Error>({
-    queryKey: ["availabilities", currentDate],
+    queryKey: [
+      "availabilities",
+      currentDate.getMonth(),
+      currentDate.getFullYear(),
+    ],
     queryFn: () =>
       fetchAvailableDates(
         currentDate.getMonth() + 1,

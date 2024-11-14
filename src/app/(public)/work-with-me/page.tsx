@@ -1,5 +1,4 @@
 "use client";
-import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import MuxPlayer from "@mux/mux-player-react";

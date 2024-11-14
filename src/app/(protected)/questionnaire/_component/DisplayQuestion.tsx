@@ -46,8 +46,12 @@ export default function DisplayQuestion() {
     mutationFn: answerSurvey,
     onSuccess: (lead: Lead) => {
       dispatch(setLead(lead));
-      refetch();
-      goToNextQuestion(surveyQuestionNumber + 2);
+      if (lead?.tag_list.includes("survey_completed")) {
+        router.push("/step-3");
+      } else {
+        refetch();
+        goToNextQuestion(surveyQuestionNumber + 2);
+      }
     },
   });
 
@@ -123,6 +127,7 @@ export default function DisplayQuestion() {
 
   if (isLoading)
     return <ClipLoader color="#fff" size={70} className="h-10 w-10" />;
+
   if (!survey?.questions?.length)
     return <p className="text-white text-2xl font-bold">No Questions Found</p>;
 

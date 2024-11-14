@@ -1,4 +1,5 @@
 "use client";
+import NotificationBanner from "@/components/ui/notification-banner";
 import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import Link from "next/link";

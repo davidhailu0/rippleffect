@@ -7,6 +7,7 @@ import DisplayMessage from "@/components/ui/displayMessage";
 
 export default function Book() {
   const [showBooking, setShowBooking] = useState<boolean>(true);
+
   const lead = useAppSelector((state) => state.auth.lead);
 
   const [session, setSession] = useState({
