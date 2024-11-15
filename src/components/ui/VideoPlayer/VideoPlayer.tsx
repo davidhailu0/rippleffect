@@ -54,7 +54,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const handleTimeUpdate = (event: Event) => {
     const videoElement = event.currentTarget as HTMLVideoElement;
     const { currentTime } = videoElement;
-    if (!seekingRef.current && currentTime - lastTime30SecRef.current >= 5) {
+    if (!seekingRef.current && currentTime - lastTime30SecRef.current >= 30) {
       updateVideoStatus(lastTime30SecRef.current, currentTime);
       lastTime30SecRef.current = currentTime;
     }
@@ -112,11 +112,11 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       ref={videoRef as any}
       className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
       playbackId={playBackId ?? "not-found"}
-      placeholder="Loading Video"
       streamType="on-demand"
       playbackRate={1.0}
       preload="auto"
       startTime={0.1}
+      disableTracking={true}
     />
   );
 };

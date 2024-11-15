@@ -1,83 +1,92 @@
-type LeaderboardData = { id: number, name: string, score: string }[]
+import * as React from 'react'
+import {
+    Card,
+    CardContent,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card"
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-const LeaderboardCard = ({ data, title }: { data: LeaderboardData, title: string }) => {
-    return (
-        <div className="flex flex-col">
-            <p className="text-2xl text-white font-bold">{title}</p>
-            <div>
-                <div className="mt-6 flow-root w-full bg-transparent">
-                    <div className="inline-block min-w-full align-middle">
-                        <div className="rounded-lg bg-transparent py-2 md:pt-0">
-                            <div className="md:hidden">
-                                {data?.map((leader, ind) => (
-                                    <div
-                                        key={ind}
-                                        className="mb-2 w-full rounded-md bg-transparent y-4"
-                                    >
-                                        <div className="flex items-center justify-between border-b pb-4">
-                                            <div>
-                                                <div className="mb-2 flex items-center">
-                                                    <p>{leader.name}</p>
-                                                </div>
-                                                <p className="text-sm text-gray-500">{leader.name}</p>
-                                            </div>
-                                            {/* <InvoiceStatus status={invoice.status} /> */}
-                                        </div>
-                                        <div className="flex w-full items-center justify-between pt-4">
-                                            <div>
-                                                {/* <p className="text-xl font-medium">
-                                            {formatCurrency(invoice.amount)}
-                                        </p>
-                                        <p>{formatDateToLocal(invoice.date)}</p> */}
-                                            </div>
-                                            <div className="flex justify-end gap-2">
-                                                {/* <UpdateInvoice id={invoice.id} />
-                                        <DeleteInvoice id={invoice.id} /> */}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <table className="hidden min-w-full text-gray-900 md:table">
-                                <thead className="rounded-lg text-left bg-[#0F2C40] font-bold text-white h-24">
-                                    <tr>
-                                        <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                                            #
-                                        </th>
-                                        <th scope="col" className="px-4 py-5 font-medium">
-                                            Name
-                                        </th>
-                                        <th scope="col" className="px-3 py-5 font-medium">
-                                            Score
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-transparent text-white">
-                                    {data?.map((leader, ind) => (
-                                        <tr
-                                            key={ind}
-                                            className="w-full border-b py-3 h-20 border-y [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                                        >
-                                            <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                                                <p>{leader.id}</p>
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-3">
-                                                <p>{leader.name}</p>
-                                            </td>
-                                            <td className="whitespace-nowrap px-3 py-3">
-                                                {leader.score}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+type LeaderboardData = { id: number; name: string; score: string; avatar?: string }[]
 
-    );
+interface LeaderboardCardProps {
+    data: LeaderboardData
+    title: string
 }
 
-export default LeaderboardCard;
+export default function LeaderboardCard({ data, title }: LeaderboardCardProps) {
+    return (
+        <Card className="w-full bg-[#0F2C40] text-white">
+            <CardHeader>
+                <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+            </CardHeader>
+            <CardContent>
+                {/* Mobile view */}
+                <div className="md:hidden space-y-4">
+                    {data?.map((leader, index) => (
+                        <div
+                            key={leader.id}
+                            className="flex items-center justify-between p-4 bg-[#1a3f5c] rounded-lg"
+                        >
+                            <div className="flex items-center space-x-4">
+                                <Badge variant="secondary" className="w-8 h-8 rounded-full">
+                                    {index + 1}
+                                </Badge>
+                                <Avatar className="w-10 h-10">
+                                    <AvatarImage src={leader.avatar} alt={leader.name} />
+                                    <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
+                                </Avatar>
+                                <div>
+                                    <p className="font-medium">{leader.name}</p>
+                                    <p className="text-sm text-gray-300">Score: {leader.score}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Desktop view */}
+                <div className="hidden md:block">
+                    <Table>
+                        <TableHeader>
+                            <TableRow className="border-b border-[#1a3f5c]">
+                                <TableHead className="text-white">Rank</TableHead>
+                                <TableHead className="text-white">Name</TableHead>
+                                <TableHead className="text-white text-right">Score</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {data?.map((leader, index) => (
+                                <TableRow
+                                    key={leader.id}
+                                    className="border-b border-[#1a3f5c] hover:bg-[#1a3f5c] transition-colors"
+                                >
+                                    <TableCell className="font-medium">
+                                        <Badge variant="secondary" className="w-8 h-8 rounded-full">
+                                            {index + 1}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <div className="flex items-center space-x-4">
+                                            <Badge>{leader.name}</Badge>
+                                        </div>
+                                    </TableCell>
+                                    <TableCell className="text-right text-white">{leader.score}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            </CardContent>
+        </Card>
+    )
+}

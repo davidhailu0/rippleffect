@@ -7,6 +7,7 @@ import { updateRegistration } from "@/services/authService";
 import { useMutation } from "@tanstack/react-query";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { UpdateRegistration } from "@/types/UpdateRegistration";
+import { toast } from "sonner";
 
 const AccountPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
@@ -75,11 +76,10 @@ const NavItem = ({
 }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 p-3 rounded-lg transition ${
-      isActive
-        ? "bg-pink-400 text-white"
-        : "bg-transparent text-white hover:bg-pink-600"
-    }`}
+    className={`flex items-center gap-2 p-3 rounded-lg transition ${isActive
+      ? "bg-pink-400 text-white"
+      : "bg-transparent text-white hover:bg-pink-600"
+      }`}
   >
     {icon}
     <span className="text-base">{label}</span>
@@ -113,16 +113,9 @@ const EditProfile = () => {
   const email = lead?.email_address;
   const phone = lead?.phone;
   const updateRegistrationMutation = useMutation({
-    mutationFn: async (data: UpdateRegistration) => {
-      const id = Cookies.get("id");
-      //FIXME: Need to fix this
-      // return await updateRegistration(id, data);
-    },
-
+    mutationFn: updateRegistration,
     onSuccess: (response) => {
-      //FIXME: Need to fix this
-      // if (response.message === "Lead has been updated.") {
-      // }
+      toast.success("Your profile has been updated successfully!");
     },
     onError: (error) => {
       console.error("Failed to update registration:", error);
@@ -141,7 +134,7 @@ const EditProfile = () => {
         terms_accepted: true,
       },
     };
-    updateRegistrationMutation.mutate(data);
+    updateRegistrationMutation.mutate({ id: lead!.id, leadData: data });
   };
   return (
     <section className="flex flex-col gap-6">

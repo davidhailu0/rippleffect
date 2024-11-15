@@ -34,7 +34,6 @@ const App: React.FC = () => {
             <MuxPlayer
               className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative`}
               playbackId={landing_page?.mux_playback_id ?? "not-found"}
-              placeholder="Loading Video"
               streamType="on-demand"
               playbackRate={1.0}
               preload="auto"
