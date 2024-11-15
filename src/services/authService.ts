@@ -26,6 +26,7 @@ export const getLeadHandler = async () => {
     } catch (error) {
       if (error instanceof AxiosError) {
         if (error.response !== undefined) {
+          localStorage.removeItem("token");
           axiosInstance.defaults.headers.common["Authorization"] = "";
           localStorage.removeItem("token");
           sessionStorage.removeItem("frontend_token");
@@ -48,7 +49,6 @@ export const confirmLead = asyncHandler(async (data: ConfirmLead) => {
 export const requestLogin = asyncHandler(async (data: LoginRequest) => {
   const url = `/request_login`;
   const response = await axiosInstance.post(url, data);
-  console.log(response.data);
   return await response.data;
 });
 
@@ -62,7 +62,6 @@ export const verifyLoginTokenRequest = asyncHandler(
 
 export const updateRegistration = asyncHandler(
   async ({ id, leadData }: { id: number; leadData: UpdateRegistration }) => {
-    console.log("lead id ", id);
     const resp = await axiosInstance.put(`/leads/${id}`, leadData);
     return resp.data;
   }

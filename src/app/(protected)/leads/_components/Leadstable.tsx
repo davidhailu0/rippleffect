@@ -1,76 +1,117 @@
-'use client';
+'use client'
 
-import { fetchLeads } from "@/services/leadsService";
-import { useQuery } from "@tanstack/react-query";
-import LeadsSkeleton from "./leadsSkeleton";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
-import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { Lead } from "@/types/Lead";
+import * as React from 'react'
+import { useQuery } from "@tanstack/react-query"
+import { fetchLeads } from "@/services/leadsService"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Badge } from "@/components/ui/badge"
+import { ChevronDown, ChevronUp } from 'lucide-react'
+import { format } from 'date-fns'
+import LeadsSkeleton from './leadsSkeleton'
+
+interface Lead {
+    id: string
+    name: string
+    email_address: string
+    created_at: string
+    stage: string
+    booking_date?: string
+    booking_status?: string
+}
 
 export default function LeadsTable() {
-    const { data, isLoading } = useQuery<Lead[], Error>({ queryKey: ['leads'], queryFn: fetchLeads });
+    const { data: leads, isLoading, error } = useQuery<Lead[], Error>({
+        queryKey: ['leads'],
+        queryFn: fetchLeads
+    })
 
-    if (isLoading) return <LeadsSkeleton />;
+    const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({})
+
+    const toggleRow = (id: string) => {
+        setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }))
+    }
+
+    if (isLoading) return <LeadsSkeleton />
+
+    if (error) return <ErrorMessage message="Error loading leads." />
+
     return (
-        <div className="mt-6 w-full">
-            {/* Mobile View */}
-            <div className="md:hidden text-white space-y-4">
-                {data?.map((member) => (
-                    <Card key={member!.id} className="bg-transparent p-4 border border-gray-700 rounded-lg">
-                        <CardHeader>
-                            <p className="text-lg font-semibold">{member.name}</p>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-sm text-gray-300">{member.email_address}</p>
-                            {/* Add other details as needed */}
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
-
-            {/* Desktop View */}
-            <div className="hidden md:block">
-                <Table className="min-w-full text-white">
-                    <TableHeader className="bg-pink-400 text-left text-lg">
-                        <TableRow>
-                            <TableHead className="px-4 py-5 font-medium sm:pl-6">#</TableHead>
-                            <TableHead className="px-4 py-5 font-medium">Name</TableHead>
-                            <TableHead className="px-3 py-5 font-medium">Email</TableHead>
-                            <TableHead className="px-3 py-5 font-medium">Signup Date</TableHead>
-                            <TableHead className="px-3 py-5 font-medium">Stage</TableHead>
-                            <TableHead className="px-3 py-5 font-medium">Booking Date</TableHead>
-                            <TableHead className="px-3 py-5 font-medium">Booking Status</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody className="bg-transparent">
-                        {data?.map((member) => (
-                            <TableRow key={member!.id} className="border-b border-gray-600 h-20">
-                                <TableCell className="whitespace-nowrap py-3 pl-6 pr-3">
-                                    {member.id}
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap px-3 py-3">
-                                    {member.name}
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap px-3 py-3">
-                                    {member.email_address}
-                                </TableCell>
-                                {/* <TableCell className="whitespace-nowrap px-3 py-3">
-                                    {member.created_at}
-                                </TableCell> */}
-                                <TableCell className="whitespace-nowrap px-3 py-3">
-                                    {/* Display additional member details if needed */}
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap px-3 py-3">
-                                    {/* Display booking date if applicable */}
-                                </TableCell>
-                                <TableCell className="whitespace-nowrap py-3 pl-6 pr-3">
-                                    {/* Display booking status or other details */}
-                                </TableCell>
+        <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <h1 className="text-2xl font-bold text-white mb-6">Leads</h1>
+            <div className="bg-white rounded-lg shadow overflow-hidden">
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[50px]"></TableHead>
+                                <TableHead>Name</TableHead>
+                                <TableHead className="hidden md:table-cell">Email</TableHead>
+                                <TableHead className="hidden lg:table-cell">Signup Date</TableHead>
+                                <TableHead>Stage</TableHead>
+                                <TableHead className="hidden xl:table-cell">Booking Date</TableHead>
+                                <TableHead className="hidden xl:table-cell">Booking Status</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {leads?.map((lead) => (
+                                <React.Fragment key={lead.id}>
+                                    <TableRow className="cursor-pointer" onClick={() => toggleRow(lead.id)}>
+                                        <TableCell>
+                                            {expandedRows[lead.id] ? (
+                                                <ChevronUp className="h-4 w-4" />
+                                            ) : (
+                                                <ChevronDown className="h-4 w-4" />
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="font-medium">{lead.name}</TableCell>
+                                        <TableCell className="hidden md:table-cell">{lead.email_address}</TableCell>
+                                        <TableCell className="hidden lg:table-cell">{format(new Date(lead.created_at), 'MMM d, yyyy')}</TableCell>
+                                        <TableCell>
+                                            <Badge>{lead.stage}</Badge>
+                                        </TableCell>
+                                        <TableCell className="hidden xl:table-cell">{lead.booking_date ? format(new Date(lead.booking_date), 'MMM d, yyyy') : 'N/A'}</TableCell>
+                                        <TableCell className="hidden xl:table-cell">
+                                            {lead.booking_status ? (
+                                                <Badge>{lead.booking_status}</Badge>
+                                            ) : 'N/A'}
+                                        </TableCell>
+                                    </TableRow>
+                                    {expandedRows[lead.id] && (
+                                        <TableRow>
+                                            <TableCell colSpan={7}>
+                                                <div className="p-4 bg-gray-50">
+                                                    <p><strong>ID:</strong> {lead.id}</p>
+                                                    <p><strong>Email:</strong> {lead.email_address}</p>
+                                                    <p><strong>Signup Date:</strong> {format(new Date(lead.created_at), 'MMMM d, yyyy')}</p>
+                                                    <p><strong>Stage:</strong> {lead.stage}</p>
+                                                    <p><strong>Booking Date:</strong> {lead.booking_date ? format(new Date(lead.booking_date), 'MMMM d, yyyy') : 'N/A'}</p>
+                                                    <p><strong>Booking Status:</strong> {lead.booking_status || 'N/A'}</p>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </React.Fragment>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
             </div>
         </div>
-    );
+    )
+}
+
+function ErrorMessage({ message }: { message: string }) {
+    return (
+        <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Error</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-red-500">{message}</p>
+                </CardContent>
+            </Card>
+        </div>
+    )
 }

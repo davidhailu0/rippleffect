@@ -150,6 +150,7 @@ export default function DisplayQuestion() {
         <MuxPlayer
           ref={videoRef as any}
           streamType="on-demand"
+          disableTracking={true}
           playbackId={currentQuestion?.video?.mux_playback_id}
           className={clsx("h-[300px] md:h-[500px] overflow-x-hidden")}
         />

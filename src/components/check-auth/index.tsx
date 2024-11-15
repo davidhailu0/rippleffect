@@ -14,8 +14,6 @@ import { useCookies } from "react-cookie";
 const CheckAuth = () => {
   const isLoggedOut = useAppSelector((state) => state.auth.isLoggedOut);
 
-  const [cookies] = useCookies(["token"]);
-
   const dispatch = useAppDispatch();
 
   const { lead, isSuccess, isError } = useGetLead();
@@ -25,7 +23,7 @@ const CheckAuth = () => {
       dispatch(setIsLogged());
       dispatch(setLead(lead));
     }
-  }, [lead, dispatch, isLoggedOut, isSuccess, cookies]);
+  }, [lead, dispatch, isLoggedOut, isSuccess]);
 
   useEffect(() => {
     if (isError === true) {

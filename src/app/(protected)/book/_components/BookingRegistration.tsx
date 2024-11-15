@@ -26,10 +26,10 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
   session,
 }) => {
   const lead = useAppSelector((state) => state.auth.lead!);
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [phone, setPhone] = useState<string>("");
+  const [firstName, setFirstName] = useState<string>(lead.first_name || "");
+  const [lastName, setLastName] = useState<string>(lead.last_name || "");
+  const [email, setEmail] = useState<string>(lead.email_address || "");
+  const [phone, setPhone] = useState<string>(lead.phone || "");
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -72,7 +72,7 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
   };
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl overflow-auto">
+    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl h-auto">
       <h2 className="text-2xl font-semibold mb-6 text-gray-800">
         User Information
       </h2>
@@ -93,6 +93,7 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
           id="email"
           label="Email"
           type="email"
+          disabled={Boolean(email)}
           value={email}
           onChange={setEmail}
         />
@@ -131,8 +132,9 @@ const InputField: React.FC<{
   type?: string;
   placeholder?: string;
   value: string;
+  disabled?: boolean;
   onChange: (value: string) => void;
-}> = ({ id, label, type = "text", placeholder = "", value, onChange }) => (
+}> = ({ id, label, type = "text", placeholder = "", value, onChange, disabled }) => (
   <div>
     <label
       htmlFor={id}
@@ -146,6 +148,7 @@ const InputField: React.FC<{
       name={id}
       placeholder={placeholder}
       value={value}
+      disabled={Boolean(disabled)}
       onChange={(e) => onChange(e.target.value)}
       className="w-full p-2 text-black border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-400"
       required
@@ -189,7 +192,7 @@ const TermsAndConditions: React.FC = () => (
       type="checkbox"
       id="terms"
       name="terms"
-      className="h-4 w-4 text-pink-600 focus:ring-pink-400 border-gray-300 rounded mt-0.5"
+      className="h-4 w-4 text-pink-600 focus:ring-pink-400 border-gray-300 rounded mt-0.5 bg-pink-600"
       required
     />
     <label htmlFor="terms" className="ml-2 text-sm text-gray-700">

@@ -21,6 +21,7 @@ import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import { setIsLogged, setLead } from "@/lib/reduxStore/authSlice";
 import { toast } from "sonner";
+import Link from "next/link";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -29,7 +30,6 @@ export default function SignUp() {
   const searchParams = useSearchParams();
   const signin_token = searchParams.get("login_token");
   const Spinner = icons["LoaderCircle"];
-  const [cookies, setCookie] = useCookies(["token"]);
   const dispatch = useDispatch();
 
   const { data, isLoading, error } = useQuery({
@@ -43,15 +43,13 @@ export default function SignUp() {
       if (data.error) {
         setUserMessage(data.error);
       } else {
-        // const decodedToken = jwtDecode(data.login_token);
-        // setCookie("token", data.login_token, { expires: new Date(decodedToken.exp! * 1000) });
         localStorage.setItem("token", data.login_token);
         dispatch(setIsLogged());
         dispatch(setLead(data));
         router.replace("/step-1");
       }
     }
-  }, [data, error, setCookie, dispatch, router]);
+  }, [data, error, dispatch, router]);
 
   const { mutate: mutateSignin, isPending: isPendingSignIn } = useMutation({
     mutationFn: requestLogin,
@@ -120,7 +118,11 @@ export default function SignUp() {
               <span className="w-full border-t" />
             </div>
           </div>
+          <p className="text-center text-sm text-gray-600">
+            Don't have an account? <Link href="/sign-up" className="text-pink-500 hover:underline">Create Account</Link>
+          </p>
         </CardFooter>
+
       </Card>
     </div>
   );

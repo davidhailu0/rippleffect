@@ -17,6 +17,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { icons } from "lucide-react";
+import Link from "next/link";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -86,6 +87,9 @@ export default function SignUp() {
               <span className="w-full border-t" />
             </div>
           </div>
+          <p className="text-center text-sm text-gray-600">
+            Already have an Account? <Link href="/sign-in" className="text-pink-500 hover:underline">Sign In</Link>
+          </p>
         </CardFooter>
       </Card>
     </div>
