@@ -62,7 +62,6 @@ export const verifyLoginTokenRequest = asyncHandler(
 
 export const updateRegistration = asyncHandler(
   async ({ id, leadData }: { id: number; leadData: UpdateRegistration }) => {
-    console.log("lead id ", id);
     const resp = await axiosInstance.put(`/leads/${id}`, leadData);
     return resp.data;
   }

@@ -15,28 +15,23 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Menu } from "lucide-react"
-import { setIsLoggedOut } from "@/lib/reduxStore/authSlice";
-import { useDispatch } from "react-redux";
-import { useQueryClient } from "@tanstack/react-query";
+import { useDispatch } from "react-redux"
+import { useQueryClient } from "@tanstack/react-query"
+import { setIsLoggedOut } from "@/lib/reduxStore/authSlice"
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
-  const lead = useAppSelector((state) => state.auth.lead);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+  const lead = useAppSelector((state) => state.auth.lead)
   const isLogged = useAppSelector((state) => state.auth.isLogged);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-  const handleBTNClick = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    router.push("/book");
-  };
 
-  const handleLogout = () => {
-    dispatch(setIsLoggedOut());
-    queryClient.clear();
-  };
+  const handleBTNClick = () => {
+    router.push("/book")
+  }
 
   const getLinkStyle = (path: string) =>
     cn(
@@ -45,7 +40,10 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
         ? "text-pink-500 border-b-2 border-pink-500"
         : "text-gray-700 hover:border-pink-500"
     )
-
+  const handleLogout = () => {
+    dispatch(setIsLoggedOut());
+    queryClient.clear();
+  };
   const navItems = [
     { href: "/step-1", label: "Step 1" },
     { href: "/step-2", label: "Step 2" },
@@ -68,32 +66,23 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
               </Link>
             </li>
           ))}
-        {!lead?.tag_list.includes("booked") && (
-          <li>
-            <Button onClick={handleBTNClick} variant="default" size="sm" className="bg-pink-400">
-              Book Now
-            </Button>
-          </li>
+        {!lead?.tag_list.includes("booked_call") && (
+          <Button
+            onClick={handleBTNClick}
+            className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 
+rounded"
+          >
+            {!lead?.tag_list.includes("booked") && "Book Now"}
+          </Button>
         )}
-        <div className="flex items-center gap-3">
-          {!lead?.tag_list.includes("booked_call") && (
-            <button
-              onClick={handleBTNClick}
-              className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
-            >
-              {!lead?.tag_list.includes("booked") && "Book Now"}
-            </button>
-          )}
-          {isLogged && (
-            <button
-              onClick={handleLogout}
-              className="px-4 hover:bg-primary/90 py-2 bg-primary transition-colors  text-white rounded"
-            >
-              Logout
-            </button>
-          )}
-        </div>
-        {/* {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />} */}
+        {isLogged && (
+          <Button
+            onClick={handleLogout}
+            className="px-4 hover:bg-primary/90 py-2 bg-primary transition-colors  text-white rounded"
+          >
+            Logout
+          </Button>
+        )}
       </ul>
 
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
@@ -126,9 +115,21 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
                   {item.label}
                 </Link>
               ))}
-            {!lead?.tag_list.includes("booked") && (
-              <Button onClick={handleBTNClick} className="mt-4 bg-pink-400">
-                Book Now
+            {!lead?.tag_list.includes("booked_call") && (
+              <Button
+                onClick={handleBTNClick}
+                className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 
+rounded"
+              >
+                {!lead?.tag_list.includes("booked") && "Book Now"}
+              </Button>
+            )}
+            {isLogged && (
+              <Button
+                onClick={handleLogout}
+                className="px-4 hover:bg-primary/90 py-2 bg-primary transition-colors  text-white rounded"
+              >
+                Logout
               </Button>
             )}
           </nav>
@@ -137,3 +138,9 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
     </nav>
   )
 }
+
+
+
+
+
+
