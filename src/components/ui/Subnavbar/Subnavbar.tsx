@@ -93,7 +93,7 @@ rounded"
             className="ml-auto md:hidden"
             aria-label="Open menu"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-6 w-6 text-black" />
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-[300px]">
