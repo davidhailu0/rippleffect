@@ -1,33 +1,27 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { useRouter } from "nextjs-toploader/app"
-import { usePathname } from "next/navigation"
-import { useAppSelector } from "@/lib/reduxStore/hooks"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { Menu } from "lucide-react"
-import { useDispatch } from "react-redux"
-import { useQueryClient } from "@tanstack/react-query"
-import { setIsLoggedOut } from "@/lib/reduxStore/authSlice"
+} from "@/components/ui/sheet";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
+import { cn } from "@/lib/utils";
+import { Menu } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useRouter } from "nextjs-toploader/app";
+import * as React from "react";
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
-  const router = useRouter()
-  const pathname = usePathname()
-  const lead = useAppSelector((state) => state.auth.lead)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const lead = useAppSelector((state) => state.auth.lead);
   const isLogged = useAppSelector((state) => state.auth.isLogged);
-  const dispatch = useDispatch();
-  const queryClient = useQueryClient();
-
 
   const handleBTNClick = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -40,11 +34,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
       pathname.includes(path)
         ? "text-pink-500 border-b-2 border-pink-500"
         : "text-gray-700 hover:border-pink-500"
-    )
-  const handleLogout = () => {
-    dispatch(setIsLoggedOut());
-    queryClient.clear();
-  };
+    );
   const navItems = [
     { href: "/step-1", label: "Step 1" },
     { href: "/step-2", label: "Step 2" },
@@ -53,7 +43,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
     { href: "/training", label: "Training" },
     { href: "/leads", label: "Leads" },
     { href: "/account", label: "Account" },
-  ]
+  ];
 
   return (
     <nav className="sticky top-0 z-50 flex h-16 w-full items-center justify-between bg-white px-4 shadow-md md:px-12 lg:px-28 ">
@@ -70,18 +60,9 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
         {!lead?.tag_list.includes("booked_call") && (
           <Button
             onClick={handleBTNClick}
-            className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 
-rounded"
+            className="px-3 py-2  bg-white border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
           >
-            {!lead?.tag_list.includes("booked") && "Book Now"}
-          </Button>
-        )}
-        {isLogged && (
-          <Button
-            onClick={handleLogout}
-            className="px-4 hover:bg-primary/90 py-2 bg-primary transition-colors  text-white rounded"
-          >
-            Logout
+            Book Now
           </Button>
         )}
       </ul>
@@ -94,7 +75,7 @@ rounded"
             className="ml-auto md:hidden"
             aria-label="Open menu"
           >
-            <Menu className="h-6 w-6" />
+            <Menu className="h-6 w-6 text-primary" />
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-[300px]">
@@ -107,10 +88,7 @@ rounded"
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={cn(
-                    getLinkStyle(item.href),
-                    "text-lg"
-                  )}
+                  className={cn(getLinkStyle(item.href), "text-lg")}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.label}
@@ -119,28 +97,14 @@ rounded"
             {!lead?.tag_list.includes("booked_call") && (
               <Button
                 onClick={handleBTNClick}
-                className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
+                className="px-3 py-2 bg-white  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
               >
-                {!lead?.tag_list.includes("booked") && "Book Now"}
-              </Button>
-            )}
-            {isLogged && (
-              <Button
-                onClick={handleLogout}
-                className="px-4 hover:bg-primary/90 py-2 bg-primary transition-colors  text-white rounded"
-              >
-                Logout
+                Book Now
               </Button>
             )}
           </nav>
         </SheetContent>
       </Sheet>
     </nav>
-  )
+  );
 }
-
-
-
-
-
-

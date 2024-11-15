@@ -1,36 +1,36 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { useQuery } from "@tanstack/react-query"
-import { Calendar, Menu } from 'lucide-react'
-import { useAppSelector } from "@/lib/reduxStore/hooks"
-import { fetchBookings } from "@/services/bookingServices"
-import { formatFriendlyDate } from "@/util/UtilformatDateFriendly"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import * as React from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+import { Calendar, Menu } from "lucide-react";
+import { useAppSelector } from "@/lib/reduxStore/hooks";
+import { fetchBookings } from "@/services/bookingServices";
+import { formatFriendlyDate } from "@/util/UtilformatDateFriendly";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import Image from "next/image"
+} from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Image from "next/image";
 
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
-  const isLogged = useAppSelector((state) => state.auth.isLogged)
-  const lead = useAppSelector((state) => state.auth.lead)
-  const pathname = usePathname()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const isLogged = useAppSelector((state) => state.auth.isLogged);
+  const lead = useAppSelector((state) => state.auth.lead);
+  const pathname = usePathname();
 
   const { data: bookings } = useQuery<Booking[], Error>({
     queryKey: ["bookings", lead?.tag_list],
     queryFn: fetchBookings,
     enabled: isLogged,
-  })
+  });
 
   const getLinkStyle = (path: string) =>
     cn(
@@ -38,13 +38,13 @@ export default function Navbar() {
       pathname === path
         ? "text-pink-400 font-semibold"
         : "text-gray-200 hover:text-pink-200"
-    )
+    );
 
   const navItems = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/media", label: "Media" },
-  ]
+  ];
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-[#1f2235] px-4 py-4 shadow-md md:px-8 lg:px-12">
@@ -84,9 +84,10 @@ export default function Navbar() {
                 >
                   <Calendar className="h-4 w-4" />
                   <span className="hidden lg:inline">
-                    Next: {formatFriendlyDate(bookings[0]?.start_date)}
+                    Upcoming Booking:{" "}
+                    {formatFriendlyDate(bookings[0]?.start_date)}
                   </span>
-                  <span className="lg:hidden">Upcoming</span>
+                  <span className="lg:hidden">Upcoming Bookings</span>
                 </Link>
               )}
               <Button asChild variant="secondary" size="sm">
@@ -95,7 +96,12 @@ export default function Navbar() {
             </div>
           ) : (
             !pathname.includes("work-with-me") && (
-              <Button asChild variant="secondary" size="sm" className="hidden md:inline-flex">
+              <Button
+                asChild
+                variant="secondary"
+                size="sm"
+                className="hidden md:inline-flex"
+              >
                 <Link href="/work-with-me">Work with Me</Link>
               </Button>
             )
@@ -172,5 +178,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  )
+  );
 }

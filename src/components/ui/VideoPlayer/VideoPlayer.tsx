@@ -1,13 +1,17 @@
 "use client";
 
 import MuxPlayer from "@mux/mux-player-react";
-import { useMutation } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useEffect, useRef, useState } from "react";
 import { ClipLoader } from "react-spinners";
-import { updateVideoProgress } from "../../../services/videoServices";
+import {
+  getVideoProgress,
+  updateVideoProgress,
+} from "../../../services/videoServices";
 import { useDispatch } from "react-redux";
 import { Lead } from "@/types/Lead";
 import { setLead } from "@/lib/reduxStore/authSlice";
+import VideoProgress from "../video_progress";
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -31,7 +35,18 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const lastTime30SecRef = useRef(0);
   const videoRef = useRef<MuxPlayerElement | null>(null);
   const seekingRef = useRef(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const dispatch = useDispatch();
+
+  const { data: videoProgress } = useQuery<{
+    lead: Lead;
+    progress: number;
+  }>({
+    queryKey: ["videoProgress", videoID],
+    queryFn: () => getVideoProgress({ video_id: videoID! }),
+    enabled: Boolean(videoID),
+    refetchInterval: isPlaying && 5000,
+  });
 
   const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
     mutationFn: updateVideoProgress,
@@ -108,16 +123,21 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   if (!playBackId) return <VideoPlayerSkeleton />;
 
   return (
-    <MuxPlayer
-      ref={videoRef as any}
-      className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
-      playbackId={playBackId ?? "not-found"}
-      streamType="on-demand"
-      playbackRate={1.0}
-      preload="auto"
-      startTime={0.1}
-      disableTracking={true}
-    />
+    <>
+      <MuxPlayer
+        ref={videoRef as any}
+        className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
+        playbackId={playBackId ?? "not-found"}
+        placeholder="Loading Video"
+        streamType="on-demand"
+        playbackRate={1.0}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
+        preload="auto"
+        startTime={0.1}
+      />
+      <VideoProgress progress={videoProgress?.progress} />
+    </>
   );
 };
 export default VideoPlayer;

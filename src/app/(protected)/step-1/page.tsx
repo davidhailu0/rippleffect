@@ -24,9 +24,7 @@ export default function Step1() {
         <div className={`flex-col mt-4 md:mt-7`}>
           <p className={`text-white text-center`}>
             Once you have{" "}
-            <span className="font-medium text-pink-400">
-              watched the videos
-            </span>{" "}
+            <span className="font-medium text-pink-400">watched the video</span>{" "}
             click the button below to continue to step 2
           </p>
         </div>
