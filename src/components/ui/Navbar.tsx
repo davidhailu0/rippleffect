@@ -61,12 +61,12 @@ export default function Navbar() {
             </Link>
           </li>
           <li>
-            <Link href="/about" className={`${getLinkStyle("/about")}`}>
+            <Link href="/about" className={`${getLinkStyle("/about/")}`}>
               About
             </Link>
           </li>
           <li>
-            <Link href="/media" className={`${getLinkStyle("/media")}`}>
+            <Link href="/media" className={`${getLinkStyle("/media/")}`}>
               Media
             </Link>
           </li>
