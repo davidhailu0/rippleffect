@@ -6,16 +6,27 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "nextjs-toploader/app";
 import { usePathname } from "next/navigation";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
+import { setIsLoggedOut } from "@/lib/reduxStore/authSlice";
+import { useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const router = useRouter();
   const pathname = usePathname();
   const lead = useAppSelector((state) => state.auth.lead);
+  const isLogged = useAppSelector((state) => state.auth.isLogged);
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const handleBTNClick = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    router.push("/book")
+    router.push("/book");
+  };
+
+  const handleLogout = () => {
+    dispatch(setIsLoggedOut());
+    queryClient.clear();
   };
 
   const getLinkStyle = (path: string) =>
@@ -24,7 +35,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
       : "text-gray-700 hover:text-pink-500 hover:border-pink-500";
 
   return (
-    <nav className="flex items-center justify-end w-full h-16 bg-white shadow-md z-50 border-b border-gray-200 mb-4 px-24 sticky top-0">
+    <nav className="flex items-center justify-end w-full h-auto py-3 bg-white shadow-md z-50 border-b border-gray-200 mb-4  sticky top-0">
       {/* Logo */}
 
       {/* Hamburger Icon for Mobile */}
@@ -42,7 +53,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
       </div>
 
       {/* Desktop Navigation */}
-      <ul className="hidden md:flex gap-6 px-7 items-center">
+      <ul className="hidden flex-wrap mr-24 md:flex gap-6 px-7 items-center">
         {lead && (
           <>
             <li>
@@ -80,9 +91,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             <li>
               <Link
                 href="/training"
-                className={`${getLinkStyle(
-                  "/training"
-                )} px-2 py-1`}
+                className={`${getLinkStyle("/training")} px-2 py-1`}
               >
                 Training
               </Link>
@@ -105,12 +114,24 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
             </li>
           </>
         )}
-        {!lead?.tag_list.includes('booked') && <Button
-          onClick={handleBTNClick}
-          className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded"
-        >
-          {!lead?.tag_list.includes('booked') && 'Book Now'}
-        </Button>}
+        <div className="flex items-center gap-3">
+          {!lead?.tag_list.includes("booked_call") && (
+            <button
+              onClick={handleBTNClick}
+              className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
+            >
+              {!lead?.tag_list.includes("booked") && "Book Now"}
+            </button>
+          )}
+          {isLogged && (
+            <button
+              onClick={handleLogout}
+              className="px-4 hover:bg-primary/90 py-2 bg-primary transition-colors  text-white rounded"
+            >
+              Logout
+            </button>
+          )}
+        </div>
         {/* {showPopup && <AuthPopup ref_code={ref_code} closePopup={closePopup} />} */}
       </ul>
 
@@ -119,22 +140,13 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
         <div className="fixed inset-0 bg-black bg-opacity-90 z-20 flex flex-col items-center justify-center space-y-6 text-2xl text-white">
           {
             <>
-              <Link
-                href="/step-1"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/step-1" onClick={() => setIsMobileMenuOpen(false)}>
                 Step 1
               </Link>
-              <Link
-                href="/step-2"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/step-2" onClick={() => setIsMobileMenuOpen(false)}>
                 Step 2
               </Link>
-              <Link
-                href="/step-3"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/step-3" onClick={() => setIsMobileMenuOpen(false)}>
                 Step 3
               </Link>
               <Link
@@ -143,27 +155,18 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
               >
                 My Booking
               </Link>
-              <Link
-                href="/training"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/training" onClick={() => setIsMobileMenuOpen(false)}>
                 Training
               </Link>
-              <Link
-                href="/leads"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/leads" onClick={() => setIsMobileMenuOpen(false)}>
                 Leads
               </Link>
-              <Link
-                href="/account"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
+              <Link href="/account" onClick={() => setIsMobileMenuOpen(false)}>
                 Account
               </Link>
             </>
           }
-          {!lead?.tag_list.includes('booked') && (
+          {!lead?.tag_list.includes("booked_call") && (
             <Button
               onClick={handleBTNClick}
               className="px-3 py-1 bg-pink-400 hover:bg-pink-600 text-white rounded"
