@@ -264,3 +264,7 @@ abbr {
 ::-webkit-scrollbar-thumb:hover {
   background: #d1d5db; /* Tailwind's gray-300 */
 }
+
+.flag-dropdown.open.country-list {
+  z-index: 1050; /* or any higher value */
+}
