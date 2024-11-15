@@ -69,7 +69,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const handleTimeUpdate = (event: Event) => {
     const videoElement = event.currentTarget as HTMLVideoElement;
     const { currentTime } = videoElement;
-    if (!seekingRef.current && currentTime - lastTime30SecRef.current >= 30) {
+    if (!seekingRef.current && currentTime - lastTime30SecRef.current >= 5) {
       updateVideoStatus(lastTime30SecRef.current, currentTime);
       lastTime30SecRef.current = currentTime;
     }
