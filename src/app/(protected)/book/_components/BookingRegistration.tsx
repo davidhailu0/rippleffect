@@ -8,6 +8,9 @@ import { updateRegistration } from "@/services/authService";
 import "react-phone-input-2/lib/style.css";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { useRouter } from "nextjs-toploader/app";
+import { useDispatch } from "react-redux";
+import { setLead } from "@/lib/reduxStore/authSlice";
+import { Lead } from "@/types/Lead";
 
 type BookingRegistrationProps = {
   callback: () => void;
@@ -23,21 +26,28 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
   session,
 }) => {
   const lead = useAppSelector((state) => state.auth.lead!);
-  console.log(lead);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const { mutateAsync: bookSessionMutation } = useMutation({
+  const { mutate: bookSessionMutation } = useMutation({
     mutationFn: bookSession,
+    onSuccess: (lead: Lead) => {
+      dispatch(setLead(lead));
+    },
   });
 
-  const { mutate: updateRegistrationMutation } = useMutation({
+  const { mutate: updateRegistrationMutation, isPending } = useMutation({
     mutationFn: updateRegistration,
-    onSuccess: (response) => {
-      router.replace("/questionnaire");
+    onSuccess: () => {
+      if (lead?.tag_list.includes("survey_completed")) {
+        router.replace("step-3");
+      } else {
+        router.replace("/questionnaire");
+      }
     },
     onError: (error) => {
       console.error("Failed to update registration:", error);
@@ -46,7 +56,7 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
 
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await bookSessionMutation(session);
+    bookSessionMutation(session);
     updateRegistrationMutation({
       id: lead.id,
       leadData: {
@@ -103,9 +113,10 @@ const BookingRegistration: React.FC<BookingRegistrationProps> = ({
           </button>
           <button
             type="submit"
+            disabled={isPending}
             className="px-6 py-2 bg-pink-400 text-white rounded-md hover:bg-pink-600 transition-colors ease-in-out duration-75 focus:outline-none"
           >
-            Schedule Meeting
+            {isPending ? "Submitting..." : "Schedule Meeting"}
           </button>
         </div>
       </form>

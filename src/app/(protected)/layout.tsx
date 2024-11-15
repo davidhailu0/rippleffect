@@ -1,5 +1,7 @@
 "use client";
 import Loader from "@/components/ui/loader/loader";
+import NotificationBanner from "@/components/ui/notification-banner";
+import SubNavbar from "@/components/ui/Subnavbar/Subnavbar";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { useRouter } from "next/navigation";
 import React, { useLayoutEffect } from "react";
@@ -28,7 +30,8 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     return (
       <>
         {/* FIXME: remove this later */}
-        {/* <SubNavbar /> */}
+        <SubNavbar />
+        <NotificationBanner />
         {children}
       </>
     );

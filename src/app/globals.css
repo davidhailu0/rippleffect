@@ -234,6 +234,15 @@ abbr {
       stroke-dashoffset: 100;
     }
   }
+
+  .hero-gradient {
+    /*
+* Created with https://www.css-gradient.com
+* Gradient link: https://www.css-gradient.com/?c1=e07bd3&c2=c932d3&gt=l&gd=dtl
+*/
+    background: #e07bd3;
+    background: linear-gradient(135deg, #e07bd3, #c932d3);
+  }
 }
 
 /* Custom Scrollbar */

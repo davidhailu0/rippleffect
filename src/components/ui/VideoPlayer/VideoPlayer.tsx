@@ -5,6 +5,9 @@ import { useMutation } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { ClipLoader } from "react-spinners";
 import { updateVideoProgress } from "../../../services/videoServices";
+import { useDispatch } from "react-redux";
+import { Lead } from "@/types/Lead";
+import { setLead } from "@/lib/reduxStore/authSlice";
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -14,9 +17,9 @@ interface MuxPlayerElement extends HTMLVideoElement {
 
 interface VideoPlayerProps {
   playBackId?: string;
-  videoID: number;
+  videoID?: number;
   className?: string;
-  tag: string;
+  tag?: string;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
@@ -28,19 +31,22 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const lastTime30SecRef = useRef(0);
   const videoRef = useRef<MuxPlayerElement | null>(null);
   const seekingRef = useRef(false);
+  const dispatch = useDispatch();
 
   const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
     mutationFn: updateVideoProgress,
-    onSuccess: () => {},
+    onSuccess: (lead: Lead) => {
+      dispatch(setLead(lead));
+    },
   });
 
   const updateVideoStatus = async (watchFrom: number, watchTo: number) => {
     mutateUpdateVideoProgress({
       video_progress: {
-        video_id: videoID,
+        video_id: videoID!,
         watch_from: watchFrom,
         watch_to: watchTo,
-        tag,
+        tag: tag!,
       },
     });
   };
@@ -97,7 +103,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       }
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [videoID]);
+  }, [videoID, playBackId]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 

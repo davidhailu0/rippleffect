@@ -11,9 +11,15 @@ ARG NEXT_PUBLIC_APP_DOMAIN
 ENV NEXT_PUBLIC_BUILD_INFO=$NEXT_PUBLIC_BUILD_INFO
 ENV NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN
 
+# Install pnpm globally
+RUN npm install -g pnpm
+
+
 # Copy package files and install dependencies
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml ./
+
+RUN pnpm install --frozen-lockfile
+
 
 # Copy all files and build the project
 COPY . .

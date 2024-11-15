@@ -14,6 +14,7 @@ const useGetVideos = () => {
   const { data, isSuccess } = useQuery<FetchVideosResponse>({
     queryKey: ["user-videos", isLogged],
     queryFn: fetchVideos,
+    retry: false,
   });
 
   useEffect(() => {
