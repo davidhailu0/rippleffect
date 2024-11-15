@@ -20,18 +20,18 @@ import { useQueryClient } from "@tanstack/react-query"
 import { setIsLoggedOut } from "@/lib/reduxStore/authSlice"
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
-  const router = useRouter()
-  const pathname = usePathname()
-  const lead = useAppSelector((state) => state.auth.lead)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
+  const lead = useAppSelector((state) => state.auth.lead);
   const isLogged = useAppSelector((state) => state.auth.isLogged);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
 
-
   const handleBTNClick = () => {
-    router.push("/book")
-  }
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    router.push("/book");
+  };
 
   const getLinkStyle = (path: string) =>
     cn(
@@ -118,8 +118,7 @@ rounded"
             {!lead?.tag_list.includes("booked_call") && (
               <Button
                 onClick={handleBTNClick}
-                className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 
-rounded"
+                className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
               >
                 {!lead?.tag_list.includes("booked") && "Book Now"}
               </Button>
