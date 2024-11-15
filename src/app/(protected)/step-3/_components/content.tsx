@@ -25,7 +25,7 @@ export default function Content({
   }, []);
 
   const videos = useAppSelector((state) => state.user.videos);
-  console.log(videos);
+
   const step_3_intro = videos?.find(
     ({ tag_list }) => tag_list.includes("step3") && tag_list.includes("intro")
   );

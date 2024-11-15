@@ -15,7 +15,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useLayoutEffect(() => {
     if (isAuthFailed || isLoggedOut) {
       localStorage.removeItem("token");
-      router.replace("/sign-up");
+      router.push("/sign-up");
     }
     if (isLogged === false) {
       return;

@@ -8,6 +8,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { UpdateRegistration } from "@/types/UpdateRegistration";
 import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { setLead } from "@/lib/reduxStore/authSlice";
 
 const AccountPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
@@ -108,13 +110,16 @@ const Profile = () => {
 /* Edit Profile Tab */
 const EditProfile = () => {
   const lead = useAppSelector((state) => state.auth.lead);
+  const dispatch = useDispatch();
   const first_name = lead?.first_name;
   const last_name = lead?.last_name;
   const email = lead?.email_address;
   const phone = lead?.phone;
   const updateRegistrationMutation = useMutation({
+    mutationKey: ["update-account"],
     mutationFn: updateRegistration,
     onSuccess: (response) => {
+      dispatch(setLead(response));
       toast.success("Your profile has been updated successfully!");
     },
     onError: (error) => {
@@ -125,12 +130,13 @@ const EditProfile = () => {
   const handleFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
+
     const data = {
       lead: {
-        email: formData.get("email")?.toString(),
-        first_name: formData.get("first_name")?.toString(),
-        last_name: formData.get("last_name")?.toString(),
-        phone: formData.get("phone")?.toString(),
+        email: formData.get("email") ? formData.get("email")?.toString() : lead?.email_address || "",
+        first_name: formData.get("first_name") ? formData.get("first_name")?.toString() : lead?.first_name || "",
+        last_name: formData.get("last_name") ? formData.get("last_name")?.toString() : lead?.last_name || "",
+        phone: formData.get("phone") ? formData.get("phone")?.toString() : lead?.phone || "",
         terms_accepted: true,
       },
     };
@@ -190,6 +196,7 @@ const InputField = ({
     <input
       disabled={Boolean(disabled)}
       type="text"
+      name={name}
       defaultValue={defaultValue}
       required
       className="p-3 rounded-lg text-gray-200 bg-[#1E213A] border border-gray-600 focus:border-[#F97316] focus:outline-none"
