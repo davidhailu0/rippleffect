@@ -20,13 +20,14 @@ import { useQueryClient } from "@tanstack/react-query"
 import { setIsLoggedOut } from "@/lib/reduxStore/authSlice"
 
 export default function SubNavbar({ ref_code }: { ref_code?: string }) {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-  const router = useRouter();
-  const pathname = usePathname();
-  const lead = useAppSelector((state) => state.auth.lead);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
+  const router = useRouter()
+  const pathname = usePathname()
+  const lead = useAppSelector((state) => state.auth.lead)
   const isLogged = useAppSelector((state) => state.auth.isLogged);
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
+
 
   const handleBTNClick = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
