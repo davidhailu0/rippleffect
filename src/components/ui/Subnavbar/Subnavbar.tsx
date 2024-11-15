@@ -30,8 +30,9 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
 
 
   const handleBTNClick = () => {
-    router.push("/book")
-  }
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    router.push("/book");
+  };
 
   const getLinkStyle = (path: string) =>
     cn(
@@ -93,7 +94,7 @@ rounded"
             className="ml-auto md:hidden"
             aria-label="Open menu"
           >
-            <Menu className="h-6 w-6 text-black" />
+            <Menu className="h-6 w-6" />
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-[300px]">
@@ -118,8 +119,7 @@ rounded"
             {!lead?.tag_list.includes("booked_call") && (
               <Button
                 onClick={handleBTNClick}
-                className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 
-rounded"
+                className="px-3 py-2  border-pink-400 border transition-colors hover:bg-pink-400 hover:text-white text-pink-400 rounded"
               >
                 {!lead?.tag_list.includes("booked") && "Book Now"}
               </Button>
