@@ -58,7 +58,7 @@ export default function Book() {
       ) : (
         <DisplayMessage
           title="Watch Step 2 Video First"
-          description="You need to watch at least 80% of the Step 2 video to proceed to booking a call."
+          description="You need to watch the Step 2 video to the end before booking a call."
           callToActionTitle="Watch Step 2"
           callToActionHref="/step-2"
         />
