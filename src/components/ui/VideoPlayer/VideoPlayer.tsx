@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { Lead } from "@/types/Lead";
 import { setLead } from "@/lib/reduxStore/authSlice";
 import VideoProgress from "../video_progress";
+import { VideoProgressData } from "@/types/VideosType";
 
 interface MuxPlayerElement extends HTMLVideoElement {
   currentTime: number;
@@ -36,17 +37,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   const videoRef = useRef<MuxPlayerElement | null>(null);
   const seekingRef = useRef(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
   const dispatch = useDispatch();
 
-  const { data: videoProgress } = useQuery<{
-    lead: Lead;
-    progress: number;
-  }>({
-    queryKey: ["videoProgress", videoID],
-    queryFn: () => getVideoProgress({ video_id: videoID! }),
-    enabled: Boolean(videoID),
-    refetchInterval: isPlaying && 5000,
-  });
+  const { data: videoProgress, isSuccess: isVideoProgressSuccess } =
+    useQuery<VideoProgressData>({
+      queryKey: ["videoProgress", videoID],
+      queryFn: () => getVideoProgress({ video_id: videoID! }),
+      enabled: Boolean(videoID),
+      refetchInterval: isPlaying && 5000,
+    });
 
   const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
     mutationFn: updateVideoProgress,
@@ -56,29 +56,48 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
   });
 
   const updateVideoStatus = async (watchFrom: number, watchTo: number) => {
-    mutateUpdateVideoProgress({
-      video_progress: {
-        video_id: videoID!,
-        watch_from: watchFrom,
-        watch_to: watchTo,
-        tag: tag!,
-      },
-    });
+    if (videoProgress?.time_interval === null && watchTo > 6) {
+      mutateUpdateVideoProgress({
+        video_progress: {
+          video_id: videoID!,
+          watch_from: 0.0,
+          watch_to: 0.1,
+          tag: tag!,
+        },
+      });
+    } else {
+      mutateUpdateVideoProgress({
+        video_progress: {
+          video_id: videoID!,
+          watch_from: watchFrom,
+          watch_to: watchTo,
+          tag: tag!,
+        },
+      });
+    }
   };
 
   const handleTimeUpdate = (event: Event) => {
     const videoElement = event.currentTarget as HTMLVideoElement;
     const { currentTime } = videoElement;
+    setCurrentTime(currentTime);
     if (!seekingRef.current && currentTime - lastTime30SecRef.current >= 5) {
       updateVideoStatus(lastTime30SecRef.current, currentTime);
       lastTime30SecRef.current = currentTime;
     }
   };
 
+  const handleResume = (time: number) => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = time; // Set the player's current time
+      videoRef.current.play(); // Start playback
+    }
+  };
+
   const handlePauseOrVisibilityChange = () => {
     const videoElement = videoRef.current;
     if (videoElement && videoElement.paused) {
-      updateVideoStatus(lastTime30SecRef.current, videoElement.currentTime);
+      // updateVideoStatus(lastTime30SecRef.current, videoElement.currentTime);
     }
   };
 
@@ -116,9 +135,21 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         );
         videoElement.removeEventListener("timeupdate", handleTimeUpdate);
       }
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      document.removeEventListener("visibilgitychange", handleVisibilityChange);
     };
-  }, [videoID, playBackId]);
+  }, [videoID, playBackId, videoProgress]);
+
+  useEffect(() => {
+    if (
+      isVideoProgressSuccess &&
+      videoProgress?.time_interval !== null &&
+      videoProgress.progress < 99
+    ) {
+      if (videoRef.current) {
+        videoRef.current.currentTime = videoProgress.time_interval[0][1]; // Set the player's current time to the last time the video was stopped
+      }
+    }
+  }, [isVideoProgressSuccess]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 
@@ -133,10 +164,20 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
         preload="auto"
-        startTime={0.1}
         disableTracking={true}
+        startTime={
+          videoProgress && videoProgress?.time_interval
+            ? videoProgress.time_interval[0][1]
+            : 0.1
+        }
       />
-      <VideoProgress progress={videoProgress?.progress} />
+      <VideoProgress
+        isPlaying={isPlaying}
+        timeInterval={videoProgress?.time_interval}
+        progress={videoProgress?.progress}
+        onResume={handleResume} // Pass the callback to VideoProgress
+        currentTime={currentTime}
+      />
     </>
   );
 };
