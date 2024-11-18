@@ -33,16 +33,6 @@ export default function Content({
     ({ tag_list }) => tag_list.includes("step3") && tag_list.includes("plan")
   );
 
-  const handleVideoEnd = () => {
-    setVideoWatched((prev) => {
-      const updatedWatched = prev + 1;
-      if (updatedWatched === 4) {
-        localStorage.setItem("step-3-watched", "true");
-      }
-      return updatedWatched;
-    });
-  };
-
   const goToTraining = () => {
     router.push("/training");
   };
@@ -70,7 +60,7 @@ export default function Content({
           <li>The Perfect Business Model</li>
           <li>My Best Strategy to get Started</li>
         </ol>
-        <p className="text-2xl font-bold text-white my-4">
+        <p className="text-2xl font-bold text-white my-10">
           1. Intro to your business journey with Nate
         </p>
         <VideoPlayer
@@ -78,7 +68,7 @@ export default function Content({
           tag="step3"
           playBackId={step_3_intro?.mux_playback_id}
         />
-        <p className="text-2xl font-bold text-white my-4">
+        <p className="text-2xl font-bold text-white my-10">
           2. The Best Product I have found so far
         </p>
         <VideoPlayer
@@ -86,7 +76,7 @@ export default function Content({
           tag="step3"
           playBackId={step_3_plan?.mux_playback_id}
         />
-        <p className="text-2xl font-bold text-white my-4">
+        <p className="text-2xl font-bold text-white my-10">
           3. The Perfect Business Model
         </p>
         <VideoPlayer
@@ -94,7 +84,7 @@ export default function Content({
           tag="step3"
           playBackId={step_3_plan?.mux_playback_id}
         />
-        <p className="text-2xl font-bold text-white my-4">
+        <p className="text-2xl font-bold text-white my-10">
           4. My Best Strategy to get Started
         </p>
         <VideoPlayer

@@ -17,7 +17,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Image from "next/image"
 
 export default function Navbar() {
@@ -51,10 +50,7 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center space-x-4 md:space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <Avatar className="h-10 w-10">
-              <AvatarImage src="/logo_white.webp" alt="Nate Wells Logo" />
-              <AvatarFallback>NW</AvatarFallback>
-            </Avatar>
+            <Image src="/logo_white.webp" height={40} width={40} alt="Nate Wells Logo" className="h-10 w-10" />
             <Image
               src="/NW.webp"
               alt="Nate Wells"
@@ -114,6 +110,7 @@ export default function Navbar() {
             </SheetTrigger>
             <SheetContent
               side="right"
+              xColor="text-white"
               className="w-[300px] bg-[#1f2235] text-white"
             >
               <SheetHeader>
@@ -154,17 +151,22 @@ export default function Navbar() {
                         </span>
                       </Link>
                     )}
-                  </>
-                ) : (
-                  !pathname.includes("work-with-me") && (
                     <Link
                       href="/work-with-me"
-                      className="text-lg text-white transition-colors hover:text-pink-400"
+                      className={cn(getLinkStyle("/work-with-me"), "text-lg text-white transition-colors hover:text-pink-400")}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
                       Work with Me
                     </Link>
-                  )
+                  </>
+                ) : (
+                  <Link
+                    href="/work-with-me"
+                    className="text-lg text-white transition-colors hover:text-pink-400"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Work with Me
+                  </Link>
                 )}
               </nav>
             </SheetContent>

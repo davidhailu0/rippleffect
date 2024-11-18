@@ -40,7 +40,7 @@ export default function BookingsPage() {
     }
 
     return (
-        <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="container mx-auto py-6 px-4 sm:px-6 lg:px-8 min-h-screen">
             <h1 className="text-2xl font-bold text-white mb-6">Your Bookings</h1>
             <div className="bg-white rounded-lg shadow overflow-hidden">
                 <div className="overflow-x-auto">

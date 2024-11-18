@@ -16,6 +16,18 @@ export const roboto = Roboto({
 export const metadata: Metadata = {
   title: "Nate Wells",
   description: "Increase Your Income",
+  icons: [
+    {
+      "url": "/favicon-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "url": "/favicon-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
 };
 
 export default function RootLayout({
@@ -31,7 +43,7 @@ export default function RootLayout({
             <Toaster position="top-center" duration={4000} richColors />
             <FetchVideos />
             <CheckAuth />
-            <div className="bg-contain bg-[#24263b] pt-0 md:pb-20 mx-auto h-screen relative scroll-smooth box-border bg-no-repeat text-white overflow-y-auto">
+            <div className="bg-contain bg-[#24263b] pt-0 md:pb-20 mx-auto relative scroll-smooth box-border text-white flex flex-col">
               <Navbar />
               {children}
             </div>

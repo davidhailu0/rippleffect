@@ -34,7 +34,7 @@ export default function LeaderboardCard({ data, title }: LeaderboardCardProps) {
                 <div className="md:hidden space-y-4">
                     {data?.map((leader, index) => (
                         <div
-                            key={leader.id}
+                            key={index}
                             className="flex items-center justify-between p-4 bg-[#1a3f5c] rounded-lg"
                         >
                             <div className="flex items-center space-x-4">
@@ -43,7 +43,7 @@ export default function LeaderboardCard({ data, title }: LeaderboardCardProps) {
                                 </Badge>
                                 <Avatar className="w-10 h-10">
                                     <AvatarImage src={leader.avatar} alt={leader.name} />
-                                    <AvatarFallback>{leader.name.charAt(0)}</AvatarFallback>
+                                    <AvatarFallback className='text-black'>{leader.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div>
                                     <p className="font-medium">{leader.name}</p>
@@ -67,7 +67,7 @@ export default function LeaderboardCard({ data, title }: LeaderboardCardProps) {
                         <TableBody>
                             {data?.map((leader, index) => (
                                 <TableRow
-                                    key={leader.id}
+                                    key={index}
                                     className="border-b border-[#1a3f5c] hover:bg-[#1a3f5c] transition-colors"
                                 >
                                     <TableCell className="font-medium">

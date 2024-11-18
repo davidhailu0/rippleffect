@@ -1,31 +1,22 @@
 "use client";
 import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { Button } from "@/components/ui/button";
-import { Suspense, useEffect, useState } from "react";
-import Cookies from "js-cookie";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const App: React.FC = () => {
-  const [showPopup, setShowPopup] = useState<boolean>(false);
-  const [showBtn, setShowBtn] = useState(false);
   const videos = useAppSelector((state) => state.user.videos);
   const landing_page = videos?.find(({ tag_list }) =>
     tag_list.includes("landing")
   );
-
-  useEffect(() => {
-    if (!Cookies.get("token")) {
-      setShowBtn(true);
-    }
-  }, []);
-
-  const closePopup = () => {
-    setShowPopup(false);
-  };
+  const searchParams = useSearchParams();
+  const ref_code = searchParams.get("ref_code");
 
   return (
-    <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-radial from-gray-900 to-black min-h-screen">
-      <div className="flex flex-col md:flex-row w-full items-center justify-between md:justify-center md:space-x-8 space-y-8 md:space-y-0 p-8">
+    <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-radial from-gray-900 to-black pt-10">
+      <div className="flex flex-col md:flex-row w-full items-center justify-between md:justify-center md:space-x-8 space-y-8 md:space-y-10 p-8 overflow-hidden">
         {/* Left Side: Video Player */}
         <div className="flex flex-col items-center md:w-2/3">
           <VideoPlayer
@@ -44,14 +35,12 @@ const App: React.FC = () => {
           <p className="text-lg mb-8">
             Get Free Access to My Lead-Generating Sales System!
           </p>
-          {showBtn && (
-            <Button
-              onClick={() => setShowPopup(true)}
-              className="px-6 py-3 h-12 bg-pink-400 text-white hover:bg-pink-600 transition rounded-[50px] shadow-xl font-bold mt-4"
-            >
-              Create Account
-            </Button>
-          )}
+          <Link
+            href={ref_code ? `/sign-up?ref_code=${ref_code}` : '/sign-up'}
+            className="px-6 py-3 h-12 bg-pink-400 text-white hover:bg-pink-600 transition rounded-[50px] shadow-xl font-bold mt-4"
+          >
+            Create Account
+          </Link>
         </div>
       </div>
 
