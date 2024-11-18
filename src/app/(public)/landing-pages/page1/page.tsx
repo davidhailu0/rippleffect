@@ -3,7 +3,6 @@ import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { use, useEffect } from "react";
 
 const App: React.FC = () => {
   const videos = useAppSelector((state) => state.user.videos);
