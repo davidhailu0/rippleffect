@@ -1,15 +1,14 @@
 "use client";
-import { FormEvent, useState } from "react";
-import { UserCircleIcon, PencilIcon } from "@heroicons/react/24/outline";
-import Cookies from "js-cookie";
-import Image from "next/image";
-import { updateRegistration } from "@/services/authService";
-import { useMutation } from "@tanstack/react-query";
+import { setIsLoggedOut, setLead } from "@/lib/reduxStore/authSlice";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
-import { UpdateRegistration } from "@/types/UpdateRegistration";
-import { toast } from "sonner";
+import { updateRegistration } from "@/services/authService";
+import { PencilIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { LogOut } from "lucide-react";
+import Image from "next/image";
+import { FormEvent, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setLead } from "@/lib/reduxStore/authSlice";
+import { toast } from "sonner";
 
 const AccountPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>("profile");
@@ -17,6 +16,13 @@ const AccountPage: React.FC = () => {
   const first_name = lead?.first_name || "";
   const last_name = lead?.last_name || "";
   const email = lead?.email_address || "";
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  const handleLogout = () => {
+    dispatch(setIsLoggedOut());
+    queryClient.clear();
+  };
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-[#1E213A] text-gray-200 p-4 md:p-8 md:mx-28">
@@ -52,6 +58,12 @@ const AccountPage: React.FC = () => {
             isActive={activeTab === "edit"}
             onClick={() => setActiveTab("edit")}
           />
+          <NavItem
+            icon={<LogOut className="h-5 w-5" />}
+            label="Logout"
+            isActive={activeTab === "logout"}
+            onClick={handleLogout}
+          />
         </nav>
       </aside>
 
@@ -78,10 +90,11 @@ const NavItem = ({
 }) => (
   <button
     onClick={onClick}
-    className={`flex items-center gap-2 p-3 rounded-lg transition ${isActive
-      ? "bg-pink-400 text-white"
-      : "bg-transparent text-white hover:bg-pink-600"
-      }`}
+    className={`flex items-center gap-2 p-3 rounded-lg transition ${
+      isActive
+        ? "bg-pink-400 text-white"
+        : "bg-transparent text-white hover:bg-pink-600"
+    }`}
   >
     {icon}
     <span className="text-base">{label}</span>
@@ -133,10 +146,18 @@ const EditProfile = () => {
 
     const data = {
       lead: {
-        email: formData.get("email") ? formData.get("email")?.toString() : lead?.email_address || "",
-        first_name: formData.get("first_name") ? formData.get("first_name")?.toString() : lead?.first_name || "",
-        last_name: formData.get("last_name") ? formData.get("last_name")?.toString() : lead?.last_name || "",
-        phone: formData.get("phone") ? formData.get("phone")?.toString() : lead?.phone || "",
+        email: formData.get("email")
+          ? formData.get("email")?.toString()
+          : lead?.email_address || "",
+        first_name: formData.get("first_name")
+          ? formData.get("first_name")?.toString()
+          : lead?.first_name || "",
+        last_name: formData.get("last_name")
+          ? formData.get("last_name")?.toString()
+          : lead?.last_name || "",
+        phone: formData.get("phone")
+          ? formData.get("phone")?.toString()
+          : lead?.phone || "",
         terms_accepted: true,
       },
     };

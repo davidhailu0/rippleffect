@@ -72,7 +72,7 @@ export default function Step2() {
       ) : (
         <DisplayMessage
           title="Watch Step 1 Video First"
-          description="You need to watch at least 80% of the Step 1 video to proceed to Step 2."
+          description="You need to watch Step 1 video to the end before getting access to step 2"
           callToActionTitle="Watch Step 1"
           callToActionHref="/step-1"
         />
