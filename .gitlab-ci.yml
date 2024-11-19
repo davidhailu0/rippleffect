@@ -30,6 +30,11 @@ build_project:
     - npm install
     - npm run build
 
+.cloudflare_deploy_script: &cloudflare_deploy_script
+  image: node:18-alpine
+  script:
+    - npm install wrangler
+    - npx wrangler pages publish out
 
 .deploy_script: &deploy_script
   # This includes kamal, dotenv, docker
@@ -57,6 +62,17 @@ build_project:
     - dotenv kamal deploy 
     - echo 'Kamal deploy done.'
     - *notification_script
+
+cloudflare_deploy:
+  <<: *cloudflare_deploy_script
+  stage: deploy
+  environment: production
+  variables:
+    CLOUDFLARE_API_TOKEN: ${CF_API_TOKEN}
+    CLOUDFLARE_ACCOUNT_ID: ${CF_ACCOUNT_ID}
+  only:
+    - main
+  when: manual
 
 production_deploy:
   <<: *deploy_script
