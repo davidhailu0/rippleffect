@@ -40,7 +40,7 @@ export default function SubNavbar({ ref_code }: { ref_code?: string }) {
     { href: "/step-2", label: "Step 2" },
     { href: "/step-3", label: "Step 3" },
     { href: "/my-bookings", label: "My Bookings" },
-    { href: "/training", label: "Training" },
+    { href: "/trainings", label: "Trainings" },
     { href: "/leads", label: "Leads" },
     { href: "/account", label: "Account" },
   ];

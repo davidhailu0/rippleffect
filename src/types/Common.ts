@@ -16,4 +16,5 @@ export type Video = {
   title: string;
   description: string | null;
   tag_list: string[];
+  chapter_id?: number;
 };
