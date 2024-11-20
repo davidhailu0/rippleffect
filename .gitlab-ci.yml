@@ -36,6 +36,8 @@ build_project:
     # Preview cloudflare pages before deploy on main
     - npm install
     - npm run build
+    - mv out build
+    - apk add curl
     - |
       DEPLOY_RESPONSE=$(curl -X POST \
         "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${CF_PROJECT_NAME}/deployments" \
@@ -56,6 +58,8 @@ build_project:
   script:
     - npm install
     - npm run build
+    - apk add curl
+    - mv out build
     - |
       curl -X POST \
         "https://api.cloudflare.com/client/v4/accounts/${CF_ACCOUNT_ID}/pages/projects/${CF_PROJECT_NAME}/deployments" \
@@ -97,7 +101,7 @@ cloudflare_preview_deploy:
   variables:
     CLOUDFLARE_API_TOKEN: ${CF_API_TOKEN}
     CLOUDFLARE_ACCOUNT_ID: ${CF_ACCOUNT_ID}
-  only:
+  except:
     - main
 
 cloudflare_deploy:
