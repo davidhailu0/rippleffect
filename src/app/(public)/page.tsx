@@ -10,7 +10,7 @@ export default function Home() {
   const Linkedin = icons["Linkedin"];
   const Instagram = icons["Instagram"];
   return (
-    <main className="w-full min-h-screen flex flex-col py-12">
+    <main className="w-full min-h-screen flex flex-col pt-12">
 
       <motion.div
         initial={{ opacity: 0, x: -50 }}
@@ -76,7 +76,7 @@ export default function Home() {
       </motion.div>
 
       {/* Introduction Section */}
-      <div className="bg-gray-950 px-10 md:px-36 pb-10">
+      <div className="bg-gray-950 px-10 md:px-36 pb-10 z-50">
         <section className="container mt-12 ">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-white">Welcome!</h2>
