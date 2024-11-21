@@ -73,7 +73,7 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {isLogged ? (
             <div className="hidden items-center space-x-4 md:flex">
-              {bookings && bookings.length > 0 && (
+              {bookings && filterAndSortBookingDate(bookings).length > 0 && (
                 <Link
                   href="/my-bookings"
                   className="flex items-center space-x-1 text-sm text-yellow-400"
@@ -81,7 +81,7 @@ export default function Navbar() {
                   <Calendar className="h-4 w-4" />
                   <span className="hidden lg:inline">
                     Upcoming Booking:{" "}
-                    {formatFriendlyDate(filterAndSortBookingDate(bookings)[0].start_date)}
+                    {formatFriendlyDate(filterAndSortBookingDate(bookings)[0]?.start_date)}
                   </span>
                   <span className="lg:hidden">Upcoming Bookings</span>
                 </Link>
@@ -145,7 +145,7 @@ export default function Navbar() {
                     >
                       My Leads
                     </Link>
-                    {bookings && bookings.length > 0 && (
+                    {bookings && filterAndSortBookingDate(bookings).length > 0 && (
                       <Link
                         href="/my-bookings"
                         className="flex items-center space-x-2 text-sm text-yellow-400"
@@ -153,7 +153,7 @@ export default function Navbar() {
                       >
                         <Calendar className="h-4 w-4" />
                         <span>
-                          Next: {formatFriendlyDate(filterAndSortBookingDate(bookings)[0].start_date)}
+                          Next: {formatFriendlyDate(filterAndSortBookingDate(bookings)[0]?.start_date)}
                         </span>
                       </Link>
                     )}

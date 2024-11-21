@@ -143,7 +143,7 @@ export default VideoPlayer;
 
 function VideoPlayerSkeleton() {
   return (
-    <div className="relative shadow-custom-shadow w-full aspect-w-16 aspect-h-9 bg-black flex items-center justify-center">
+    <div className="relative shadow-custom-shadow w-10/12 h-[500px] aspect-w-16 aspect-h-9 bg-black flex items-center justify-center">
       <ClipLoader color="#ffffff" size={50} />
     </div>
   );

@@ -18,7 +18,7 @@ export default function LeadsTable() {
     const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({})
 
     const toggleRow = (id: string) => {
-        setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }))
+        setExpandedRows(prev => ({ [id]: !prev[id] }))
     }
 
     if (isLoading) return <LeadsSkeleton />
@@ -56,7 +56,7 @@ export default function LeadsTable() {
                                         <TableRow>
                                             <TableCell colSpan={7}>
                                                 <div className="p-4 bg-gray-50">
-                                                    <p><strong>ID:</strong> {lead.id}</p>
+                                                    <p><strong>Name:</strong> {lead.first_name ? lead.first_name + " " + lead.last_name : ""}</p>
                                                     <p><strong>Email:</strong> {lead.email_address}</p>
                                                 </div>
                                             </TableCell>
