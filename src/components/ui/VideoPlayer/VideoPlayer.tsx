@@ -48,7 +48,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
       refetchInterval: isPlaying && 5000,
     });
 
-  const { mutate: mutateUpdateVideoProgress, isPending } = useMutation({
+  const { mutate: mutateUpdateVideoProgress } = useMutation({
     mutationFn: updateVideoProgress,
     onSuccess: (lead: Lead) => {
       dispatch(setLead(lead));
@@ -87,105 +87,63 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     }
   };
 
-  const handleResume = (time: number) => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = time; // Set the player's current time
-      videoRef.current.play(); // Start playback
-    }
-  };
-
-  const handlePauseOrVisibilityChange = () => {
-    const videoElement = videoRef.current;
-    if (videoElement && videoElement.paused) {
-      // updateVideoStatus(lastTime30SecRef.current, videoElement.currentTime);
-    }
-  };
-
-  const handleSeeked = () => {
-    const videoElement = videoRef.current;
-    if (videoElement) {
-      lastTime30SecRef.current = videoElement.currentTime;
-      seekingRef.current = false;
-    }
-  };
-
-  const handleSeeking = () => {
-    seekingRef.current = true;
-  };
-
   useEffect(() => {
     const videoElement = videoRef.current;
-    const handleVisibilityChange = () =>
-      document.visibilityState === "hidden" && handlePauseOrVisibilityChange();
 
     if (videoElement) {
-      videoElement.addEventListener("pause", handlePauseOrVisibilityChange);
+      videoElement.addEventListener("pause", handleTimeUpdate);
       videoElement.addEventListener("timeupdate", handleTimeUpdate);
-      videoElement.addEventListener("seeked", handleSeeked);
-      videoElement.addEventListener("seeking", handleSeeking);
     }
-
-    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
       if (videoElement) {
-        videoElement.removeEventListener(
-          "pause",
-          handlePauseOrVisibilityChange
-        );
+        videoElement.removeEventListener("pause", handleTimeUpdate);
         videoElement.removeEventListener("timeupdate", handleTimeUpdate);
       }
-      document.removeEventListener("visibilgitychange", handleVisibilityChange);
     };
   }, [videoID, playBackId, videoProgress]);
-
-  useEffect(() => {
-    if (
-      isVideoProgressSuccess &&
-      videoProgress?.time_interval !== null &&
-      videoProgress.progress < 99
-    ) {
-      if (videoRef.current) {
-        videoRef.current.currentTime = videoProgress.time_interval[0][1]; // Set the player's current time to the last time the video was stopped
-      }
-    }
-  }, [isVideoProgressSuccess]);
 
   if (!playBackId) return <VideoPlayerSkeleton />;
 
   return (
     <>
-      <MuxPlayer
-        ref={videoRef as any}
-        className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative ${className}`}
-        playbackId={playBackId ?? "not-found"}
-        streamType="on-demand"
-        playbackRate={1.0}
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-        preload="auto"
-        disableTracking={true}
-        startTime={
-          videoProgress && videoProgress?.time_interval
-            ? videoProgress.time_interval[0][1]
-            : 0.1
-        }
-      />
+      <div className={`relative w-10/12 shadow-custom-shadow ${className}`}>
+        <MuxPlayer
+          ref={videoRef as any}
+          playbackId={playBackId ?? "not-found"}
+          streamType="on-demand"
+          playbackRate={1.0}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          preload="auto"
+          disableTracking={true}
+          startTime={
+            videoProgress && videoProgress?.time_interval
+              ? videoProgress.time_interval[0][1]
+              : 0.1
+          }
+          style={{
+            width: "100%",
+            height: "auto",
+            aspectRatio: "16/9", // Ensures the video maintains its intrinsic aspect ratio
+          }}
+        />
+      </div>
       <VideoProgress
         isPlaying={isPlaying}
         timeInterval={videoProgress?.time_interval}
         progress={videoProgress?.progress}
-        onResume={handleResume} // Pass the callback to VideoProgress
         currentTime={currentTime}
       />
     </>
   );
 };
+
 export default VideoPlayer;
 
 function VideoPlayerSkeleton() {
   return (
-    <div className="relative shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden bg-black flex items-center justify-center">
+    <div className="relative shadow-custom-shadow w-full aspect-w-16 aspect-h-9 bg-black flex items-center justify-center">
       <ClipLoader color="#ffffff" size={50} />
     </div>
   );

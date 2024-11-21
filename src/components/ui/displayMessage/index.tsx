@@ -16,7 +16,7 @@ const DisplayMessage = ({
   callToActionHref,
 }: Props) => {
   return (
-    <div className="flex flex-col items-center pt-10  justify-center text-center">
+    <div className="flex flex-col items-center pt-10 min-h-screen justify-center text-center">
       <h1 className="text-3xl md:text-5xl font-bold text-white mb-4">
         {title}
       </h1>

@@ -17,6 +17,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import Logo from "../../../public/logo_white.svg"
 import Image from "next/image"
 
 export default function Navbar() {
@@ -50,9 +51,9 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center space-x-4 md:space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/logo_white.webp" height={40} width={40} alt="Nate Wells Logo" className="h-10 w-10" />
+            <Image src={'/logo_white.svg'} height={40} width={40} alt="Nate Wells Logo" className="h-10 w-10" />
             <Image
-              src="/NW.webp"
+              src="/NW.svg"
               alt="Nate Wells"
               width={100}
               height={40}

@@ -15,19 +15,17 @@ export default function Content({
   countryFlagImg: string;
   bestStrategyVideo: Video | undefined;
 }) {
-  const [videoWatched, setVideoWatched] = useState<number>(0);
   const router = useRouter();
 
-  useEffect(() => {
-    if (localStorage.getItem("step-3-watched") === "true") {
-      setVideoWatched(4);
-    }
-  }, []);
-
   const videos = useAppSelector((state) => state.user.videos);
+  const lead = useAppSelector((state) => state.auth.lead);
 
   const step_3_intro = videos?.find(
     ({ tag_list }) => tag_list.includes("step3") && tag_list.includes("intro")
+  );
+
+  const step_3_product = videos?.find(
+    ({ tag_list }) => tag_list.includes("step3") && tag_list.includes("products")
   );
   const step_3_plan = videos?.find(
     ({ tag_list }) => tag_list.includes("step3") && tag_list.includes("plan")
@@ -72,9 +70,9 @@ export default function Content({
           2. The Best Product I have found so far
         </p>
         <VideoPlayer
-          videoID={step_3_plan?.id}
+          videoID={step_3_product?.id}
           tag="step3"
-          playBackId={step_3_plan?.mux_playback_id}
+          playBackId={step_3_product?.mux_playback_id}
         />
         <p className="text-2xl font-bold text-white my-10">
           3. The Perfect Business Model
@@ -94,8 +92,8 @@ export default function Content({
         />
         <p
           className={clsx({
-            "text-md text-gray-200 mb-5": videoWatched !== 4,
-            hidden: videoWatched === 4,
+            "text-md text-gray-200 mb-5": lead?.tag_list.includes("step3_watched"),
+            hidden: !lead?.tag_list.includes("step3_watched"),
           })}
         >
           Make sure to watch all videos before you call, if not you will not be
@@ -103,8 +101,8 @@ export default function Content({
         </p>
         <div
           className={clsx({
-            "flex justify-between w-full md:w-1/2": videoWatched === 4,
-            hidden: videoWatched !== 4,
+            "flex justify-between w-full md:w-1/2": lead?.tag_list.includes("step3_watched"),
+            hidden: !lead?.tag_list.includes("step3_watched"),
           })}
         >
           <Button title="f Join our Facebook Group" type="button" />

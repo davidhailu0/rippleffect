@@ -31,13 +31,15 @@ export default function SignUp() {
       mutationFn: createLead,
       onSuccess: (data: { frontend_token: string }) => {
         sessionStorage.setItem("frontend_token", data.frontend_token);
+        sessionStorage.setItem("email", email);
         router.push("/confirm-account");
       },
     });
 
   const createAccount = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const leadData = ref_code ? { email, referral_code: ref_code } : { email };
+    const ref_code_str = localStorage.getItem("ref_code")
+    const leadData = Boolean(ref_code) || Boolean(ref_code_str) ? { email, referral_code: ref_code || ref_code_str || "" } : { email };
     const data = { lead: leadData };
     mutateCreateAccount(data);
   };
@@ -50,7 +52,7 @@ export default function SignUp() {
             Sign Up
           </CardTitle>
           <CardDescription className="text-center">
-            Enter your email to create an account or sign in
+            Enter your email to create an account
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -81,16 +83,6 @@ export default function SignUp() {
             </div>
           </form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-          </div>
-          <p className="text-center text-sm text-gray-600">
-            Already have an Account? <Link href="/sign-in" className="text-pink-500 hover:underline">Sign In</Link>
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );
