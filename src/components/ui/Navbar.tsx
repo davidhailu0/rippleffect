@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Calendar, Menu } from "lucide-react";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { fetchBookings } from "@/services/bookingServices";
-import { formatFriendlyDate } from "@/util/UtilformatDateFriendly";
+import { filterAndSortBookingDate, formatFriendlyDate } from "@/util/UtilformatDateFriendly";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,7 +17,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-import Logo from "../../../public/logo_white.svg"
 import Image from "next/image"
 
 export default function Navbar() {
@@ -82,7 +81,7 @@ export default function Navbar() {
                   <Calendar className="h-4 w-4" />
                   <span className="hidden lg:inline">
                     Upcoming Booking:{" "}
-                    {formatFriendlyDate(bookings[0]?.start_date)}
+                    {formatFriendlyDate(filterAndSortBookingDate(bookings)[0].start_date)}
                   </span>
                   <span className="lg:hidden">Upcoming Bookings</span>
                 </Link>
@@ -154,7 +153,7 @@ export default function Navbar() {
                       >
                         <Calendar className="h-4 w-4" />
                         <span>
-                          Next: {formatFriendlyDate(bookings[0]?.start_date)}
+                          Next: {formatFriendlyDate(filterAndSortBookingDate(bookings)[0].start_date)}
                         </span>
                       </Link>
                     )}
@@ -183,3 +182,6 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
+

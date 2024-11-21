@@ -6,18 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatFriendlyDate } from '@/util/UtilformatDateFriendly'
+import { filterAndSortBookingDate, formatFriendlyDate } from '@/util/UtilformatDateFriendly'
 import { fetchBookings } from '@/services/bookingServices'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-
-interface Booking {
-    id: string
-    name: string
-    start_date: string
-    end_date: string
-    status: string
-    cancel_reason?: string
-}
 
 export default function BookingsPage() {
     const { data: bookings, isLoading, error } = useQuery<Booking[], Error>({
@@ -56,9 +47,9 @@ export default function BookingsPage() {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {bookings?.map((booking) => (
+                            {filterAndSortBookingDate(bookings!).map((booking) => (
                                 <React.Fragment key={booking.id}>
-                                    <TableRow className="cursor-pointer" onClick={() => toggleRow(booking.id)}>
+                                    <TableRow className="cursor-pointer" onClick={() => toggleRow(booking.id.toString())}>
                                         <TableCell>
                                             {expandedRows[booking.id] ? (
                                                 <ChevronUp className="h-4 w-4" />
