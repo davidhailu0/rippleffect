@@ -47,7 +47,7 @@ const App: React.FC = () => {
         </div>
         <div className="flex justify-center flex-1 text-center my-10 w-full gap-10">
           {isLogged === false ? (
-            <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-10">
               <Link href={"/sign-up"}>
                 <Button className="px-6 py-3 h-12 bg-pink-400 text-white hover:bg-pink-600 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3">
                   Create Account
@@ -58,7 +58,7 @@ const App: React.FC = () => {
                   Log In
                 </Button>
               </Link>
-            </>
+            </div>
           ) : (
             <Link href={"/leads"}>
               <Button className="px-6 py-3 h-12 bg-pink-400 text-white hover:bg-pink-600 transitionh-12 rounded-[50px] shadow-xl font-bold mt-8 col-span-2 w-[260px] mx-auto text-center box-border pt-3">
