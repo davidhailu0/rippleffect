@@ -30,6 +30,23 @@ build_project:
     - npm install
     - npm run build
 
+.cloudflare_deploy_script: &cloudflare_deploy_script
+  image: node:18-alpine
+  script:
+    # Install curl and wrangler
+    - apk add curl
+    - npm install -g wrangler
+
+    # Deploy with wrangler and extract url
+    - PREVIEW_URL=$(wrangler pages deploy out/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$CI_COMMIT_REF_NAME | grep -o 'https://.*\.pages\.dev')
+
+    # Post preview URL to mattermost
+    - |
+      curl -X POST -H 'Content-Type: application/json' \
+      "${MATTERMOST_WEBHOOK_URL}" \
+      -d "{
+          \"text\": \"🔍 Preview deployment ready for ${CI_COMMIT_REF_NAME}:\n${PREVIEW_URL}\"
+      }"
 
 .deploy_script: &deploy_script
   # This includes kamal, dotenv, docker
@@ -57,6 +74,12 @@ build_project:
     - dotenv kamal deploy 
     - echo 'Kamal deploy done.'
     - *notification_script
+
+cloudflare_deploy:
+  <<: *cloudflare_deploy_script
+  stage: deploy
+  environment: production
+  when: manual
 
 production_deploy:
   <<: *deploy_script
