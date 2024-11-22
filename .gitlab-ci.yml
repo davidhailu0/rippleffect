@@ -32,6 +32,7 @@ build_project:
   artifacts:
     paths:
       - build/
+      
 .cloudflare_deploy_script: &cloudflare_deploy_script
   image: node:18-alpine
   script:
@@ -40,7 +41,7 @@ build_project:
     - npm install -g wrangler
 
     # Deploy with wrangler and extract url
-    - PREVIEW_URL=$(wrangler pages deploy out/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$CI_COMMIT_REF_NAME | grep -o 'https://.*\.pages\.dev')
+    - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$CI_COMMIT_REF_NAME | grep -o 'https://.*\.pages\.dev')
 
     # Post preview URL to mattermost
     - |
