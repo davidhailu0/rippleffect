@@ -10,73 +10,74 @@ export default function Home() {
   const Linkedin = icons["Linkedin"];
   const Instagram = icons["Instagram"];
   return (
-    <main className="w-full min-h-dvh flex flex-col py-12 px-10 md:px-36">
-      <div className="max-w-[1440px] mx-auto">
-        <motion.div
-          initial={{ opacity: 0, x: -50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex  flex-col lg:flex-row items-center gap-20 md:gap-36"
-        >
-          {/* Hero Content */}
+    <main className="w-full min-h-screen flex flex-col pt-12">
 
-          <div className="lg:w-1/2 space-y-8">
-            {/* Social Icons */}
-            <div className="flex gap-4">
-              <a
-                href="https://www.facebook.com/natewells.uk"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center hover:bg-pink-600 transition-colors"
-              >
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.linkedin.com/in/nate-wells/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a
-                href="https://www.instagram.com/natewells.uk"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 via-red-500 to-yellow-500 text-white flex items-center justify-center hover:opacity-90 transition-opacity"
-              >
-                <Instagram className="w-5 h-5" />
-              </a>
-            </div>
+      <motion.div
+        initial={{ opacity: 0, x: -50 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex justify-center flex-col lg:flex-row items-center gap-20 md:gap-36 px-10 md:px-36"
+      >
+        {/* Hero Content */}
 
-            <div className="space-y-4">
-              <h1 className="text-5xl lg:text-6xl font-bold text-white">
-                I am Nate
-              </h1>
-              <p className="text-xl text-gray-300">
-                Business coach and network marketing professional with
-                <br />a passion for helping others achieve success
-              </p>
-            </div>
+        <div className="lg:w-1/2 space-y-8">
+          {/* Social Icons */}
+          <div className="flex gap-4">
+            <a
+              href="https://www.facebook.com/natewells.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-pink-500 text-white flex items-center justify-center hover:bg-pink-600 transition-colors"
+            >
+              <Facebook className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/nate-wells/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 transition-colors"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.instagram.com/natewells.uk"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-10 h-10 rounded-full bg-gradient-to-r from-pink-400 via-red-500 to-yellow-500 text-white flex items-center justify-center hover:opacity-90 transition-opacity"
+            >
+              <Instagram className="w-5 h-5" />
+            </a>
           </div>
 
-          {/* Hero Image */}
-          <div className="lg:w-1/2 relative h-[445px] lg:h-[629px] w-full group flex flex-col items-center">
-            {/* <div className="absolute h-full text-center inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 z-10 rounded-lg"></div> */}
-            <div className="hero-gradient absolute top-[80px] size-[300px] blur-[150px]"></div>
-            <Image
-              src="/natewells.webp"
-              alt="Professional portrait of Nate Wells"
-              height={500}
-              width={400}
-              className="object-cover z-40 rounded-lg"
-              priority
-            />
+          <div className="space-y-4">
+            <h1 className="text-5xl lg:text-6xl font-bold text-white">
+              I am Nate
+            </h1>
+            <p className="text-xl text-gray-300">
+              Business coach and network marketing professional with
+              <br />a passion for helping others achieve success
+            </p>
           </div>
-        </motion.div>
+        </div>
 
-        {/* Introduction Section */}
-        <section className="container mt-12">
+        {/* Hero Image */}
+        <div className="lg:w-1/2 relative h-[445px] lg:h-[629px] w-full group flex flex-col items-center">
+          {/* <div className="absolute h-full text-center inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 z-10 rounded-lg"></div> */}
+          <div className="hero-gradient absolute top-[80px] size-[300px] blur-[150px]"></div>
+          <Image
+            src="/natewells.webp"
+            alt="Professional portrait of Nate Wells"
+            height={500}
+            width={400}
+            className="object-cover z-40 rounded-lg"
+            priority
+          />
+        </div>
+      </motion.div>
+
+      {/* Introduction Section */}
+      <div className="bg-gray-950 px-10 md:px-36 pb-10 z-50">
+        <section className="container mt-12 ">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-white">Welcome!</h2>
             <p className="text-lg text-white mt-4 leading-relaxed font-light">

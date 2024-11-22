@@ -29,12 +29,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   if (isLogged === true) {
     return (
-      <>
+      <div className="md:pb-10">
         {/* FIXME: remove this later */}
         <SubNavbar />
         <NotificationBanner />
         {children}
-      </>
+      </div>
     );
   }
 };

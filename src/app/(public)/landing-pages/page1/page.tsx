@@ -3,6 +3,7 @@ import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const App: React.FC = () => {
   const videos = useAppSelector((state) => state.user.videos);
@@ -12,8 +13,12 @@ const App: React.FC = () => {
   const searchParams = useSearchParams();
   const ref_code = searchParams.get("ref_code");
 
+  useEffect(() => {
+    localStorage.setItem("ref_code", ref_code || "")
+  }, [])
+
   return (
-    <div className="flex flex-col items-center h-auto overflow-hidden bg-gradient-radial from-gray-900 to-black pt-10">
+    <div className="flex flex-col items-center min-h-screen overflow-hidden bg-gradient-radial from-gray-900 to-black pt-10">
       <div className="flex flex-col md:flex-row w-full items-center overflow-auto justify-between md:justify-center md:space-x-8 space-y-8 md:space-y-0 p-8">
         {/* Left Side: Text Content and Button */}
         <div className="flex flex-col items-center gap-4 justify-center h-full md:w-1/3 text-center md:text-left">
@@ -37,7 +42,7 @@ const App: React.FC = () => {
           <VideoPlayer
             videoID={landing_page?.id}
             playBackId={landing_page?.mux_playback_id}
-            className="md:h-[460px]"
+            className="mb-7"
           />
         </div>
       </div>

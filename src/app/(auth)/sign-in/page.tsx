@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { requestLogin, verifyLoginTokenRequest } from "@/services/authService";
+import { createLead, requestLogin, verifyLoginTokenRequest } from "@/services/authService";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,20 +51,21 @@ export default function SignUp() {
     }
   }, [data, error, dispatch, router]);
 
-  const { mutate: mutateSignin, isPending: isPendingSignIn } = useMutation({
-    mutationFn: requestLogin,
-    onSuccess: (data) => {
-      if (data.message) {
-        setUserMessage("Check Your Email for Login Link. The login link only works for 15 minutes.");
-      } else if (data.error) {
-        toast.error(data.error);
-      }
-    },
-  });
+  const { mutate: mutateCreateAccount, isPending: isPendingSignIn } =
+    useMutation({
+      mutationFn: createLead,
+      onSuccess: (data: { frontend_token: string }) => {
+        sessionStorage.setItem("frontend_token", data.frontend_token);
+        sessionStorage.setItem("email", email);
+        router.push("/confirm-account");
+      },
+    });
 
   const handleSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    mutateSignin({ email });
+    const leadData = { email };
+    const data = { lead: leadData };
+    mutateCreateAccount(data);
   };
 
   if (isLoading) {
@@ -112,16 +113,6 @@ export default function SignUp() {
             </form>
           </CardContent>
         )}
-        <CardFooter className="flex flex-col space-y-4">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-          </div>
-          <p className="text-center text-sm text-gray-600">
-            Don't have an account? <Link href="/sign-up" className="text-pink-500 hover:underline">Create Account</Link>
-          </p>
-        </CardFooter>
 
       </Card>
     </div>

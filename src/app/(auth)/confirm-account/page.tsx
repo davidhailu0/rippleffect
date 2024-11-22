@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { useDispatch } from "react-redux";
@@ -18,12 +18,12 @@ import {
 import { LoaderCircle } from "lucide-react";
 import CodeInput from "@/components/ui/CodeInput";
 import { Lead } from "@/types/Lead";
-import { useCookies } from "react-cookie";
 import { axiosInstance } from "@/config/axiosConfig";
 
 export default function ConfirmAccount() {
   const [confirmationCode, setConfirmationCode] = useState<string>("");
   const [frontendToken, setFrontendToken] = useState<string>("");
+  const email = useRef("")
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -56,6 +56,10 @@ export default function ConfirmAccount() {
 
   useEffect(() => {
     const token = sessionStorage.getItem("frontend_token");
+    const emailStr = sessionStorage.getItem("email");
+    if (email) {
+      email.current = emailStr!
+    }
     if (token) {
       setFrontendToken(token);
     } else {
@@ -71,7 +75,7 @@ export default function ConfirmAccount() {
             Confirm Your Account
           </CardTitle>
           <CardDescription className="text-center">
-            Please enter the 6-digit confirmation code sent to your email
+            Please enter the 6-digit confirmation code sent to {email.current}
           </CardDescription>
           <CardTitle className="text-2xl font-bold text-center">
             {frontendToken}

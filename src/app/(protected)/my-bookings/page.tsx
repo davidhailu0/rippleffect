@@ -6,18 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatFriendlyDate } from '@/util/UtilformatDateFriendly'
+import { filterAndSortBookingDate, formatFriendlyDate } from '@/util/UtilformatDateFriendly'
 import { fetchBookings } from '@/services/bookingServices'
 import { ChevronDown, ChevronUp } from 'lucide-react'
-
-interface Booking {
-    id: string
-    name: string
-    start_date: string
-    end_date: string
-    status: string
-    cancel_reason?: string
-}
 
 export default function BookingsPage() {
     const { data: bookings, isLoading, error } = useQuery<Booking[], Error>({
@@ -28,7 +19,7 @@ export default function BookingsPage() {
     const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({})
 
     const toggleRow = (id: string) => {
-        setExpandedRows(prev => ({ ...prev, [id]: !prev[id] }))
+        setExpandedRows(prev => ({ [id]: !prev[id] }))
     }
 
     if (isLoading) {
@@ -52,13 +43,13 @@ export default function BookingsPage() {
                                 <TableHead className="hidden md:table-cell">Start Date</TableHead>
                                 <TableHead className="hidden md:table-cell">End Date</TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead className="hidden lg:table-cell">Cancel Reason</TableHead>
+                                {/* <TableHead className="hidden lg:table-cell">Cancel Reason</TableHead> */}
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {bookings?.map((booking) => (
+                            {filterAndSortBookingDate(bookings!).map((booking) => (
                                 <React.Fragment key={booking.id}>
-                                    <TableRow className="cursor-pointer" onClick={() => toggleRow(booking.id)}>
+                                    <TableRow className="cursor-pointer" onClick={() => toggleRow(booking.id.toString())}>
                                         <TableCell>
                                             {expandedRows[booking.id] ? (
                                                 <ChevronUp className="h-4 w-4" />
@@ -72,16 +63,14 @@ export default function BookingsPage() {
                                         <TableCell>
                                             <Badge>{booking.status}</Badge>
                                         </TableCell>
-                                        <TableCell className="hidden lg:table-cell">{booking.cancel_reason || 'N/A'}</TableCell>
                                     </TableRow>
                                     {expandedRows[booking.id] && (
                                         <TableRow>
                                             <TableCell colSpan={6}>
                                                 <div className="p-4 bg-gray-50">
-                                                    <p><strong>ID:</strong> {booking.id}</p>
                                                     <p><strong>Start Date:</strong> {formatFriendlyDate(booking.start_date)}</p>
                                                     <p><strong>End Date:</strong> {formatFriendlyDate(booking.end_date)}</p>
-                                                    <p><strong>Cancel Reason:</strong> {booking.cancel_reason || 'N/A'}</p>
+                                                    {/* <p><strong>Cancel Reason:</strong> {booking.cancel_reason || 'N/A'}</p> */}
                                                 </div>
                                             </TableCell>
                                         </TableRow>

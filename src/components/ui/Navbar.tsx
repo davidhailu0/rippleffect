@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Calendar, Menu } from "lucide-react";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { fetchBookings } from "@/services/bookingServices";
-import { formatFriendlyDate } from "@/util/UtilformatDateFriendly";
+import { filterAndSortBookingDate, formatFriendlyDate } from "@/util/UtilformatDateFriendly";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,9 +50,9 @@ export default function Navbar() {
       <div className="mx-auto flex max-w-7xl items-center justify-between">
         <div className="flex items-center space-x-4 md:space-x-8">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src="/logo_white.webp" height={40} width={40} alt="Nate Wells Logo" className="h-10 w-10" />
+            <Image src={'/logo_white.svg'} height={40} width={40} alt="Nate Wells Logo" className="h-10 w-10" />
             <Image
-              src="/NW.webp"
+              src="/NW.svg"
               alt="Nate Wells"
               width={100}
               height={40}
@@ -73,7 +73,7 @@ export default function Navbar() {
         <div className="flex items-center space-x-4">
           {isLogged ? (
             <div className="hidden items-center space-x-4 md:flex">
-              {bookings && bookings.length > 0 && (
+              {bookings && filterAndSortBookingDate(bookings).length > 0 && (
                 <Link
                   href="/my-bookings"
                   className="flex items-center space-x-1 text-sm text-yellow-400"
@@ -81,7 +81,7 @@ export default function Navbar() {
                   <Calendar className="h-4 w-4" />
                   <span className="hidden lg:inline">
                     Upcoming Booking:{" "}
-                    {formatFriendlyDate(bookings[0]?.start_date)}
+                    {formatFriendlyDate(filterAndSortBookingDate(bookings)[0]?.start_date)}
                   </span>
                   <span className="lg:hidden">Upcoming Bookings</span>
                 </Link>
@@ -145,7 +145,7 @@ export default function Navbar() {
                     >
                       My Leads
                     </Link>
-                    {bookings && bookings.length > 0 && (
+                    {bookings && filterAndSortBookingDate(bookings).length > 0 && (
                       <Link
                         href="/my-bookings"
                         className="flex items-center space-x-2 text-sm text-yellow-400"
@@ -153,7 +153,7 @@ export default function Navbar() {
                       >
                         <Calendar className="h-4 w-4" />
                         <span>
-                          Next: {formatFriendlyDate(bookings[0]?.start_date)}
+                          Next: {formatFriendlyDate(filterAndSortBookingDate(bookings)[0]?.start_date)}
                         </span>
                       </Link>
                     )}
@@ -182,3 +182,6 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
+

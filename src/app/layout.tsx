@@ -43,7 +43,7 @@ export default function RootLayout({
             <Toaster position="top-center" duration={4000} richColors />
             <FetchVideos />
             <CheckAuth />
-            <div className="bg-contain min-h-dvh bg-[#24263b] pt-0 md:pb-20 mx-auto relative scroll-smooth box-border text-white flex flex-col">
+            <div className="bg-contain min-h-dvh bg-[#24263b] pt-0 mx-auto relative scroll-smooth box-border text-white flex flex-col">
               <Navbar />
               {children}
             </div>
