@@ -29,7 +29,9 @@ build_project:
   script:
     - npm install
     - npm run build
-
+  artifacts:
+    paths:
+      - build/
 .cloudflare_deploy_script: &cloudflare_deploy_script
   image: node:18-alpine
   script:
