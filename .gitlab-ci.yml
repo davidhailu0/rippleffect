@@ -28,9 +28,10 @@ build_project:
   image: node:18-alpine
   script:
     - export NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN
-    - echo $NEXT_PUBLIC_APP_DOMAIN
+    - export NEXT_PUBLIC_APP_ORIGIN=$NEXT_PUBLIC_APP_ORIGIN
+    - echo $NEXT_PUBLIC_APP_DOMAIN && echo NEXT_PUBLIC_APP_ORIGIN
     - npm install
-    - NEXT_PUBLIC_APP_DOMAIN=${NEXT_PUBLIC_APP_DOMAIN} npm run build
+    - npm run build
   artifacts:
     paths:
       - build/
