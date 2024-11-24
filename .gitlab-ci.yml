@@ -30,7 +30,7 @@ build_project:
     - export NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN
     - echo $NEXT_PUBLIC_APP_DOMAIN
     - npm install
-    - npm run build
+    - NEXT_PUBLIC_APP_DOMAIN=${NEXT_PUBLIC_APP_DOMAIN} npm run build
   artifacts:
     paths:
       - build/
