@@ -5,7 +5,8 @@ default:
 
 stages:
   - build
-  - deploy
+  - deploy-preview
+  - deploy-production
 
 variables:
   DEPLOY_NOTIFICATION_ENDPOINT: "https://n0l5yvafvi.execute-api.us-east-1.amazonaws.com/default/deploy-notifications"
@@ -108,7 +109,7 @@ cloudflare_deploy_production:
 
 production_deploy:
   <<: *deploy_script
-  stage: deploy
+  stage: deploy-production
   environment: production
   variables:
     REMOTE_HOST: 49.13.236.191
