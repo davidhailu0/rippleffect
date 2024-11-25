@@ -30,7 +30,7 @@ build_project:
   script:
     - export NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN
     - export NEXT_PUBLIC_APP_ORIGIN=$NEXT_PUBLIC_APP_ORIGIN
-    - echo $NEXT_PUBLIC_APP_DOMAIN && echo NEXT_PUBLIC_APP_ORIGIN
+    - echo $NEXT_PUBLIC_APP_DOMAIN && echo $NEXT_PUBLIC_APP_ORIGIN
     - npm install
     - npm run build
   artifacts:
@@ -61,6 +61,15 @@ build_project:
 
     # Deploy with wrangler and extract url
     - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$BRANCH_NAME | grep -o 'https://.*\.pages\.dev')
+
+    # Post preview URL to mattermost
+    - | 
+      curl -X POST -H 'Content-Type: application/json' \
+      "${MATTERMOST_WEBHOOK_URL}" \
+      -d "{
+          \"text\": \"🔍 Preview deployment ready for ${BRANCH_NAME}:\n${PREVIEW_URL}\"
+      }"
+      
 
 .deploy_script: &deploy_script
   # This includes kamal, dotenv, docker
