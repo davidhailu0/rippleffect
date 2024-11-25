@@ -28,8 +28,7 @@ build_project:
   stage: build
   image: node:18-alpine
   script:
-    - export NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN
-    - export NEXT_PUBLIC_APP_ORIGIN=$NEXT_PUBLIC_APP_ORIGIN
+    - export NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN && export NEXT_PUBLIC_APP_ORIGIN=$NEXT_PUBLIC_APP_ORIGIN
     - echo $NEXT_PUBLIC_APP_DOMAIN && echo $NEXT_PUBLIC_APP_ORIGIN
     - npm install
     - npm run build
@@ -60,7 +59,7 @@ build_project:
       fi    
 
     # Deploy with wrangler and extract url
-    - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$BRANCH_NAME | grep -o 'https://.*\.pages\.dev')
+    - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$BRANCH_NAME | grep -o 'https://[0-9a-f]\{8\}.*\.pages\.dev')
 
     # Post preview URL to mattermost
     - | 
