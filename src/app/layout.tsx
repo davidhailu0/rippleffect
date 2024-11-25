@@ -8,6 +8,7 @@ import ReactQueryProvider from "@/lib/reactQuery/ReactQueryProvider";
 import FetchVideos from "@/components/fetch-videos";
 import "./globals.css";
 import CheckAuth from "@/components/check-auth";
+import { PreviewBanner } from "@/components/ui/preview-banner";
 
 export const roboto = Roboto({
   subsets: ["latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
               <Navbar />
               {children}
             </div>
+            <PreviewBanner />
             <NextTopLoader showSpinner={false} color="#fff" />
           </ReactQueryProvider>
         </ReduxStoreProvider>
