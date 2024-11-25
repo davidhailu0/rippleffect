@@ -5,7 +5,8 @@ default:
 
 stages:
   - build
-  - deploy
+  - deploy-preview
+  - deploy-production
 
 variables:
   DEPLOY_NOTIFICATION_ENDPOINT: "https://n0l5yvafvi.execute-api.us-east-1.amazonaws.com/default/deploy-notifications"
@@ -35,6 +36,9 @@ build_project:
   artifacts:
     paths:
       - build/
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_COMMIT_REF_NAME
       
 .cloudflare_deploy_script: &cloudflare_deploy_script
   image: node:18-alpine
@@ -43,16 +47,20 @@ build_project:
     - apk add curl
     - npm install -g wrangler
 
-    # Deploy with wrangler and extract url
-    - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$CI_COMMIT_REF_NAME | grep -o 'https://.*\.pages\.dev')
-
-    # Post preview URL to mattermost
+    # Set branch name based on context
     - |
-      curl -X POST -H 'Content-Type: application/json' \
-      "${MATTERMOST_WEBHOOK_URL}" \
-      -d "{
-          \"text\": \"🔍 Preview deployment ready for ${CI_COMMIT_REF_NAME}:\n${PREVIEW_URL}\"
-      }"
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        BRANCH_NAME=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
+      elif [ "$CI_COMMIT_BRANCH" = "main" ]; then
+        BRANCH_NAME="preview"
+      elif [ "$CI_COMMIT_TAG" ]; then
+        BRANCH_NAME="main"  # Use 'main' for production in Cloudflare
+      else
+        BRANCH_NAME=$CI_COMMIT_REF_NAME
+      fi    
+
+    # Deploy with wrangler and extract url
+    - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$BRANCH_NAME | grep -o 'https://.*\.pages\.dev')
 
 .deploy_script: &deploy_script
   # This includes kamal, dotenv, docker
@@ -81,15 +89,30 @@ build_project:
     - echo 'Kamal deploy done.'
     - *notification_script
 
-cloudflare_deploy:
+cloudflare_deploy_preview:
   <<: *cloudflare_deploy_script
-  stage: deploy
-  environment: production
-  when: manual
+  stage: deploy-preview
+  environment:
+    name: preview
+    url: $PREVIEW_URL
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      when: manual
+    - if: $CI_COMMIT_BRANCH == "main"    
+
+cloudflare_deploy_production:
+  <<: *cloudflare_deploy_script
+  stage: deploy-production
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+  environment:
+    name: production
+    url: $PREVIEW_URL
 
 production_deploy:
   <<: *deploy_script
-  stage: deploy
+  stage: deploy-production
   environment: production
   variables:
     REMOTE_HOST: 49.13.236.191
