@@ -157,13 +157,6 @@ export default function Navbar() {
                         </span>
                       </Link>
                     )}
-                    <Link
-                      href="/work-with-me"
-                      className={cn(getLinkStyle("/work-with-me"), "text-lg text-white transition-colors hover:text-pink-400")}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Work with Me
-                    </Link>
                   </>
                 ) : (
                   <Link

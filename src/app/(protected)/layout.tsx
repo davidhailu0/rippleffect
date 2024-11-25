@@ -2,21 +2,23 @@
 import Loader from "@/components/ui/loader/loader";
 import NotificationBanner from "@/components/ui/notification-banner";
 import SubNavbar from "@/components/ui/Subnavbar/Subnavbar";
+import { setIsLoggedOut } from "@/lib/reduxStore/authSlice";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
 import { useRouter } from "next/navigation";
 import React, { useLayoutEffect } from "react";
+import { useDispatch } from "react-redux";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const { isLogged, isAuthFailed, isLoggedOut } = useAppSelector(
     (state) => state.auth
   );
+  const dispatch = useDispatch();
 
   useLayoutEffect(() => {
     if (isAuthFailed || isLoggedOut) {
-      console.log("logout");
-      localStorage.removeItem("token");
-      router.push("/sign-up");
+      dispatch(setIsLoggedOut());
+      router.push("/sign-in");
     }
     if (isLogged === false) {
       return;
