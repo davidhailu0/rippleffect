@@ -61,7 +61,7 @@ export default function Home() {
         </div>
 
         {/* Hero Image */}
-        <div className="lg:w-1/2 relative h-[445px] lg:h-[629px] w-full group flex flex-col items-center">
+        <div className="lg:w-1/2 relative h-[435px] lg:h-[629px] w-full group flex flex-col items-center justify-between">
           {/* <div className="absolute h-full text-center inset-0 bg-gradient-to-b from-transparent via-transparent to-black opacity-80 z-10 rounded-lg"></div> */}
           <div className="hero-gradient absolute top-[80px] size-[300px] blur-[150px]"></div>
           <Image
@@ -76,7 +76,7 @@ export default function Home() {
       </motion.div>
 
       {/* Introduction Section */}
-      <div className="bg-gray-950 px-10 md:px-36 pb-10 z-50">
+      <div className="bg-[#1f2235] px-10 md:px-36 pb-10 z-50">
         <section className="container mt-12 ">
           <div className="max-w-3xl">
             <h2 className="text-3xl font-semibold text-white">Welcome!</h2>

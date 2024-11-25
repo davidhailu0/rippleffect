@@ -1,12 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import SubNavbar from "@/components/ui/Subnavbar/Subnavbar";
+import VideoPlayer from "@/components/ui/VideoPlayer/VideoPlayer";
 import { useAppSelector } from "@/lib/reduxStore/hooks";
-import MuxPlayer from "@mux/mux-player-react";
 import Link from "next/link";
 import React from "react";
-import { ClipLoader } from "react-spinners";
-import CreateAccountBar from "./_components/CreateAccountBar";
 
 const App: React.FC = () => {
   const { isLogged } = useAppSelector((state) => state.auth);
@@ -29,21 +26,8 @@ const App: React.FC = () => {
             Get Free Access to My Lead-Generating Sales System!
           </p>
         </div>
-        <div className="flex flex-col gap-4 items-center w-[95%] md:w-[73%] mx-auto">
-          {landing_page?.mux_playback_id ? (
-            <MuxPlayer
-              className={`shadow-custom-shadow md:w-10/12 sx:w-full md:min-h-[519px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden relative`}
-              playbackId={landing_page?.mux_playback_id ?? "not-found"}
-              streamType="on-demand"
-              playbackRate={1.0}
-              preload="auto"
-              startTime={0.1}
-            />
-          ) : (
-            <div className="relative shadow-custom-shadow md:w-[86%] sx:w-full md:h-[540px] sm:h-[200px] object-contain hover:cursor-pointer overflow-x-hidden bg-black flex items-center justify-center">
-              <ClipLoader color="#ffffff" size={50} />
-            </div>
-          )}
+        <div className="flex flex-col gap-4 items-center w-[95%] md:w-[73%] h-auto md:h-auto mx-auto">
+          <VideoPlayer playBackId={landing_page?.mux_playback_id} videoID={landing_page?.id} />
         </div>
         <div className="flex justify-center flex-1 text-center my-10 w-full gap-10">
           {isLogged === false ? (
