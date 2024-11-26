@@ -111,14 +111,3 @@ cloudflare_deploy_production:
   environment:
     name: production
     url: $PREVIEW_URL
-
-production_deploy:
-  <<: *deploy_script
-  stage: deploy-production
-  environment: production
-  variables:
-    REMOTE_HOST: 49.13.236.191
-    RAILS_ENV: production
-  only:
-    - main
-  when: manual
