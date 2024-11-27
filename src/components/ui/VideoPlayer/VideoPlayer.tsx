@@ -25,12 +25,14 @@ interface VideoPlayerProps {
   videoID?: number;
   className?: string;
   tag?: string;
+  showProgress?: boolean;
 }
 
 const VideoPlayer: React.FC<VideoPlayerProps> = ({
   playBackId,
   videoID,
   className = "",
+  showProgress = true,
   tag,
 }) => {
   const lastTime30SecRef = useRef(0);
@@ -44,7 +46,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
     useQuery<VideoProgressData>({
       queryKey: ["videoProgress", videoID],
       queryFn: () => getVideoProgress({ video_id: videoID! }),
-      enabled: Boolean(videoID),
+      enabled: Boolean(videoID) && showProgress,
       refetchInterval: isPlaying && 5000,
     });
 
@@ -129,12 +131,12 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           }}
         />
       </div>
-      <VideoProgress
+      {showProgress && <VideoProgress
         isPlaying={isPlaying}
         timeInterval={videoProgress?.time_interval}
         progress={videoProgress?.progress}
         currentTime={currentTime}
-      />
+      />}
     </>
   );
 };

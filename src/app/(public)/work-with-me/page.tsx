@@ -27,7 +27,7 @@ const App: React.FC = () => {
           </p>
         </div>
         <div className="flex flex-col gap-4 items-center w-[95%] md:w-[73%] h-auto md:h-auto mx-auto">
-          <VideoPlayer playBackId={landing_page?.mux_playback_id} videoID={landing_page?.id} />
+          <VideoPlayer playBackId={landing_page?.mux_playback_id} videoID={landing_page?.id} showProgress={false} />
         </div>
         <div className="flex justify-center flex-1 text-center my-10 w-full gap-10">
           {isLogged === false ? (

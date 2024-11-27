@@ -14,10 +14,8 @@ import {
   CardTitle,
   CardDescription,
   CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 import { icons } from "lucide-react";
-import Link from "next/link";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");
@@ -63,7 +61,7 @@ export default function SignUp() {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="johndoe@example.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
