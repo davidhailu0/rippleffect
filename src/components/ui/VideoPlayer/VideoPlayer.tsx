@@ -127,6 +127,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({
           style={{
             width: "100%",
             height: "auto",
+            overflowX: "hidden",
             aspectRatio: "16/9", // Ensures the video maintains its intrinsic aspect ratio
           }}
         />

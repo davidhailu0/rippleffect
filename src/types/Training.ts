@@ -1,20 +1,27 @@
 import { Video } from "./Common";
 
-type Chapter = {
+type Lesson = {
+  id: number;
+  title: string;
+  video: Video;
+};
+
+type Topics = {
   id: number;
   title: string;
   training_id: number;
   created_at: string;
   updated_at: string;
-  videos: Video[];
+  lessons: Lesson[];
 };
 
 export type Training = {
   id: number;
   title: string;
-  description: string | null;
+  description: string;
+  share_link: { slug: string };
   lead_id: number;
   created_at: string;
   updated_at: string;
-  chapters: Chapter[];
+  topics: Topics[];
 };

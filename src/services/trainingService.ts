@@ -13,12 +13,14 @@ type VideoProgressParam = {
 
 export const getTrainingsHandler = asyncHandler(async () => {
   const res = await axiosInstance.get(`/trainings`);
+  console.log(res.data);
   return res.data;
 });
 
 export const getSingleTrainingHandler = asyncHandler(
-  async ({ trainingId }: { trainingId: number }) => {
-    const res = await axiosInstance.get(`/trainings/${trainingId}`);
+  async ({ trainingSlug }: { trainingSlug: string }) => {
+    const res = await axiosInstance.get(`/trainings/by_slug/${trainingSlug}`);
+    console.log(res.data);
     return res.data;
   }
 );
