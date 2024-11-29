@@ -1,6 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    output:'standalone'
+  output: "export",
+  distDir: "build",
+  trailingSlash: true,
+  // reactStrictMode:false
+  // typescript: {
+  //   ignoreBuildErrors: true,
+  // },
+  images: {
+    unoptimized: true,
+  },
 };
 
 export default nextConfig;

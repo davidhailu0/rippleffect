@@ -1,92 +1,113 @@
-# GitLab CI configuration for Next.js 14 deployment to S3 bucket cliptill.com
-# Necessary variables:
-# region: eu-central-1
-# bucketname: cliptill.com
-# DEPLOY_NOTIFICATION_TOKEN
-# DEPLOY_NOTIFICATION_RECIPIENTS
-
 default:
-  image: docker:24.0.7
-  services:
-    - docker:24.0.7-dind
+  image: node:18-alpine
+  tags:
+    -  external-vps-runner
 
 stages:
-  - install
   - build
-  - deploy
+  - deploy-preview
+  - deploy-production
 
-# Notification script for deployment updates
+variables:
+  DEPLOY_NOTIFICATION_ENDPOINT: "https://n0l5yvafvi.execute-api.us-east-1.amazonaws.com/default/deploy-notifications"
+  DEPLOY_NOTIFICATION_RECIPIENTS: till@tillcarlos.com
+  REMOTE_HOST: 49.13.236.191
+
+
 .notification_script: &notification_script
-  - apt-get install -y curl
-  - COMMIT_MESSAGE=$(echo "$CI_COMMIT_MESSAGE" | sed 's/"/\\"/g' | tr -d '\n')
-  - PIPELINE_URL=$(echo "$CI_PIPELINE_URL" | sed 's/"/\\"/g')
+  - ./bin/generate_build_info.sh > BUILD_INFO.json
+  - apk add jq # TODO: This should go into the deployer image!
+  - "jq '. + {token: \"'$DEPLOY_NOTIFICATION_TOKEN'\"}' BUILD_INFO.json > tmp.json && mv tmp.json BUILD_INFO.json"
   - >
     curl -X POST $DEPLOY_NOTIFICATION_ENDPOINT
     -H "Content-Type: application/json"
-    -d '{
-          "token": "'"${DEPLOY_NOTIFICATION_TOKEN}"'",
-          "appname": "'"${CI_PROJECT_NAME}"'",
-          "version": "'$CI_COMMIT_SHA'",
-          "message": "'"${COMMIT_MESSAGE}"'",
-          "pipeline_url": "'"${PIPELINE_URL}"'",
-          "deployment_time": "'"$(date -u)"'",
-          "author": "'"${CI_COMMIT_AUTHOR}"'",
-          "branch_name": "'"${CI_COMMIT_REF_NAME}"'",
-          "environment_name": "'"${CI_ENVIRONMENT_NAME}"'",
-          "recipients": "'$DEPLOY_NOTIFICATION_RECIPIENTS'"
-        }'
-
-# Stage 1: Install dependencies
-install_dependencies:
-  stage: install
-  image: node:18-alpine
-  script:
-    # Install libc6-compat and install dependencies based on the package manager
-    - apk add --no-cache libc6-compat
-    - >
-      if [ -f yarn.lock ]; then yarn --frozen-lockfile;
-      elif [ -f package-lock.json ]; then npm ci;
-      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm i --frozen-lockfile;
-      else echo "Lockfile not found." && exit 1;
-      fi
-  artifacts:
-    paths:
-      - node_modules/
+    -d @BUILD_INFO.json
 
 # Stage 2: Build the Next.js project
 build_project:
   stage: build
   image: node:18-alpine
   script:
-    - >
-      if [ -f yarn.lock ]; then yarn run build;
-      elif [ -f package-lock.json ]; then npm run build;
-      elif [ -f pnpm-lock.yaml ]; then corepack enable pnpm && pnpm run build;
-      else echo "Lockfile not found." && exit 1;
-      fi
+    - export NEXT_PUBLIC_APP_DOMAIN=$NEXT_PUBLIC_APP_DOMAIN && export NEXT_PUBLIC_APP_ORIGIN=$NEXT_PUBLIC_APP_ORIGIN
+    - echo $NEXT_PUBLIC_APP_DOMAIN && echo $NEXT_PUBLIC_APP_ORIGIN
+    - npm install
+    - npm run build
   artifacts:
     paths:
-      - .next/standalone/
-      - .next/static/
-      - public/
-  only:
-    - main
-
-# Stage 3: Deploy to S3
-deploy_to_s3:
-  stage: deploy
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+      - build/
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_COMMIT_REF_NAME
+      
+.cloudflare_deploy_script: &cloudflare_deploy_script
+  image: node:18-alpine
   script:
-    - aws --version
-    - aws s3 rm s3://$S3_BUCKET --recursive  # Clear the existing content in the S3 bucket
-    - aws s3 sync .next/static s3://$S3_BUCKET/_next/static  # Sync the static Next.js assets
-    - aws s3 sync public/ s3://$S3_BUCKET/public  # Sync the public directory
-  only:
-    - main
+    # Install curl and wrangler
+    - apk add curl
+    - npm install -g wrangler
 
-# Optional: Notifications after deploy
-deploy_notification:
-  stage: deploy
-  script: *notification_script
-  only:
-    - main
+    # Set branch name based on context
+    - |
+      if [ "$CI_COMMIT_BRANCH" = "main" ]; then
+        BRANCH_NAME="preview"
+      elif [ "$CI_COMMIT_TAG" ]; then
+        BRANCH_NAME="main"  # Use 'main' for production in Cloudflare
+      fi  
+
+    # Deploy with wrangler and extract url
+    - PREVIEW_URL=$(wrangler pages deploy build/ --project-name=$CLOUDFLARE_PROJECT_NAME --branch=$BRANCH_NAME | grep -o 'https://[0-9a-f]\{8\}.*\.pages\.dev')
+
+    # Post preview URL to mattermost
+    - | 
+      curl -X POST -H 'Content-Type: application/json' \
+      "${MATTERMOST_WEBHOOK_URL}" \
+      -d "{
+          \"text\": \"🔍 Preview deployment ready for ${BRANCH_NAME}:\n${PREVIEW_URL}\"
+      }"
+      
+
+.deploy_script: &deploy_script
+  # This includes kamal, dotenv, docker
+  image: tillcarlos/kamal-deployer:latest
+  tags:
+    - product-deployer
+  before_script:
+    - uname -m
+    - docker info
+    - git rev-parse HEAD # Optional check to verify repository presence
+    - mkdir -p ~/.ssh
+    - eval $(ssh-agent -s)
+    - '[ -z "$SSH_PRIVATE_KEY_BASE64" ] && { echo "Error: SSH_PRIVATE_KEY_BASE64 is empty."; exit 1; }'
+    - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d > ~/.ssh/id_rsa
+    - chmod 600 ~/.ssh/id_rsa
+    - ssh-add ~/.ssh/id_rsa
+    - ssh-keyscan $REMOTE_HOST >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - docker version
+    - kamal version
+    - echo "$PRODUCTION_KAMAL_SECRETS" > .env
+    - echo "BUILD_INFO='$(./bin/generate_build_info.sh)'" >> .env
+    - 'echo "${RAILS_ENV}:${RAILS_MASTER_KEY:0:3} <-- R.ENV R._MASTER_KEY"'
+    - dotenv kamal deploy 
+    - echo 'Kamal deploy done.'
+    - *notification_script
+
+cloudflare_deploy_preview:
+  <<: *cloudflare_deploy_script
+  stage: deploy-preview
+  environment:
+    name: preview
+    url: $PREVIEW_URL
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"    
+
+cloudflare_deploy_production:
+  <<: *cloudflare_deploy_script
+  stage: deploy-production
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: manual
+  environment:
+    name: production
+    url: $PREVIEW_URL

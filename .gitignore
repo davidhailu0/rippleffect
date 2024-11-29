@@ -13,6 +13,8 @@
 /.next/
 /out/
 
+/.vscode
+
 # production
 /build
 
@@ -26,8 +28,8 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
-.env
-.env*.local
+.env*
+!.env.example
 
 # vercel
 .vercel
@@ -35,3 +37,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+commit_info.json
