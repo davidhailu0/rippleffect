@@ -12,16 +12,12 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
-  CardFooter,
+  CardContent
 } from "@/components/ui/card";
 import { icons } from "lucide-react";
 import Loader from "@/components/ui/loader/loader";
-import { useCookies } from "react-cookie";
 import { useDispatch } from "react-redux";
 import { setIsLogged, setLead } from "@/lib/reduxStore/authSlice";
-import { toast } from "sonner";
-import Link from "next/link";
 
 export default function SignUp() {
   const [email, setEmail] = useState("");

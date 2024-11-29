@@ -18,7 +18,7 @@ const loaderVariants = cva("animate-spin text-muted-foreground", {
             xl: "w-8 h-8",
         },
         variant: {
-            default: "text-primary",
+            default: "text-white",
             secondary: "text-secondary-foreground",
             muted: "text-muted-foreground",
         },

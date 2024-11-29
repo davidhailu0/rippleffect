@@ -8,7 +8,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const isLogged = useAppSelector((state) => state.auth.isLogged);
   useLayoutEffect(() => {
     if (isLogged === true) {
-      router.replace("/step-1/");
+      if (Boolean(localStorage.getItem("slug"))) {
+        const slug = localStorage.getItem("slug")
+        localStorage.removeItem("slug")
+        router.replace(`/training/?slug=${slug}`);
+      }
+      else {
+        router.replace("/step-1/");
+      }
     }
   }, [isLogged, router]);
   return <Suspense>{children}</Suspense>;
